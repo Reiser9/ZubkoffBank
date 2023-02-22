@@ -3,7 +3,7 @@ import "./App.css";
 const App = () => {
     return (
         <div>
-            Тест1
+            Тест1337
         </div>
     );
 };
