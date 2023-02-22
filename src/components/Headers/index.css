@@ -1,0 +1,40 @@
+/* Шапка */
+.header{
+	width: 100%;
+	padding: 1.2rem 0;
+	border-bottom: 1px solid var(--borderC);
+}
+
+.header__inner{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.header__logo--inner{
+	display: flex;
+}
+
+.header__logo{
+	width: 100%;
+}
+
+.header__profile{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 500;
+}
+
+.header__profile--icon{
+	width: 24px;
+}
+
+.header__profile:hover{
+	color: var(--mainC);
+}
+
+.header__profile:hover svg path{
+	stroke: var(--mainC);
+}

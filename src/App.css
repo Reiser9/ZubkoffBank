@@ -1,5 +1,13 @@
 :root{
 	font-size: 10px;
+	--mainC: #1373E5;
+	--mainHoverC: #206AC2;
+	--mainFocusC: #3D91F4;
+	--backgroundC: #F5F7FA;
+	--textC: #42464B;
+	--borderC: #EAF1F9;
+	--inputC: #CED7E0;
+	--green: #10B97B;
 }
 
 body{
@@ -9,6 +17,13 @@ body{
     font-family: 'Montserrat', sans-serif;
 }
 
+#root{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	min-height: 100vh;
+}
+
 *,
 *:after,
 *:before{
@@ -16,8 +31,11 @@ body{
     margin: 0;
 }
 
-a, button, input, textarea, select{
+svg, path, a, button, input, textarea, select{
 	transition: .2s linear;
+}
+
+a, button, input, textarea, select{
 	font-size: 1.6rem;
     font-family: 'Montserrat', sans-serif;
 }
@@ -56,7 +74,7 @@ input::-webkit-inner-spin-button{
 }
 
 .input::placeholder{
-
+	color: rgba(0, 0, 0, .5);
 }
 
 .input:focus::placeholder{
@@ -65,8 +83,9 @@ input::-webkit-inner-spin-button{
 
 .container{
 	width: 100%;
-	max-width: 1160px;
+	max-width: 1190px;
 	margin: 0 auto;
+	padding: 0 15px;
 }
 
 .block{
@@ -75,6 +94,14 @@ input::-webkit-inner-spin-button{
     flex-wrap: wrap;
     gap: 15px;
     padding: 50px;
+}
+
+.checkbox{
+	display: none;
+}
+
+.checkbox:checked + label:after{
+	opacity: 1;
 }
 
 /* Адаптив */
