@@ -1,0 +1,55 @@
+/* 404 */
+.notfound{
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notfound__inner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.notfound__icon{
+    width: 530px;
+    max-width: 90%;
+    height: auto;
+}
+
+.notfound__title{
+    margin-top: 4rem;
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.notfound__text{
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.notfound__link{
+    margin-top: 3.2rem;
+}
+
+@media(max-width: 768px){
+    .notfound__title{
+        font-size: 2rem;
+    }
+}
+@media(max-width: 480px){
+    .notfound__title{
+        font-size: 1.6rem;
+        margin-top: 3.2rem;
+    }
+
+    .notfound__text{
+        font-size: 1.4rem;
+        margin-top: 1.2rem;
+    }
+}

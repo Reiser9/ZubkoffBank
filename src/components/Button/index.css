@@ -1,0 +1,27 @@
+.default__button{
+    padding: 1.4rem 6.6rem;
+    border-radius: 50px;
+    background: var(--mainC);
+    font-weight: 600;
+    color: #fff;
+}
+
+.default__button.disabled{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.default__button:hover{
+    background: var(--mainHoverC);
+}
+
+.default__button:active{
+    background: var(--mainFocusC);
+}
+
+@media(max-width: 768px){
+    .default__button{
+        padding: 1.2rem 4rem;
+        margin-top: 2rem;
+    }
+}
