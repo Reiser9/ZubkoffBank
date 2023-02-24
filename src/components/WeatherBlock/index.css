@@ -151,7 +151,7 @@
 .course-weather__day {
     align-self: end;
     color: var(--weatherLightC);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .course-weather__currency {

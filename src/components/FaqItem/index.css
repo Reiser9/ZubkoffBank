@@ -1,0 +1,76 @@
+.faq__item {
+    width: 100%;
+    border-bottom: 1px solid var(--inputC);
+    gap: 20px;
+}
+
+.faq__item:first-child {
+    border-top: 1px solid var(--inputC);
+}
+
+.faq__question {
+    font-weight: 500;
+    font-size: 1.8rem;
+    line-height: 1.25;
+    gap: 20px;
+    padding: 1.2rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width:576px) {
+    .faq__question {
+        font-size: 1.6rem;
+    }
+}
+
+.faq__btn {
+    background-color: var(--creditCardBg);
+    flex: 0 0 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.faq__btn:hover {
+    opacity: 0.7;
+}
+
+.faq__btn::before,
+.faq__btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--mainC);
+}
+
+.faq__btn::before {
+    width: 16px;
+    height: 1px;
+}
+
+.faq__btn::after {
+    width: 1px;
+    height: 16px;
+    transition: .2s linear;
+}
+
+.faq__btn.active::after {
+    height: 0;
+}
+
+.faq__answer {
+    padding: 1.2rem 0;
+    font-weight: 400;
+    font-size: 1.4rem;
+    display: none;
+}
+
+.faq__answer.active {
+    display: block;
+}

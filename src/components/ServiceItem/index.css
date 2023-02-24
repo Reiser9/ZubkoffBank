@@ -1,0 +1,68 @@
+.item-services {
+    border-radius: 8px;
+    background-color: var(--backgroundC);
+    width: calc(100% / 3 - 2 * 24px / 3);
+    min-height: 260px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+@media (max-width:1190px) {
+    .item-services {
+        width: calc(100% / 2 - 1 * 24px / 2);
+    }
+}
+
+@media (max-width:768px) {
+    .item-services {
+        width: 100%;
+    }
+}
+
+.item-services_big {
+    width: calc(100% / 2 - 24px / 2);
+}
+
+@media (max-width:768px) {
+    .item-services_big {
+        width: 100%;
+    }
+}
+
+.item-services__icon--inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--creditCardBg);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-bottom: 2.4rem;
+}
+
+.item-services__icon {
+    width: 24px;
+    height: 24px;
+}
+
+.item-services__icon path {
+    stroke: var(--mainC);
+}
+
+.item-services__title {
+    font-weight: 600;
+    font-size: 1.8rem;
+    margin-bottom: 1.6rem;
+}
+
+.item-services__text {
+    line-height: 1.25;
+    margin-bottom: 2rem;
+}
+
+.item-services__button {
+    margin-top: auto;
+}

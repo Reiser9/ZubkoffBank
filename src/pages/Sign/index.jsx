@@ -19,6 +19,10 @@ const Sign = () => {
     const [isLogin, setIsLogin] = React.useState(true);
     const [agree, setAgree] = React.useState(false);
 
+    React.useEffect(() => {
+        document.title = `Zubkoff Bank - ${isLogin ? "Вход" : "Регистрация"}`
+    }, [isLogin]);
+
     return(
         <div className="sign">
             <div className="container">
@@ -122,7 +126,7 @@ const Sign = () => {
                         <RegisterIcon className="register__icon" />
 
                         <p className="sign__info--title">
-                            Зачем регистрироваться на Zubkoff?
+                            Зачем регистрироваться на {process.env.REACT_APP_BANK_NAME}?
                         </p>
 
                         <div className="sign__info--points">

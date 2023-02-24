@@ -1,0 +1,65 @@
+.item-cashback {
+    min-height: 276px;
+    width: calc(100% / 3 - 2 * 24px / 3);
+    background-color: var(--cashBackItemC);
+    border-radius: 8px;
+    color: #fff;
+    padding: 3.2rem;
+}
+
+@media (max-width:1190px) {
+    .item-cashback {
+        width: calc(100% / 2 - 1 * 24px / 2);
+    }
+}
+
+@media (max-width:768px) {
+    .item-cashback {
+        width: 100%;
+    }
+}
+
+.item-cashback_light {
+    background-color: var(--cashBackItemLightC);
+    color: var(--cashBackItemC);
+}
+
+.item-cashback__icon--inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    background-color: #fff;
+    border-radius: 50%;
+    margin-bottom: 3.2rem;
+}
+
+.item-cashback__icon {
+    width: 48px;
+    height: 48px;
+    margin-left: -12px;
+}
+
+.item-cashback__icon_small {
+    width: 30px;
+    height: 30px;
+}
+
+.item-cashback__icon:first-child {
+    margin-left: unset;
+}
+
+.item-cashback__title {
+    color: inherit;
+    margin-bottom: 1.6rem;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.item-cashback__text {
+    color: inherit;
+    font-weight: 500;
+    font-size: 1.6rem;
+    line-height: 1.25;
+}
