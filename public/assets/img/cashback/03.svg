@@ -1,0 +1,22 @@
+<svg width="57" height="56" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_50_25)">
+<path d="M28.2556 56C43.7463 56 56.304 43.464 56.304 28C56.304 12.536 43.7463 0 28.2556 0C12.765 0 0.207275 12.536 0.207275 28C0.207275 43.464 12.765 56 28.2556 56Z" fill="#7CAEFF"/>
+<path d="M44.2833 12H12.228V44H44.2833V12Z" fill="#7CAEFF"/>
+<mask id="mask0_50_25" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="13" y="17" width="30" height="23">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M20.047 17.3333C18.5293 17.3333 17.1418 18.1893 16.4631 19.5445L13.5636 25.3333L20.2418 26.6666V17.3333H20.047ZM36.4643 17.3333C37.982 17.3333 39.3695 18.1893 40.0482 19.5445L42.9477 25.3333L36.2694 26.6666V17.3333H36.4643Z" fill="black"/>
+<path d="M22.9131 17.3333H20.2418V40H32.2625C34.4755 40 36.2695 38.2091 36.2695 36V17.3333H33.5983C32.8606 17.3333 32.2844 17.9467 32.0431 18.6425C31.4998 20.2087 30.0094 21.3333 28.2556 21.3333C26.502 21.3333 25.0114 20.2087 24.4683 18.6425C24.227 17.9466 23.6508 17.3333 22.9131 17.3333Z" fill="url(#paint0_linear_50_25)"/>
+</mask>
+<g mask="url(#mask0_50_25)">
+<path d="M12.228 12H44.2832V44H12.228V12Z" fill="white"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_50_25" x1="20.2418" y1="29.3333" x2="36.2695" y2="29.3333" gradientUnits="userSpaceOnUse">
+<stop stop-opacity="0.8"/>
+<stop offset="1" stop-opacity="0.7"/>
+</linearGradient>
+<clipPath id="clip0_50_25">
+<rect width="56.0967" height="56" fill="white" transform="translate(0.207275)"/>
+</clipPath>
+</defs>
+</svg>

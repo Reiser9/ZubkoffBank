@@ -37,6 +37,12 @@
     margin-top: 3.2rem;
 }
 
+@media (max-width:768px) {
+    .notfound__link{
+        margin-top: 2rem;
+    }
+}
+
 @media(max-width: 768px){
     .notfound__title{
         font-size: 2rem;
