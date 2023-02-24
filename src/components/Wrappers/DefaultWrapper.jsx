@@ -3,7 +3,7 @@ import {Outlet} from 'react-router-dom';
 
 import Header from '../Headers';
 
-const DefaultWrapper = ({children}) => {
+const DefaultWrapper = () => {
     return(
         <>
             <Header />
