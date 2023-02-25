@@ -1,25 +1,30 @@
 import React from 'react';
 
-import {getCurrency} from '../../utils/getCity';
+import {getCurrency} from '../../utils/getApiData';
 
 import PreloaderFill from '../Preloader/PreloaderFill';
+import ErrorBlock from '../ErrorBlock';
 
 const CurrencyItem = () => {
     const [isLoad, setIsLoad] = React.useState(false);
-
+    const [error, setError] = React.useState(false);
     const [currency, setCurrency] = React.useState({});
 
     const getCurrencyData = async () => {
         setIsLoad(true);
 
-        const currencyUsd = await getCurrency("USD");
-        const currencyEur = await getCurrency("EUR");
-
-        setCurrency({
-            usd: currencyUsd,
-            eur: currencyEur
-        });
+        const {currencyUsd, currencyEur, error} = await getCurrency();
         
+        if(error){
+            setError(true);
+        }
+        else{
+            setCurrency({
+                usd: currencyUsd,
+                eur: currencyEur
+            });
+        }
+
         setIsLoad(false);
     }
 
@@ -29,7 +34,7 @@ const CurrencyItem = () => {
 
     return(
         <div className="course-weather">
-            {isLoad ? <PreloaderFill /> : <>
+            {isLoad ? <PreloaderFill /> : error ? <ErrorBlock text="Сервис временно недоступен" /> : <>
                 <p className="course-weather__label">
                     Курс рубля от ЦБ РФ
                 </p>

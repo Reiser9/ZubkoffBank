@@ -86,7 +86,7 @@ const Sign = () => {
                             </div>
 
                             <div className="sign__button--inner">
-                                <Button disabled={!agree}>
+                                <Button className="register__button" disabled={!agree}>
                                     Регистрация
                                 </Button>
 
@@ -118,7 +118,7 @@ const Sign = () => {
                             </p>
 
                             <p className="sign__info--point">
-                                Спросить о чем-либо у технической поддержки
+                                Поболтать с технической поддержкой
                             </p>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ const Sign = () => {
                             </p>
 
                             <p className="sign__info--point">
-                                Удобное снятие наличных онлайн или в банкомате
+                                Выгодные условия по картам
                             </p>
 
                             <p className="sign__info--point">

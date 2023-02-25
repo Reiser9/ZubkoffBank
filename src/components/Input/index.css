@@ -31,3 +31,13 @@
 .input__icon path{
     stroke: rgba(0, 0, 0, .5);
 }
+
+@media(max-width: 480px){
+    .default__input{
+        padding: 1rem 2rem;
+    }
+
+    .password__input{
+        padding: 1rem 5.6rem 1rem 2rem;
+    }
+}

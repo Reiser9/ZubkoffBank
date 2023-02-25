@@ -19,9 +19,9 @@ const Main = () => {
                     <div className="main-block__inner">
                         <div className="main-block__content">
                             <h1 className="main-block__title title">Привет 👋</h1>
-                            <p className="main-block__text">Здесь, в {process.env.REACT_APP_BANK_NAME}, мы придумываем отличные сервисы для людей в России. Все, что мы разрабатываем, пишем или рекомендуем - сделано с любовью.</p>
+                            <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
                             
-                            <Button className="main-block__button">
+                            <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
                             </Button>
                         </div>
@@ -37,14 +37,14 @@ const Main = () => {
                         <div className="credit-card__content">
                             <h2 className="credit-card__title title">Получите дебетовую карту онлайн!</h2>
                             
-                            <p className="credit-card__text">Воспользуйтесь нашей системой подбора дебетовых карт с <span>бесплатной проверкой рейтинга!</span></p>
+                            <p className="credit-card__text">Подберите себе дебетовую карту, которая <span>подойдет вам лучше всего </span></p>
                             
-                            <Button className="credit-card__button">
-                                Оформить карту
+                            <Button isLink to="/cards" className="credit-card__button">
+                                Подобрать карту
                             </Button>
                         </div>
 
-                        <img src="/assets/img/card.svg" alt="card" className="credit-card__icon" />
+                        <img src="/assets/img/card-black.svg" alt="card" className="credit-card__icon" />
                     </div>
                 </div>
             </section>
@@ -57,13 +57,13 @@ const Main = () => {
                         <div className="services__items">
                             <ServiceItem icon={<Invest className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
 
-                            <ServiceItem icon={<Card className="item-services__icon" />} title={`Дебетовая карта ${process.env.REACT_APP_BANK_NAME} Black`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" />
+                            <ServiceItem icon={<Card className="item-services__icon" />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
 
                             <ServiceItem icon={<Dollar className="item-services__icon" />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
 
                             <ServiceItem icon={<Fast className="item-services__icon" />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
 
-                            <ServiceItem icon={<Phone className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" big />
+                            <ServiceItem icon={<Phone className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,7 @@ const Main = () => {
             <section className="cashback">
                 <div className="container">
                     <div className="cashback__inner">
-                        <h2 className="cashback__title title">Кэшбек с {process.env.REACT_APP_BANK_NAME} Black</h2>
+                        <h2 className="cashback__title title">Кэшбек с {process.env.REACT_APP_BANK_NAME} Bank</h2>
 
                         <div className="cashback__items">
                             <CashbackItem title="До 30% у партнеров" text="Самый большой кэшбэк — за покупки по спецпредложениям партнеров банка" />
@@ -103,7 +103,7 @@ const Main = () => {
                         </div>
 
                         <div className="banner__text-block">
-                            <h2 className="banner__title title">Лучший системы быстрых платежей банк в мире</h2>
+                            <h2 className="banner__title title">Лучшее мобильное приложение банка</h2>
 
                             <p className="banner__text">По версии Global Finance — Best Digital Bank Award 2020</p>
                         </div>

@@ -1,0 +1,41 @@
+.card{
+    width: 100%;
+    padding: 6rem 0;
+}
+
+.card__inner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card__title{
+    font-size: 4rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.card__content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 3.2rem;
+    gap: 24px;
+}
+
+@media(max-width: 768px){
+    .card__title{
+        font-size: 3rem;
+    }
+
+    .card{
+        padding: 4rem 0;
+    }
+}
+@media(max-width: 375px){
+    .card__title{
+        font-size: 2.5rem;
+    }
+}

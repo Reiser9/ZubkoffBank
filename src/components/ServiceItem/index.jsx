@@ -4,7 +4,7 @@ import './index.css';
 
 import Button from '../Button';
 
-const ServiceItem = ({title, text, icon, buttonText = false, big = false}) => {
+const ServiceItem = ({title, text, icon, buttonText = false, big = false, buttonLink}) => {
     return(
         <div className={`item-services${big ? " item-services_big" : ""}`}>
             <div className="item-services__icon--inner">
@@ -15,7 +15,7 @@ const ServiceItem = ({title, text, icon, buttonText = false, big = false}) => {
 
             <p className="item-services__text">{text}</p>
 
-            {buttonText && <Button className="item-services__button">{buttonText}</Button>}
+            {buttonText && <Button className="item-services__button" isLink={buttonLink} to={buttonLink}>{buttonText}</Button>}
         </div>
     )
 }

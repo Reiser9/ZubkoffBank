@@ -22,7 +22,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 20rem 0 4rem 0;
+    padding: 20rem 0 10rem 0;
 }
 
 .sign__content, .sign__info{
@@ -33,11 +33,13 @@
 }
 
 .login__icon{
-    width: 200px;
+    width: 100%;
+    max-width: 200px;
 }
 
 .register__icon{
-    width: 392px;
+    width: 100%;
+    max-width: 392px;
 }
 
 .sign__info--title{
@@ -212,8 +214,60 @@
 
 .sign__save--icon{
     width: 24px;
+    flex-shrink: 0;
 }
 
 .sign__save--icon path{
     stroke: var(--green);
+}
+
+@media(max-width: 998px){
+    .sign__button--inner{
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .sign__content, .sign__info{
+        width: calc(50% - 24px);
+    }
+}
+@media(max-width: 768px){
+    .sign:before, .sign__info{
+        display: none;
+    }
+
+    .sign__inner{
+        padding: 10rem 0;
+        justify-content: center;
+    }
+
+    .sign__content{
+        width: 90%;
+    }
+}
+@media(max-width: 480px){
+    .sign__inner{
+        padding: 6rem 0;
+    }
+
+    .sign__content, .sign__button, .register__button{
+        width: 100%;
+    }
+
+    .sign__title{
+        font-size: 2rem;
+    }
+
+    .sign__form{
+        margin-top: 2.4rem;
+    }
+
+    .sign__link, .sign__button{
+        margin-top: 1.6rem;
+    }
+
+    .sign__link{
+        font-size: 1.4rem;
+    }
 }

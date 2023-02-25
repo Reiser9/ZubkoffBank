@@ -11,7 +11,7 @@ const Button = ({text, isLink = false, disabled = false, children, className, ..
                 {text}
                 {children}
             </Link>
-            : <button {...props} className={`button default__button ${className}${disabled ? " disabled" : ""}`}>
+            : <button {...props} className={`button default__button${className ? " " + className : ""}${disabled ? " disabled" : ""}`}>
                 {text}
                 {children}
             </button>}
