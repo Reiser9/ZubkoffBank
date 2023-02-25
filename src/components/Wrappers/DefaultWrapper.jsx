@@ -2,6 +2,7 @@ import React from 'react';
 import {Outlet} from 'react-router-dom';
 
 import Header from '../Headers';
+import Footer from '../Footer';
 
 const DefaultWrapper = () => {
     return(
@@ -9,6 +10,8 @@ const DefaultWrapper = () => {
             <Header />
 
             <Outlet />
+
+            <Footer />
         </>
     )
 }
