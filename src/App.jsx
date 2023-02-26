@@ -9,6 +9,7 @@ import EmptyWrapper from './components/Wrappers/EmptyWrapper';
 
 const Main = React.lazy(() => import('./pages/Main'));
 const Cards = React.lazy(() => import('./pages/Cards'));
+const Profile = React.lazy(() => import('./pages/Profile'));
 const Sign = React.lazy(() => import('./pages/Sign'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/" element={<DefaultWrapper />}>
                 <Route index element={withSuspense(Main)} />
                 <Route path="cards" element={withSuspense(Cards)} />
+                <Route path="profile" element={withSuspense(Profile)} />
                 <Route path="*" element={<Navigate to={"/404"} />} />
             </Route>
 

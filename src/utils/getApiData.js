@@ -1,7 +1,12 @@
 import {city, weather, currency} from '../api';
+import {isBot} from './isBot';
 
 export const getCity = async () => {
     try{
+        if(isBot(window.navigator.userAgent)){
+            throw new Error();
+        }
+
         const {data} = await city.get();
 
         const cityName = data.city.name_ru;
@@ -21,6 +26,24 @@ export const getCity = async () => {
 
         return {error: true};
     }
+}
+
+export const getCurrency = async () => {
+    if(isBot(window.navigator.userAgent)){
+        return {error: true}
+    }
+
+    let currencyUsd = await getOneCurrency();
+    let currencyEur = await getOneCurrency("EUR");
+
+    if(currencyUsd.error || currencyEur.error){
+        return {error: true}
+    }
+
+    currencyUsd = currencyUsd.currencyResult;
+    currencyEur = currencyEur.currencyResult;
+
+    return {currencyUsd, currencyEur};
 }
 
 const getWeather = async (lat, lon) => {
@@ -55,15 +78,4 @@ const getOneCurrency = async (from = "USD") => {
 
         return {error: true};
     }
-}
-
-export const getCurrency = async () => {
-    const currencyUsd = await getOneCurrency();
-    const currencyEur = await getOneCurrency("EUR");
-
-    if(currencyUsd.error || currencyEur.error){
-        return {error: true}
-    }
-
-    return {currencyUsd, currencyEur};
 }
