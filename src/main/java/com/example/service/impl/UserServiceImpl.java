@@ -59,7 +59,10 @@ public class UserServiceImpl implements UserService {
                 .setId(user.getId())
                 .setPhone_num(user.getPhone_num())
                 .setPassword(user.getPassword())
-                .setAccount_number(user.getAccount_number());
+                .setAccount_number(user.getAccount_number())
+//                .setFk_card(user.getFk_card())
+                .setFk_role(user.getFk_role());
+//                .setFk_data(user.getFk_data());
 //                .setMiddleName(user.getMiddleName())
 //                .setLastName(user.getLastName())
 //                .setAddress(new AddressResponse()
@@ -73,6 +76,9 @@ public class UserServiceImpl implements UserService {
         return new User()
                 .setPhone_num(request.getPhone_num())
                 .setPassword(request.getPassword())
-                .setAccount_number(request.getAccount_number());
+                .setAccount_number(request.getAccount_number())
+//                .setFk_card(request.getFk_card())
+                .setFk_role(request.getFk_role());
+//                .setFk_data(request.getFk_data());
     }
 }

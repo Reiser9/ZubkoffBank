@@ -23,8 +23,20 @@ public class User {
     @Column(name = "password")
     private String password;
 
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "FK_card"))
+//    private int fk_card;
+
     @Column(name = "account_number")
     private String account_number;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "FK_role"))
+    private Role fk_role;
+
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "id", foreignKey = @ForeignKey(name = "FK_data"))
+//    private int fk_data;
 
     @Override
     public boolean equals(Object o) {
