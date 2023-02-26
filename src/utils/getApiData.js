@@ -33,17 +33,19 @@ export const getCurrency = async () => {
         return {error: true}
     }
 
-    let currencyUsd = await getOneCurrency();
-    let currencyEur = await getOneCurrency("EUR");
+    const [currencyUsd, currencyEur] = await Promise.all([
+        getOneCurrency(),
+        getOneCurrency("EUR")
+    ]);
 
     if(currencyUsd.error || currencyEur.error){
         return {error: true}
     }
 
-    currencyUsd = currencyUsd.currencyResult;
-    currencyEur = currencyEur.currencyResult;
-
-    return {currencyUsd, currencyEur};
+    return {
+        currencyUsd: currencyUsd.currencyResult,
+        currencyEur: currencyEur.currencyResult
+    };
 }
 
 const getWeather = async (lat, lon) => {

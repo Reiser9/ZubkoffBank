@@ -1,0 +1,61 @@
+.profile__sidebar--check{
+    width: 100%;
+    padding: 1.2rem 2rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: .2s linear;
+    cursor: pointer;
+}
+
+.profile__sidebar--check--item{
+    background: var(--backgroundC);
+}
+
+.profile__sidebar--check--item:hover, .profile__sidebar--check--item.active{
+    background: var(--creditCardBg);
+}
+
+.profile__sidebar--check--icon--inner{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--creditCardBg);
+    transition: .2s linear;
+    flex-shrink: 0;
+}
+
+.profile__sidebar--check--item:hover .profile__sidebar--check--icon--inner,
+.profile__sidebar--check--item.active .profile__sidebar--check--icon--inner{
+    background: #fff;
+}
+
+.profile__sidebar--check--icon--inner svg{
+    width: 24px;
+}
+
+.profile__sidebar--check--icon--inner svg path{
+    stroke: var(--mainC);
+}
+
+.profile__sidebar--check--text--inner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.profile__sidebar--check--card--name{
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, .5);
+}
+
+.profile__sidebar--check--card--balance{
+    font-weight: 600;
+}

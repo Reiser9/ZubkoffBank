@@ -5,7 +5,9 @@ import './index.css';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import ErrorBlock from '../../components/ErrorBlock';
-import {Cart, Car, Plus} from '../../components/Icons';
+import SidebarItem from '../../components/SidebarItem';
+import CheckItem from '../../components/CheckItem';
+import {Plus} from '../../components/Icons';
 
 import {copyToClipboard} from '../../utils/copyToClipboard';
 
@@ -19,59 +21,23 @@ const Profile = () => {
             <div className="container">
                 <div className="profile__inner">
                     <div className="profile__sidebar">
-                        <div className="profile__sidebar--block">
-                            <p className="profile__sidebar--title">
-                                Счета и карты
-                            </p>
-
-                            <div className="profile__sidebar--check profile__sidebar--check--item active">
-                                <div className="profile__sidebar--check--icon--inner">
-                                    <Cart className="profile__sidebar--check--icon" />
-                                </div>
-
-                                <div className="profile__sidebar--check--text--inner">
-                                    <p className="profile__sidebar--check--card--name">
-                                        Zubkoff Black
-                                    </p>
-
-                                    <p className="profile__sidebar--check--card--balance">
-                                        13 453,15 ₽
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="profile__sidebar--check profile__sidebar--check--item">
-                                <div className="profile__sidebar--check--icon--inner">
-                                    <Car className="profile__sidebar--check--icon" />
-                                </div>
-
-                                <div className="profile__sidebar--check--text--inner">
-                                    <p className="profile__sidebar--check--card--name">
-                                        Zubkoff Drive
-                                    </p>
-
-                                    <p className="profile__sidebar--check--card--balance">
-                                        10,51 ₽
-                                    </p>
-                                </div>
-                            </div>
+                        <SidebarItem title="Счета и карты">
+                            <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
+                            <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
+                            <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
 
                             <div className="profile__sidebar--check profile__sidebar--check--add">
                                 <div className="profile__sidebar--check--icon--inner">
-                                    <Plus className="profile__sidebar--check--icon" />
+                                    <Plus />
                                 </div>
 
                                 <p className="profile__sidebar--check--add--text">
                                     Открыть новый счет
                                 </p>
                             </div>
-                        </div>
+                        </SidebarItem>
 
-                        <div className="profile__sidebar--block">
-                            <p className="profile__sidebar--title">
-                                Курсы валют
-                            </p>
-
+                        <SidebarItem title="Курсы валют">
                             <div className="profile__sidebar--currency--inner">
                                 <div className="profile__sidebar--currency--item">
                                     <p className="profile__sidebar--currency--title">
@@ -95,7 +61,7 @@ const Profile = () => {
 
                                 {/* <ErrorBlock text="Сервис временно недоступен" /> */}
                             </div>
-                        </div>
+                        </SidebarItem>
                     </div>
 
                     <div className="profile__content">

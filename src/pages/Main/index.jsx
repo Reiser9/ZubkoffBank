@@ -10,15 +10,23 @@ import WeatherBlock from '../../components/WeatherBlock';
 import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
+import Modal from '../../components/Modal';
+import CardShortBlock from '../../components/CardShortBlock';
 
 const Main = () => {
+    const [modal, setModal] = React.useState(false);
+
+    const openModal = () => {
+        setModal(true);
+    }
+
     return (
         <>
             <section className="main-block">
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title">Привет 👋</h1>
+                            <h1 className="main-block__title title" onClick={openModal}>Привет 👋</h1>
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
                             
                             <Button className="main-block__button" isLink to="/cards">
@@ -132,6 +140,15 @@ const Main = () => {
                     </div>
                 </div>
             </section>
+
+            <Modal active={modal} setActive={setModal}>
+                <div className="cards-popup__items">
+                    <CardShortBlock icon="black" />
+                    <CardShortBlock icon="junior" />
+                    <CardShortBlock icon="platinum" />
+                    <CardShortBlock icon="drive" />
+                </div>
+            </Modal>
         </>
     )
 }

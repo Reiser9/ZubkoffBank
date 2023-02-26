@@ -1,4 +1,4 @@
-.preloader__inner{
+.preloader__inner, .preloader__page--inner{
     position: absolute;
     top: 0;
     left: 0;
@@ -8,6 +8,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.preloader__page--inner{
+    position: relative;
+    flex: 1;
 }
 
 .preloader__inner.fill{

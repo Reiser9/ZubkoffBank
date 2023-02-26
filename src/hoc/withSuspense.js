@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Preloader from '../components/Preloader';
+import PreloaderPage from '../components/Preloader/PreloaderPage';
 
 export const withSuspense = (Component) => {
     return(
-        <React.Suspense fallback={<Preloader />}>
+        <React.Suspense fallback={<PreloaderPage />}>
             <Component />
         </React.Suspense>
     );
