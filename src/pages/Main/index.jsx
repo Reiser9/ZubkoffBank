@@ -132,6 +132,51 @@ const Main = () => {
                     </div>
                 </div>
             </section>
+
+            <div className="cards-popup active">
+                <div className="cards-popup__container">
+                    <div className="cards-popup__inner">
+                        <div className="cards-popup__items">
+                            <div className="cards-popup__item">
+                                <div className="cards-popup__card-icon--inner">
+                                    <img src="assets/img/card-black.svg" alt="card" className="cards-popup__card-icon"/>
+                                </div>
+                                <div className="cards-popup__btns">
+                                    <Button className="cards-popup__button">Оформить карту</Button>
+                                    <Link to="/" className="cards-popup__link">Подробнее</Link>
+                                </div>
+                            </div>
+                            <div className="cards-popup__item">
+                                <div className="cards-popup__card-icon--inner">
+                                    <img src="assets/img/card-junior.svg" alt="card" className="cards-popup__card-icon"/>
+                                </div>
+                                <div className="cards-popup__btns">
+                                    <Button className="cards-popup__button">Оформить карту</Button>
+                                    <Link to="/" className="cards-popup__link">Подробнее</Link>
+                                </div>
+                            </div>
+                            <div className="cards-popup__item">
+                                <div className="cards-popup__card-icon--inner">
+                                    <img src="assets/img/card-platinum.svg" alt="card" className="cards-popup__card-icon"/>
+                                </div>
+                                <div className="cards-popup__btns">
+                                    <Button className="cards-popup__button">Оформить карту</Button>
+                                    <Link to="/" className="cards-popup__link">Подробнее</Link>
+                                </div>
+                            </div>
+                            <div className="cards-popup__item">
+                                <div className="cards-popup__card-icon--inner">
+                                    <img src="assets/img/card-drive.svg" alt="card" className="cards-popup__card-icon"/>
+                                </div>
+                                <div className="cards-popup__btns">
+                                    <Button className="cards-popup__button">Оформить карту</Button>
+                                    <Link to="/" className="cards-popup__link">Подробнее</Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

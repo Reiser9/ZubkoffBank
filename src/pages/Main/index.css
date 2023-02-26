@@ -62,8 +62,8 @@
     color: #000;
 }
 
-@media(max-width: 768px){
-    .credit-card__title{
+@media(max-width: 768px) {
+    .credit-card__title {
         text-align: center;
     }
 }
@@ -79,8 +79,8 @@
     font-weight: 600;
 }
 
-@media(max-width: 768px){
-    .credit-card__text{
+@media(max-width: 768px) {
+    .credit-card__text {
         text-align: center;
     }
 }
@@ -108,13 +108,13 @@
 }
 
 @media (max-width:992px) {
-    .main-block  {
+    .main-block {
         padding: 5rem 0;
     }
 }
 
 @media (max-width:768px) {
-    .main-block  {
+    .main-block {
         padding: 4rem 0;
     }
 }
@@ -495,4 +495,167 @@
 
 .faq__items {
     width: 100%;
+}
+
+/* cards-popup */
+.cards-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    overflow: auto;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+    padding: 0 2rem;
+}
+
+.cards-popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cards-popup.active .cards-popup__inner {
+    transform: scale(1);
+}
+
+.cards-popup__container {
+    width: 100%;
+    max-width: 1160px;
+    min-height: calc(100% - 40px);
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+}
+
+.cards-popup__inner {
+    width: 100%;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    position: relative;
+    transform: scale(0);
+}
+
+@media (max-width:1080px) {
+    .cards-popup__inner {
+        padding: 1.6rem;
+    }
+}
+
+.cards-popup__items {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.cards-popup__item {
+    padding: 3.2rem 2rem;
+    width: calc(100% / 2 - 24px / 2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--backgroundC);
+    border-radius: 8px;
+    gap: 32px;
+}
+
+@media (max-width:998px) {
+    .cards-popup__item {
+        gap: 24px;
+    }
+}
+
+@media (max-width:768px) {
+    .cards-popup__item {
+        gap: 20px;
+    }
+}
+
+@media (max-width:768px) {
+    .cards-popup__item {
+        width: 100%;
+    }
+}
+
+@media (max-width:370px) {
+    .cards-popup__item {
+        padding: 2.4rem 1.2rem;
+    }
+}
+
+.cards-popup__card-icon--inner {
+    width: 100%;
+    max-width: 290px;
+}
+
+.cards-popup__card-icon {
+    width: 100%;
+}
+
+.cards-popup__btns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+}
+
+@media (max-width:1080px) {
+    .cards-popup__btns {
+        gap: 24px;
+    }
+}
+
+@media (max-width:992px) {
+    .cards-popup__btns {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media (max-width:768px) {
+    .cards-popup__btns {
+        flex-direction: row;
+        gap: 24px;
+    }
+}
+
+@media (max-width:480px) {
+    .cards-popup__btns {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+.cards-popup__button {}
+
+@media (max-width:480px) {
+    .cards-popup__button {
+        width: 100%;
+    }
+}
+
+.cards-popup__link {
+    font-weight: 500;
+    transition: .3s;
+}
+
+@media (max-width:480px) {
+    .cards-popup__link {
+        font-size: 1.4rem;
+    }
+}
+
+.cards-popup__link:hover {
+    color: var(--mainC);
 }

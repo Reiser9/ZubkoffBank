@@ -58,12 +58,15 @@ const getOneCurrency = async (from = "USD") => {
 }
 
 export const getCurrency = async () => {
-    const currencyUsd = await getOneCurrency();
-    const currencyEur = await getOneCurrency("EUR");
+    let currencyUsd = await getOneCurrency();
+    let currencyEur = await getOneCurrency("EUR");
 
     if(currencyUsd.error || currencyEur.error){
         return {error: true}
     }
+
+    currencyUsd = currencyUsd.currencyResult;
+    currencyEur = currencyEur.currencyResult;
 
     return {currencyUsd, currencyEur};
 }
