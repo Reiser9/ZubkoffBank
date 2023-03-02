@@ -135,7 +135,9 @@ const Main = () => {
                         <h2 className="faq__title title">Часто задаваемые вопросы</h2>
 
                         <div className="faq__items">
-                            <FaqItem title={`Как сделать быстрый перевод в ${process.env.REACT_APP_BANK_NAME}?`} text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis molestiae nam animi corrupti hic, quia exercitationem incidunt eveniet praesentium veniam. Debitis neque laboriosam odit quibusdam nam temporibus dolore excepturi. Officiis!" />
+                            <FaqItem title={`Как сделать быстрый перевод в ${process.env.REACT_APP_BANK_NAME}?`} text="Чтобы сделать быстрый перевод, Вам необходимо авторизоваться и находясь в своем профиле нажать на кнопку «Перевести», а затем выбрать способ перевода («По номеру карты» или «По номеру телефона»)." />
+                            <FaqItem title={`Как стать клиентом ${process.env.REACT_APP_BANK_NAME}?`} text="Чтобы стать нашим клиентом, Вам необходимо перейти на страницу регистрации, и прохождения процесса регистрации, Ваша заявка будет направлена нашей администраницц и после того, как она её подтвердит, Вы сможете пользоваться услугами нашего банка." />
+                            <FaqItem title={`Как оформить карту ${process.env.REACT_APP_BANK_NAME}?`} text="Чтобы оформит карту в нашем банке, Вам необходимо перейти на страницу с выбором карт, выбрать интересующий тариф и наать кнопку «Оформить карту»." />
                         </div>
                     </div>
                 </div>

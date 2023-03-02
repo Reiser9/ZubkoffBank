@@ -14,6 +14,12 @@
     padding: 0 2rem;
 }
 
+@media (max-width:480px) {
+    .cards-popup {
+        padding: 0 1.2rem;
+    }
+}
+
 .cards-popup.active {
     opacity: 1;
     visibility: visible;
@@ -36,15 +42,24 @@
 
 .cards-popup__inner {
     width: 100%;
-    padding: 2rem;
+    padding: 6rem 2rem 2rem;
     background-color: #fff;
     border-radius: 8px;
     position: relative;
     transform: scale(0);
 }
 
+.cards-popup__close-btn {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
+
 @media (max-width:1080px) {
     .cards-popup__inner {
-        padding: 1.6rem;
+        padding: 6rem 1.6rem 1.6rem;
     }
 }
