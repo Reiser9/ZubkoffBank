@@ -12,6 +12,11 @@
 	--weatherLightC: #87919C;
 	--cashBackItemC : #333;
 	--cashBackItemLightC : #EAECEE;
+	--notifyWarning: #FABD48;
+	--notifyOk: #10B97B;
+	--notifError: #EF3B3B;
+	--notifyInfo: var(--mainC);
+
 }
 
 body{

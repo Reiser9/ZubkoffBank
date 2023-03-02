@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
-import { Dollar, Fast, Phone, Invest, Card } from '../../components/Icons';
+import { Dollar, Fast, Phone, Invest, Card, NotifyWarningIcon, NotifyOkIcon, NotifyErrorIcon, NotifyInfoIcon } from '../../components/Icons';
 
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
@@ -28,7 +28,7 @@ const Main = () => {
                         <div className="main-block__content">
                             <h1 className="main-block__title title" onClick={openModal}>Привет 👋</h1>
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
-                            
+
                             <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
                             </Button>
@@ -44,9 +44,9 @@ const Main = () => {
                     <div className="credit-card__inner">
                         <div className="credit-card__content">
                             <h2 className="credit-card__title title">Получите дебетовую карту онлайн!</h2>
-                            
+
                             <p className="credit-card__text">Подберите себе дебетовую карту, которая <span>подойдет вам лучше всего </span></p>
-                            
+
                             <Button isLink to="/cards" className="credit-card__button">
                                 Подобрать карту
                             </Button>
@@ -151,6 +151,37 @@ const Main = () => {
                     <CardShortBlock icon="drive" />
                 </div>
             </Modal>
+
+            <div className="notifies">
+                <div className="notifies__item notify-warning">
+                    <NotifyWarningIcon className="notifies__icon" />
+                    <div className="notifies__content">
+                        <h4 className="notifies__title">Внимание!</h4>
+                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
+                    </div>
+                </div>
+                <div className="notifies__item notify-ok">
+                    <NotifyOkIcon className="notifies__icon" />
+                    <div className="notifies__content">
+                        <h4 className="notifies__title">Внимание!</h4>
+                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
+                    </div>
+                </div>
+                <div className="notifies__item notify-error">
+                    <NotifyErrorIcon className="notifies__icon" />
+                    <div className="notifies__content">
+                        <h4 className="notifies__title">Внимание!</h4>
+                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
+                    </div>
+                </div>
+                <div className="notifies__item notify-info">
+                    <NotifyInfoIcon className="notifies__icon" />
+                    <div className="notifies__content">
+                        <h4 className="notifies__title">Внимание!</h4>
+                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

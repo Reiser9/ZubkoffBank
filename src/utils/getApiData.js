@@ -15,6 +15,7 @@ export const getCity = async () => {
         const timezone = data.region.timezone;
 
         const {temp, humidity, feels_like, wind, main, description, error} = await getWeather(lat, lon);
+        console.log(data);
 
         if(error){
             return {error: true};
