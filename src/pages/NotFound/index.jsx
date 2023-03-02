@@ -6,6 +6,11 @@ import {NotFoundIcon} from '../../components/Icons';
 import Button from '../../components/Button';
 
 const NotFound = () => {
+    React.useEffect(() => {
+        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - 404`;
+        window.scrollTo(0, 0);
+    }, []);
+
     return(
         <div className="notfound">
             <div className="notfound__inner">

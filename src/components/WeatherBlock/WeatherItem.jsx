@@ -2,52 +2,20 @@ import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-import {getCity} from '../../utils/getApiData';
-import {getWeatherIcon} from '../../utils/getWeatherIcon';
-import {getNormalWord} from '../../utils/getNormalWord';
-
 import {Location} from '../../components/Icons';
 
-import PreloaderFill from '../Preloader/PreloaderFill';
+import Preloader from '../Preloader';
 import WeatherBox from './WeatherBox';
 import ErrorBlock from '../ErrorBlock';
 
+import useWeather from '../../hooks/useWeather';
+
 const WeatherItem = () => {
-    const [weather, setWeather] = React.useState({});
-    const [error, setError] = React.useState(false);
-    const [isLoad, setIsLoad] = React.useState(false);
-
-    const getCityData = async () => {
-        setIsLoad(true);
-
-        const {cityName, timezone, error, wind, description, temp, humidity, feels_like, main} = await getCity();
-
-        if(error){
-            setError(true);
-        }
-        else{
-            setWeather({
-                city: cityName,
-                timezone: timezone,
-                temp: temp,
-                humidity: humidity,
-                tempDesc: getNormalWord(description),
-                feelsLike: feels_like,
-                wind: wind,
-                weatherIcon: getWeatherIcon(main)
-            });
-        }
-
-        setIsLoad(false);
-    }
-
-    React.useEffect(() => {
-        getCityData();
-    }, []);
+    const {isLoadWeather, errorWeather, weather} = useWeather();
 
     return(
         <div className="weather__inner">
-            {isLoad ? <PreloaderFill /> : error ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
+            {isLoadWeather ? <Preloader fill /> : errorWeather ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
                 <div className="weather__info">
                     <div className="weather__location">
                         <Location className="weather__location--icon" />
@@ -61,7 +29,7 @@ const WeatherItem = () => {
                 </div>
 
                 <div className="weather__temp">
-                    <img src={`/assets/img/${weather.weatherIcon}.svg`} alt={weather.weatherIcon} className="weather__temp--icon big" />
+                    {weather.weatherIcon && <img src={`/assets/img/${weather.weatherIcon}.svg`} alt={weather.weatherIcon} className="weather__temp--icon big" />}
 
                     <div className="weather__current-temp-inner">
                         <p className="weather__current-temp">{weather.temp}°</p>

@@ -6,6 +6,11 @@ import CardBlock from '../../components/CardBlock';
 import cardData from '../../cardData.json';
 
 const Cards = () => {
+    React.useEffect(() => {
+        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Наши карты`;
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <section className="card">
             <div className="container">

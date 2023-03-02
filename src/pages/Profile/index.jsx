@@ -7,7 +7,9 @@ import Input from '../../components/Input';
 import ErrorBlock from '../../components/ErrorBlock';
 import SidebarItem from '../../components/SidebarItem';
 import CheckItem from '../../components/CheckItem';
+import Preloader from '../../components/Preloader';
 import {Plus} from '../../components/Icons';
+import useCurrency from '../../hooks/useCurrency';
 
 import {copyToClipboard} from '../../utils/copyToClipboard';
 
@@ -15,6 +17,13 @@ const Profile = () => {
     const [cardNumber, setCardNumber] = React.useState("4377 **** **** ****");
     const [cardDate, setCardDate] = React.useState("** / **");
     const [cardCvv, setCardCvv] = React.useState("***");
+
+    const {isLoadCurrency, errorCurrency, currency} = useCurrency();
+
+    React.useEffect(() => {
+        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Профиль`;
+        window.scrollTo(0, 0);
+    }, []);
 
     return(
         <section className="profile">
@@ -39,27 +48,27 @@ const Profile = () => {
 
                         <SidebarItem title="Курсы валют">
                             <div className="profile__sidebar--currency--inner">
-                                <div className="profile__sidebar--currency--item">
-                                    <p className="profile__sidebar--currency--title">
-                                        USD
-                                    </p>
+                                {isLoadCurrency ? <Preloader small /> : errorCurrency ? <ErrorBlock text="Сервис временно недоступен" /> : <>
+                                    <div className="profile__sidebar--currency--item">
+                                        <p className="profile__sidebar--currency--title">
+                                            USD
+                                        </p>
 
-                                    <p className="profile__sidebar--currency--value">
-                                        ₽ 74.76
-                                    </p>
-                                </div>
+                                        <p className="profile__sidebar--currency--value">
+                                            ₽ {currency.usd}
+                                        </p>
+                                    </div>
 
-                                <div className="profile__sidebar--currency--item">
-                                    <p className="profile__sidebar--currency--title">
-                                        EUR
-                                    </p>
+                                    <div className="profile__sidebar--currency--item">
+                                        <p className="profile__sidebar--currency--title">
+                                            EUR
+                                        </p>
 
-                                    <p className="profile__sidebar--currency--value">
-                                        ₽ 80.76
-                                    </p>
-                                </div>
-
-                                {/* <ErrorBlock text="Сервис временно недоступен" /> */}
+                                        <p className="profile__sidebar--currency--value">
+                                            ₽ {currency.eur}
+                                        </p>
+                                    </div>
+                                </>}
                             </div>
                         </SidebarItem>
                     </div>

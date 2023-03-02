@@ -9,10 +9,10 @@ export const getCity = async () => {
 
         const {data} = await city.get();
 
-        const cityName = data.city.name_ru;
-        const lat = data.city.lat;
-        const lon = data.city.lon;
-        const timezone = data.region.timezone;
+        const cityName = data.city.name_ru ? data.city.name_ru : "Тюмень";
+        const lat = data.city.name_ru ? data.city.lat : "57.1522";
+        const lon = data.city.name_ru ? data.city.lon : "65.5272";
+        const timezone = data.city.name_ru ? data.region.timezone : "Asia/Yekaterinburg";
 
         const {temp, humidity, feels_like, wind, main, description, error} = await getWeather(lat, lon);
         console.log(data);

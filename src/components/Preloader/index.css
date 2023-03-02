@@ -1,4 +1,4 @@
-.preloader__inner, .preloader__page--inner{
+.preloader__inner{
     position: absolute;
     top: 0;
     left: 0;
@@ -10,7 +10,7 @@
     justify-content: center;
 }
 
-.preloader__page--inner{
+.preloader__inner.page{
     position: relative;
     flex: 1;
 }
@@ -34,6 +34,12 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
+}
+
+.preloader.small{
+    width: 25px;
+    height: 25px;
+    font-size: 4px;
 }
 
 .preloader:after{
