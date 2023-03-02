@@ -65,7 +65,7 @@
 }
 
 .faq__answer {
-    padding: 1.2rem 0;
+    padding: 0 0 1.2rem 0;
     font-weight: 400;
     font-size: 1.4rem;
     display: none;
@@ -73,4 +73,19 @@
 
 .faq__answer.active {
     display: block;
+}
+
+@media(max-width: 480px){
+    .faq__btn{
+        flex: 0 0 35px;
+        height: 35px;
+    }
+
+    .faq__btn::before{
+        width: 12px;
+    }
+
+    .faq__btn::after{
+        height: 12px;
+    }
 }

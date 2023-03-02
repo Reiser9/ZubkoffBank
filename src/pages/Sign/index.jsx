@@ -20,7 +20,8 @@ const Sign = () => {
     const [agree, setAgree] = React.useState(false);
 
     React.useEffect(() => {
-        document.title = `Zubkoff Bank - ${isLogin ? "Вход" : "Регистрация"}`
+        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - ${isLogin ? "Вход" : "Регистрация"}`;
+        window.scrollTo(0, 0);
     }, [isLogin]);
 
     return(
