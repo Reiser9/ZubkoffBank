@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
-import { Dollar, Fast, Phone, Invest, Card, NotifyWarningIcon, NotifyOkIcon, NotifyErrorIcon, NotifyInfoIcon } from '../../components/Icons';
+import { Dollar, Fast, Phone, Invest, Card } from '../../components/Icons';
 
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
@@ -156,37 +156,6 @@ const Main = () => {
                     <CardShortBlock icon="drive" />
                 </div>
             </Modal>
-
-            <div className="notifies">
-                <div className="notifies__item notify-warning">
-                    <NotifyWarningIcon className="notifies__icon" />
-                    <div className="notifies__content">
-                        <h4 className="notifies__title">Внимание!</h4>
-                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
-                    </div>
-                </div>
-                <div className="notifies__item notify-ok">
-                    <NotifyOkIcon className="notifies__icon" />
-                    <div className="notifies__content">
-                        <h4 className="notifies__title">Внимание!</h4>
-                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
-                    </div>
-                </div>
-                <div className="notifies__item notify-error">
-                    <NotifyErrorIcon className="notifies__icon" />
-                    <div className="notifies__content">
-                        <h4 className="notifies__title">Внимание!</h4>
-                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
-                    </div>
-                </div>
-                <div className="notifies__item notify-info">
-                    <NotifyInfoIcon className="notifies__icon" />
-                    <div className="notifies__content">
-                        <h4 className="notifies__title">Внимание!</h4>
-                        <p className="notifies__text">Условия по дебетовым картам с кэшбэком банки также могут менять. Перед оформлением уточните информацию об условиях обслуживания и размере кэшбэка.</p>
-                    </div>
-                </div>
-            </div>
         </>
     )
 }
