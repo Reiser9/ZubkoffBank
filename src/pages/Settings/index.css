@@ -1,0 +1,19 @@
+.sidebar-tab {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    gap: 8px;
+    transition: .3s;
+}
+.sidebar-tab.active, .sidebar-tab:hover {
+    background-color: var(--creditCardBg);
+}
+.sidebar-tab__icon--inner {
+    flex: 0 0 24px;
+}
+.sidebar-tab__icon {
+    width: 100%;
+    height: auto;
+}
+.sidebar-tab__text {
+}
