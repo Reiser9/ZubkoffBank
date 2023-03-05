@@ -515,9 +515,10 @@
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
     width: 100%;
     max-width: 600px;
+    padding: 8px;
 }
 
 @media (max-width:998px) {
