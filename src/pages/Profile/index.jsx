@@ -74,7 +74,26 @@ const Profile = () => {
                     </div>
 
                     <div className="profile__content">
-                        <div className="profile__content--card--inner">
+                        {/* верификация */}
+                        {/* <div className="unavailable">
+                            <div className="unavailable__icon--inner">
+                                <img src="/assets/img/not-verified.svg" alt="icon" className="unavailable__icon"/>
+                            </div>
+                            <p className="unavailable__text">Для проведения операций требуется верификация</p>
+                            <Button className="unavailable__button">Перейти</Button>
+                        </div> */}
+
+                        {/* откройте карту */}
+                        {/* <div className="unavailable">
+                            <div className="unavailable__icon--inner">
+                                <img src="/assets/img/open-card.svg" alt="icon" className="unavailable__icon"/>
+                            </div>
+                            <p className="unavailable__text">Для проведения операций нужно открыть счет</p>
+                            <Button className="unavailable__button">Открыть</Button>
+                        </div> */}
+                        
+                        {/* функции по карте */}
+                        {/* <div className="profile__content--card--inner">
                             <img src="/assets/img/card-black-empty.svg" alt="card" className="profile__content--card--img" />
 
                             <p className="profile__content--card--number" onClick={() => copyToClipboard("4377 7462 7348 2748")}>
@@ -136,7 +155,7 @@ const Profile = () => {
 
                                 <Input value={cardCvv} setValue={setCardCvv} readOnly="readonly" />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
