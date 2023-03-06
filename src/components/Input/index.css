@@ -35,6 +35,7 @@
 @media(max-width: 480px){
     .default__input{
         padding: 1rem 2rem;
+        font-size: 1.4rem;
     }
 
     .password__input{

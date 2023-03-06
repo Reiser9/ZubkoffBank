@@ -17,6 +17,7 @@ const Sign = React.lazy(() => import('./pages/Sign'));
 const Recovery = React.lazy(() => import('./pages/Recovery'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Settings = React.lazy(() => import('./pages/Settings'));
+const Admin = React.lazy(() => import('./pages/Admin'));
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                     <Route path="cards" element={withSuspense(Cards)} />
                     <Route path="profile" element={withSuspense(Profile)} />
                     <Route path="settings" element={withSuspense(Settings)} />
+                    <Route path="admin" element={withSuspense(Admin)} />
                     <Route path="*" element={<Navigate to={"/404"} />} />
                 </Route>
 

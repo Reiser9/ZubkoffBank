@@ -1,39 +1,30 @@
 import React from 'react';
 
 import '../Profile/index.css';
+import '../Settings/index.css';
 import './index.css';
 
 import SidebarItem from '../../components/SidebarItem';
 import SidebarTab from '../../components/SidebarTab';
 
-import { NotifyOkIcon, Lock, SettingsIcon } from '../../components/Icons';
+import { User } from '../../components/Icons';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
 
 const settingsTabs = [
     {
-        text: "Данные",
-        icon: <SettingsIcon />,
-        name: "data"
+        text: "Пользователи",
+        icon: <User />,
+        name: "users"
     },
-    {
-        text: "Верификация",
-        icon: <NotifyOkIcon />,
-        name: "verify"
-    },
-    {
-        text: "Безопасность",
-        icon: <Lock />,
-        name: "save"
-    }
 ]
 
-const Settings = () => {
+const Admin = () => {
     const [tab, setTab] = React.useState("data");
 
     React.useEffect(() => {
-        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Настройки`;
+        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Админка`;
         window.scrollTo(0, 0);
     }, []);
 
@@ -140,4 +131,4 @@ const Settings = () => {
     )
 }
 
-export default Settings;
+export default Admin;
