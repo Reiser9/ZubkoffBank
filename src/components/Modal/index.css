@@ -10,7 +10,7 @@
     z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: .3s;
+    transition: .2s linear;
     padding: 0 2rem;
 }
 
@@ -37,7 +37,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: .3s;
+    transition: .2s linear;
 }
 
 .cards-popup__inner {

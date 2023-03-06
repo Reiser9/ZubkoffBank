@@ -156,6 +156,19 @@ const Main = () => {
                     <CardShortBlock icon="drive" />
                 </div>
             </Modal>
+
+            <div className="confirm-popup active">
+                <div className="confirm-popup__container">
+                    <div className="confirm-popup__inner">
+                        <h4 className="confirm-popup__title">Подтвердите действие</h4>
+                        <p className="confirm-popup__text">Вы действительно хотите заблокировать карту?</p>
+                        <div className="confirm-popup__btns">
+                            <Button className="confirm-popup__btn">Отмена</Button>
+                            <Button className="red-btn confirm-popup__btn">Да</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
