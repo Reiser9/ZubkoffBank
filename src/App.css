@@ -15,6 +15,7 @@
 	--notifyWarning: #FABD48;
 	--notifyOk: #10B97B;
 	--notifError: #EF3B3B;
+	--errorHover: #d42b2b;
 	--notifyInfo: var(--mainC);
 
 }
@@ -114,6 +115,10 @@ input::-webkit-inner-spin-button{
 	font-weight: 700;
 	font-size: 2.8rem;
 	color: #000;
+}
+
+::-webkit-scrollbar{
+	width: 0px;
 }
 
 @media (max-width:992px) {

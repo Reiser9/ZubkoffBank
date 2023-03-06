@@ -1,11 +1,3 @@
-.sidebar__tabs {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-}
-
 .setting {
     display: flex;
     flex-direction: column;

@@ -497,15 +497,6 @@
     width: 100%;
 }
 
-.cards-popup__items {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 24px;
-}
-
 /* confirm-popup */
 .confirm-popup {
     position: fixed;
@@ -634,4 +625,8 @@
 
 .default__button.red-btn {
     background-color: var(--notifError);
+}
+
+.default__button.red-btn:hover {
+    background-color: var(--errorHover);
 }
