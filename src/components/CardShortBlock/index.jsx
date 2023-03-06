@@ -15,7 +15,7 @@ const CardShortBlock = ({icon = "black"}) => {
             <div className="cards-popup__btns">
                 <Button className="cards-popup__button">Оформить карту</Button>
 
-                <Link to="/" className="cards-popup__link">Подробнее</Link>
+                <Link to="/cards" className="cards-popup__link">Подробнее</Link>
             </div>
         </div>
     )

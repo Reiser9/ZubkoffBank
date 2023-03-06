@@ -1,14 +1,22 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 import './index.css';
 
-const SidebarTab = ({text, icon, name, tab, setTab}) => {
+const SidebarTab = ({text, icon, name, tab, setTab, isLink = false, ...props}) => {
     return(
-        <div className={`sidebar-tab${tab === name ? " active" : ""}`} onClick={() => setTab(name)}>
-            {icon}
+        <>
+            {isLink ? <Link className="sidebar-tab" {...props}>
+                {icon}
 
-            <p className="sidebar-tab__text">{text}</p>
-        </div>
+                <p className="sidebar-tab__text">{text}</p>
+            </Link>
+            : <div className={`sidebar-tab${tab === name ? " active" : ""}`} onClick={() => setTab(name)} {...props}>
+                {icon}
+    
+                <p className="sidebar-tab__text">{text}</p>
+            </div>}
+        </>
     )
 }
 

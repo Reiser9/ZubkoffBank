@@ -116,6 +116,10 @@ input::-webkit-inner-spin-button{
 	color: #000;
 }
 
+::-webkit-scrollbar{
+	width: 0px;
+}
+
 @media (max-width:992px) {
 	.title {
 		font-size: 2.4rem;

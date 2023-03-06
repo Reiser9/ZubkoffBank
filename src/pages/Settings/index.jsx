@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import '../Profile/index.css';
 import './index.css';
@@ -9,18 +10,17 @@ import SidebarTab from '../../components/SidebarTab';
 import { NotifyOkIcon, Lock, SettingsIcon } from '../../components/Icons';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Link } from 'react-router-dom';
 
 const settingsTabs = [
-    {
-        text: "Данные",
-        icon: <SettingsIcon />,
-        name: "data"
-    },
     {
         text: "Верификация",
         icon: <NotifyOkIcon />,
         name: "verify"
+    },
+    {
+        text: "Данные",
+        icon: <SettingsIcon />,
+        name: "data"
     },
     {
         text: "Безопасность",
@@ -30,7 +30,7 @@ const settingsTabs = [
 ]
 
 const Settings = () => {
-    const [tab, setTab] = React.useState("data");
+    const [tab, setTab] = React.useState("verify");
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Настройки`;

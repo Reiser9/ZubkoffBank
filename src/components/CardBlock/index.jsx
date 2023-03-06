@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import './index.css';
 
@@ -57,10 +56,6 @@ const CardBlock = ({data}) => {
                 <Button isLink to="/" className="card__item--button--event">
                     Оформить карту
                 </Button>
-
-                <Link to="/" className="card__item--button">
-                    Подробнее
-                </Link>
             </div>
         </div>
     )

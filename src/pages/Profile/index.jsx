@@ -8,15 +8,21 @@ import ErrorBlock from '../../components/ErrorBlock';
 import SidebarItem from '../../components/SidebarItem';
 import CheckItem from '../../components/CheckItem';
 import Preloader from '../../components/Preloader';
-import {Plus} from '../../components/Icons';
+import {Plus, SettingsIcon} from '../../components/Icons';
 import useCurrency from '../../hooks/useCurrency';
+import Modal from '../../components/Modal';
+import CardShortBlock from '../../components/CardShortBlock';
+import SidebarTab from '../../components/SidebarTab';
 
 import {copyToClipboard} from '../../utils/copyToClipboard';
+import NotContentBlock from '../../components/NotContentBlock';
 
 const Profile = () => {
     const [cardNumber, setCardNumber] = React.useState("4377 **** **** ****");
     const [cardDate, setCardDate] = React.useState("** / **");
     const [cardCvv, setCardCvv] = React.useState("***");
+
+    const [modal, setModal] = React.useState(false);
 
     const {isLoadCurrency, errorCurrency, currency} = useCurrency();
 
@@ -35,7 +41,7 @@ const Profile = () => {
                             <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
                             <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
 
-                            <div className="profile__sidebar--check profile__sidebar--check--add">
+                            <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setModal(true)}>
                                 <div className="profile__sidebar--check--icon--inner">
                                     <Plus />
                                 </div>
@@ -71,29 +77,24 @@ const Profile = () => {
                                 </>}
                             </div>
                         </SidebarItem>
+
+                        <SidebarItem title="Настройки">
+                            <div className="sidebar__tabs">
+                                <SidebarTab text="Настройки" icon={<SettingsIcon />} isLink to="/settings" />
+                            </div>
+                        </SidebarItem>
                     </div>
 
                     <div className="profile__content">
-                        {/* верификация */}
-                        {/* <div className="unavailable">
-                            <div className="unavailable__icon--inner">
-                                <img src="/assets/img/not-verified.svg" alt="icon" className="unavailable__icon"/>
-                            </div>
-                            <p className="unavailable__text">Для проведения операций требуется верификация</p>
-                            <Button className="unavailable__button">Перейти</Button>
-                        </div> */}
+                        {/* <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
+                            <Button className="unavailable__button" isLink to="/settings">Пройти</Button>
+                        </NotContentBlock>
 
-                        {/* откройте карту */}
-                        {/* <div className="unavailable">
-                            <div className="unavailable__icon--inner">
-                                <img src="/assets/img/open-card.svg" alt="icon" className="unavailable__icon"/>
-                            </div>
-                            <p className="unavailable__text">Для проведения операций нужно открыть счет</p>
-                            <Button className="unavailable__button">Открыть</Button>
-                        </div> */}
+                        <NotContentBlock text="Для проведения операций нужно открыть счет" icon="open-card">
+                            <Button className="unavailable__button" onClick={() => setModal(true)}>Открыть</Button>
+                        </NotContentBlock> */}
                         
-                        {/* функции по карте */}
-                        {/* <div className="profile__content--card--inner">
+                        <div className="profile__content--card--inner">
                             <img src="/assets/img/card-black-empty.svg" alt="card" className="profile__content--card--img" />
 
                             <p className="profile__content--card--number" onClick={() => copyToClipboard("4377 7462 7348 2748")}>
@@ -155,10 +156,19 @@ const Profile = () => {
 
                                 <Input value={cardCvv} setValue={setCardCvv} readOnly="readonly" />
                             </div>
-                        </div> */}
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <Modal active={modal} setActive={setModal}>
+                <div className="cards-popup__items">
+                    <CardShortBlock icon="black" />
+                    <CardShortBlock icon="junior" />
+                    <CardShortBlock icon="platinum" />
+                    <CardShortBlock icon="drive" />
+                </div>
+            </Modal>
         </section>
     )
 }
