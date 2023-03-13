@@ -45,7 +45,6 @@ public class AuthController {
 		} catch (BadCredentialsException e) {
 			return ResponseEntity.badRequest().body("Incorrect credentials!");
 		}
-		
 		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) auth.getPrincipal();
 		final String jwt = jwtUtils.generateToken(userDetailsImpl);
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetailsImpl.getId());
@@ -66,15 +65,7 @@ public class AuthController {
 		User regUser = userService.findUserByPhoneNum(user.getPhoneNum());
 		if(regUser != null)
 			return ResponseEntity.badRequest().body("User already exists!");
- 		while(true) {
-			String tmpAccountNum = String.valueOf((int)(1000000 + (Math.random() * (9999999 - 1000000))));
-			if (userService.findUserByAccountNum(tmpAccountNum) == null) {
-				user.setAccountNum(tmpAccountNum);
-				break;
-			}
-		}
-		user.setVerify("not verified");
-		userService.saveUser(user);
+		userService.saveUser(userService.createUser(user));
 		return createAuthenticationTokenAfterRegistration(user);
 	}
 	
@@ -87,16 +78,13 @@ public class AuthController {
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshtoken(@RequestBody Map<String, String> refreshToken) {
 		RefreshToken token = refreshTokenService.findByRefreshToken(refreshToken.get("token"));
-		
 		if(token != null && refreshTokenService.verifyExpiration(token) != null) {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
 			String jwt = jwtUtils.createToken(claims, user.getAccountNum());
-			
 			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("token")));
 		}
-		
 		return ResponseEntity.badRequest().body("Refresh token expired!");
 	}
 	

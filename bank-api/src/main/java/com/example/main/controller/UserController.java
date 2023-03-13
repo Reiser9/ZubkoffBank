@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 	@Value("${bank.id}")
 	private String bankId;
 	@Autowired
@@ -51,7 +50,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/1")
+	@GetMapping("/")
 	public ResponseEntity<?> GetFullInfoUser(Principal user) {
 //		try {
 		User userInfo = userService.findUserByPhoneNum(user.getName());
@@ -80,48 +79,26 @@ public class UserController {
 		}
 	}
 
-	@PostMapping("/unblock")
-	public ResponseEntity<?> unblock(Principal user, @RequestBody Map<String, String> cardNum) {
-		Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
-		card.setLock(false);
-		cardService.save(card);
-		return ResponseEntity.ok(new DefaultResponse("Successful", ""));
-	}
+//	@PostMapping("/unblock")
+//	public ResponseEntity<?> unblock(Principal user, @RequestBody Map<String, String> cardNum) {
+//		cardService.findCardByCardNum(cardNum.get("cardNum")).setLock(false);
+//
+//		card.setLock(false);
+//		cardService.save(card);
+//		return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+//	}
 
 	@PostMapping("/create_card")
 	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> data_card) {
 		if (Integer.parseInt(data_card.get("type")) > typeService.getLength())
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "invalid card type"));
-		User tmpUser = userService.findUserByPhoneNum(user.getName());
-		List<Card> cards = cardService.findCardByUserId(tmpUser.getId());
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
-		cal.add(Calendar.YEAR, 4);
-		Timestamp date = new Timestamp(cal.getTime().getTime());
-		String cardNum = "";
-		while(true) {
-			cardNum = bankId
-					+ String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))))
-					+ String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))))
-					+ String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))));
-			if (cardService.findCardByCardNum(cardNum) == null)
-				break;
-		}
-		Card card = new Card();
-		card.setCardNum(cardNum);
-		card.setCvc(String.valueOf((int)(100 + (Math.random() * (999 - 100)))));
-		card.setExpDate(date);
-		card.setMoney(0);
-		card.setFirstName(data_card.get("firstName"));
-		card.setSecondName(data_card.get("secondName"));
-		card.setUserId(tmpUser.getId());
-		card.setLock(false);
-		card.setTypeId(Integer.parseInt(data_card.get("type")));
-		cards.add(card);
-		tmpUser.setCards(cards);
-		cardService.save(cards.get(cards.size()-1));
-		userService.saveUser(tmpUser);
-		return ResponseEntity.ok(new CardResponse(cards.get(cards.size()-1)));
+			return ResponseEntity.badRequest().body(
+					new DefaultResponse("Not Successful", "invalid card type"));
+		User userInfo = userService.findUserByPhoneNum(user.getName());
+		Card newCard = cardService.createCard(data_card, bankId);
+		userInfo.getCards().add(newCard);
+		userInfo.setCards(userInfo.getCards());
+		userService.saveUser(userInfo);
+		return ResponseEntity.ok(new CardResponse(newCard));
 	}
 
 	@PostMapping("/change_pass")
@@ -133,7 +110,8 @@ public class UserController {
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
 		else {
-			return ResponseEntity.badRequest().body("Incorrect credentials!");
+			return ResponseEntity.badRequest().body(
+					new DefaultResponse("Not Successful", "Incorrect credentials!"));
 		}
 	}
 }

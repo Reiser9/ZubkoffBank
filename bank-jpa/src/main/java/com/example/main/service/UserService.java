@@ -33,6 +33,18 @@ public class UserService {
 		return userRepository.findByAccountNum(accountNum);
 	}
 
+	public User createUser(User user) {
+		while(true) {
+			String tmpAccountNum = String.valueOf((int)(1000000 + (Math.random() * (9999999 - 1000000))));
+			if (findUserByAccountNum(tmpAccountNum) == null) {
+				user.setAccountNum(tmpAccountNum);
+				break;
+			}
+		}
+		user.setVerify("not verified");
+		return user;
+	}
+
 	public User saveUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Role userRole = roleRepository.findByRole("user");
