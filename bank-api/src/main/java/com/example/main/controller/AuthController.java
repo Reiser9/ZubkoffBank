@@ -61,12 +61,13 @@ public class AuthController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@RequestBody User user) throws Exception {
-		User regUser = userService.findUserByPhoneNum(user.getPhoneNum());
+	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) throws Exception {
+		User regUser = userService.findUserByPhoneNum(user.get("phoneNum"));
 		if(regUser != null)
 			return ResponseEntity.badRequest().body("User already exists!");
-		userService.saveUser(userService.createUser(user));
-		return createAuthenticationTokenAfterRegistration(user);
+		User newUser = userService.createUser(user);
+		userService.saveUser(newUser);
+		return createAuthenticationTokenAfterRegistration(newUser);
 	}
 	
 	@PostMapping("/logout")

@@ -1,9 +1,11 @@
 package com.example.main.controller;
 
 import com.example.main.model.Card;
+import com.example.main.model.DataUser;
 import com.example.main.model.User;
 import com.example.main.payload.CardResponse;
 import com.example.main.payload.DefaultResponse;
+import com.example.main.payload.FullInfoUserResponse;
 import com.example.main.payload.UserResponse;
 import com.example.main.security.jwt.JwtUtils;
 import com.example.main.service.CardService;
@@ -51,23 +53,35 @@ public class UserController {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<?> GetFullInfoUser(Principal user) {
-//		try {
+	public ResponseEntity<?> getUserWithName(Principal user) {
 		User userInfo = userService.findUserByPhoneNum(user.getName());
-//		logger.error(userInfo.toString());
 		return ResponseEntity.ok(new UserResponse(
 				userInfo.getId(), userInfo.getPhoneNum(),
 				userInfo.getVerify(),
 				userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
 				userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1).getFirstName()));
-//		}
-//		catch (Exception e) {
-//			return ResponseEntity.badRequest().body(e.getStackTrace());
-//		}
+	}
+
+	@GetMapping("/info")
+	public ResponseEntity<?> getFullInfoUser(Principal user) {
+		User userInfo = userService.findUserByPhoneNum(user.getName());
+		DataUser dataUser = userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1);
+		return ResponseEntity.ok(new FullInfoUserResponse(
+				userInfo.getId(), userInfo.getPhoneNum(),
+				userInfo.getVerify(),
+				userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
+				dataUser.getFirstName(),
+				dataUser.getSecondName(),
+				dataUser.getMiddleName(),
+				dataUser.getPassportNum(),
+				dataUser.getPassportSer(),
+				dataUser.getAddress(),
+				dataUser.getBirthdate(),
+				dataUser.getSex()));
 	}
 
 	@PostMapping("/block")
-	public ResponseEntity<?> block(Principal user, @RequestBody Map<String, String> cardNum) {
+	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardNum) {
 		try {
 			Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
 			card.setLock(true);
@@ -78,15 +92,6 @@ public class UserController {
 			return ResponseEntity.badRequest().body(e.getStackTrace());
 		}
 	}
-
-//	@PostMapping("/unblock")
-//	public ResponseEntity<?> unblock(Principal user, @RequestBody Map<String, String> cardNum) {
-//		cardService.findCardByCardNum(cardNum.get("cardNum")).setLock(false);
-//
-//		card.setLock(false);
-//		cardService.save(card);
-//		return ResponseEntity.ok(new DefaultResponse("Successful", ""));
-//	}
 
 	@PostMapping("/create_card")
 	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> data_card) {
