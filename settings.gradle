@@ -1,0 +1,3 @@
+rootProject.name = 'BANK'
+include 'bank-application'
+
