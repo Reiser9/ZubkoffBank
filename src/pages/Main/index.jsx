@@ -10,8 +10,11 @@ import WeatherBlock from '../../components/WeatherBlock';
 import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
+import Confirm from '../../components/Confirm';
 
 const Main = () => {
+    const [deleteAccount, setDeleteAccount] = React.useState(false);
+
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank`;
         window.scrollTo(0, 0);
@@ -23,7 +26,7 @@ const Main = () => {
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title">Привет 👋</h1>
+                            <h1 className="main-block__title title" onClick={() => setDeleteAccount(true)}>Привет 👋</h1>
                             
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
@@ -141,18 +144,7 @@ const Main = () => {
                 </div>
             </section>
 
-            <div className="confirm-popup active">
-                <div className="confirm-popup__container">
-                    <div className="confirm-popup__inner">
-                        <h4 className="confirm-popup__title">Подтвердите действие</h4>
-                        <p className="confirm-popup__text">Вы действительно хотите заблокировать карту?</p>
-                        <div className="confirm-popup__btns">
-                            <Button className="confirm-popup__btn">Отмена</Button>
-                            <Button className="red-btn confirm-popup__btn">Да</Button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Confirm active={deleteAccount} setActive={setDeleteAccount} text="Вы реально хотите удалить что-то??" action={() => alert("Удалил)")} />
         </>
     )
 }

@@ -15,7 +15,6 @@ export const getCity = async () => {
         const timezone = data.city.name_ru ? data.region.timezone : "Asia/Yekaterinburg";
 
         const {temp, humidity, feels_like, wind, main, description, error} = await getWeather(lat, lon);
-        console.log(data);
 
         if(error){
             return {error: true};

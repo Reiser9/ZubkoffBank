@@ -1,0 +1,123 @@
+/* confirm-popup */
+.confirm-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65);
+    overflow: auto;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s linear;
+    padding: 0 2rem;
+}
+
+.confirm-popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirm-popup.active .confirm-popup__inner {
+    transform: scale(1);
+}
+
+.confirm-popup__container {
+    width: 100%;
+    max-width: 600px;
+    min-height: calc(100% - 40px);
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .2s linear;
+}
+
+.confirm-popup__inner {
+    width: 100%;
+    min-height: 320px;
+    padding: 3.2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    position: relative;
+    transform: scale(0);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.confirm-popup__title {
+    font-weight: 600;
+    font-size: 2.4rem;
+    text-align: center;
+}
+
+.confirm-popup__text {
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+}
+
+.confirm-popup__btns {
+    width: 100%;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+
+.confirm-popup__btn {
+    width: calc(100% / 2 - 24px / 2);
+}
+
+.default__button.red-btn {
+    background-color: var(--notifError);
+}
+
+.default__button.red-btn:hover {
+    background-color: var(--errorHover);
+}
+
+@media (max-width:768px) {
+    .confirm-popup__btn {
+        width: calc(100% / 2 - 16px / 2);
+    }
+
+    .confirm-popup__btns {
+        gap: 16px;
+    }
+
+    .confirm-popup__title {
+        font-size: 2rem;
+    }
+
+    .confirm-popup__inner {
+        min-height: 240px;
+        padding: 2.4rem;
+        gap: 16px;
+    }
+}
+
+@media (max-width:480px) {
+    .confirm-popup__btn {
+        width: 80%;
+    }
+
+    .confirm-popup__btns {
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+
+    .confirm-popup__inner {
+        padding: 2rem 1.2rem 1.2rem;
+    }
+}
+
+@media (max-width:370px) {
+    .confirm-popup__btn {
+        width: 100%;
+    }
+}
