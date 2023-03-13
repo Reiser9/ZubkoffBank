@@ -1,0 +1,11 @@
+
+jar.enabled = true
+dependencies {
+    implementation project(':bank-domain')
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-devtools"
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}

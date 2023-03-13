@@ -1,0 +1,7 @@
+jar.enabled = true
+dependencies {
+    implementation project(':bank-api')
+    implementation project(':bank-domain')
+    implementation project(':bank-security')
+    implementation project(':bank-jpa')
+}

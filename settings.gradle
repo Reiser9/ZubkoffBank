@@ -1,3 +1,8 @@
 rootProject.name = 'BANK'
 include 'bank-application'
+include 'bank-api'
+include 'bank-application'
+include 'bank-domain'
+include 'bank-jpa'
+include 'bank-security'
 
