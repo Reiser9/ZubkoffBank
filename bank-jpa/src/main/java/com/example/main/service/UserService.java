@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.main.model.Role;
@@ -57,6 +60,11 @@ public class UserService {
 
 		user.setVerify("not verified");
 		return user;
+	}
+
+
+	public Page<User> findAll(int offset, int limit) {
+		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
 	}
 
 	public User saveUser(User user) {
