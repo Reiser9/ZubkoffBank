@@ -1,0 +1,23 @@
+.recovery__text {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 2.4rem 0;
+}
+
+.recovery__text span {
+    cursor: pointer;
+    color: var(--mainC);
+}
+
+@media(max-width: 768px){
+    .recovery__title {
+        align-self: center;
+    }
+}
+@media(max-width: 480px){
+    .recovery__btn {
+        width: 100%;
+    }
+}

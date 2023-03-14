@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import '../Sign/index.css';
+import './index.css';
 
 import { LoginIcon, RegisterIcon, Save, RecoveryIcon } from '../../components/Icons';
 import Button from '../../components/Button';
@@ -10,6 +11,7 @@ import Input from '../../components/Input';
 const Recovery = () => {
     const [phoneEnter, setPhoneEnter] = React.useState("");
     const [passwordEnter, setPasswordEnter] = React.useState("");
+    const [step, setStep] = React.useState(1);
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Забыли пароль`;
@@ -21,7 +23,25 @@ const Recovery = () => {
             <div className="container">
                 <div className="sign__inner">
                     <div className="sign__content">
-                        <div className="sign__wrapper">
+                        {step === 1 && <div className="sign__wrapper">
+                            <p className="sign__title recovery__title">
+                                Восстановление пароля
+                            </p>
+
+                            <div className="sign__form">
+                                <Input placeholder="Введите номер телефона" value={phoneEnter} setValue={setPhoneEnter} />
+                            </div>
+
+                            <p className="recovery__text">
+                                Не пришлом СМС?<span>Отправить код повторно</span>
+                            </p>
+
+                            <Button className="sign__btn">
+                                Отправить
+                            </Button>
+                        </div>}
+
+                        {step === 2 && <div className="sign__wrapper">
                             <p className="sign__title recovery__title">
                                 Восстановление пароля
                             </p>
@@ -41,7 +61,7 @@ const Recovery = () => {
                             <Button className="sign__btn">
                                 Отправить
                             </Button>
-                        </div>
+                        </div>}
                     </div>
 
                     <div className="sign__info">

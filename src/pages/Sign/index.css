@@ -223,19 +223,6 @@
     stroke: var(--green);
 }
 
-.recovery__text {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin: 2.4rem 0;
-}
-
-.recovery__text span {
-    cursor: pointer;
-    color: var(--mainC);
-}
-
 @media(max-width: 998px){
     .sign__button--inner{
         flex-direction: column-reverse;
@@ -259,10 +246,6 @@
 
     .sign__content{
         width: 90%;
-    }
-
-    .recovery__title {
-        align-self: center;
     }
 }
 @media(max-width: 480px){
@@ -288,9 +271,5 @@
 
     .sign__link{
         font-size: 1.4rem;
-    }
-
-    .recovery__btn {
-        width: 100%;
     }
 }

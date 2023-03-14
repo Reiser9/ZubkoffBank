@@ -358,18 +358,12 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 24px;
-}
-
-@media (max-width:768px) {
-    .banner__icons {
-        gap: 20px;
-    }
+    gap: 12px;
 }
 
 .banner__icon--inner {
-    width: 120px;
-    height: 120px;
+    width: 105px;
+    height: 105px;
     border-radius: 16px;
     display: flex;
     justify-content: center;
