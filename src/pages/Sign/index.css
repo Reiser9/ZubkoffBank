@@ -287,7 +287,7 @@
 .sign__warning {
     font-weight: 400;
     font-size: 1.5rem;
-    color: var(--notifError);
+    color: var(--notifyError);
 }
 
 .sign__warning_1 {

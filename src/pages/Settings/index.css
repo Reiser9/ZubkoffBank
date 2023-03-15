@@ -130,6 +130,6 @@
 
 .setting__delete-account-btn {
     font-weight: 500;
-    color: var(--notifError);
+    color: var(--notifyError);
     margin: 0 auto;
 }
