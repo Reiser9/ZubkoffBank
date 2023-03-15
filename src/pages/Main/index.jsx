@@ -11,11 +11,25 @@ import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
 
+import useNotify from '../../hooks/useNotify';
+
 const Main = () => {
+    const {alertNotify} = useNotify();
+
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank`;
         window.scrollTo(0, 0);
     }, []);
+
+    const login = () => {
+        window.localStorage.setItem("accessToken", "egor228");
+        alertNotify("Успешно", "Вы авторизовались!", "success", 2000);
+    }
+
+    const logout = () => {
+        window.localStorage.removeItem("accessToken");
+        alertNotify("Успешно", "Вы вышли :(", "success", 2000);
+    }
 
     return (
         <>
@@ -23,9 +37,9 @@ const Main = () => {
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title">Привет 👋</h1>
+                            <h1 className="main-block__title title" onClick={login}>Привет 👋</h1>
                                 
-                            <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
+                            <p className="main-block__text" onClick={logout}>Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
                             <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
@@ -61,15 +75,15 @@ const Main = () => {
                         <h2 className="services__title title">Сервисы и услуги</h2>
 
                         <div className="services__items">
-                            <ServiceItem icon={<Invest className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
+                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
 
-                            <ServiceItem icon={<Card className="item-services__icon" />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
+                            <ServiceItem icon={<Card />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
 
-                            <ServiceItem icon={<Dollar className="item-services__icon" />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
+                            <ServiceItem icon={<Dollar />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
 
-                            <ServiceItem icon={<Fast className="item-services__icon" />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
+                            <ServiceItem icon={<Fast />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
 
-                            <ServiceItem icon={<Phone className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
+                            <ServiceItem icon={<Phone />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
                         </div>
                     </div>
                 </div>

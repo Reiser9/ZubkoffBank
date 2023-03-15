@@ -17,7 +17,7 @@ const useWeather = () => {
     const getCityData = async () => {
         setIsLoad(true);
 
-        if(Object.keys(weatherState.weather).length != 0){
+        if(Object.keys(weatherState.weather).length !== 0){
             setWeather(weatherState.weather);
         }
         else{

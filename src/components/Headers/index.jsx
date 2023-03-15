@@ -5,6 +5,16 @@ import {Link} from 'react-router-dom';
 import './index.css';
 
 const Header = () => {
+    const [name, setName] = React.useState("");
+
+    React.useEffect(() => {
+        const accessToken = window.localStorage.getItem("accessToken");
+
+        if(accessToken){
+            setName(accessToken);
+        }
+    }, []);
+
     return(
         <header className="header">
             <div className="container">
@@ -16,7 +26,7 @@ const Header = () => {
                     <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />
 
-                        Вход
+                        {name ? name : "Вход"}
                     </Link>
                 </div>
             </div>
