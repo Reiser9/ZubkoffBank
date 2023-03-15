@@ -19,6 +19,7 @@ const Recovery = React.lazy(() => import('./pages/Recovery'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Settings = React.lazy(() => import('./pages/Settings'));
 const Admin = React.lazy(() => import('./pages/Admin'));
+const Api = React.lazy(() => import('./pages/Api'));
 
 const App = () => {
     const notifyState = useSelector(state => state.notify);
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path="profile" element={withSuspense(Profile)} />
                     <Route path="settings" element={withSuspense(Settings)} />
                     <Route path="admin" element={withSuspense(Admin)} />
+                    <Route path="api" element={withSuspense(Api)} />
                     <Route path="*" element={<Navigate to={"/404"} />} />
                 </Route>
 
