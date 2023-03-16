@@ -7,23 +7,15 @@ import com.example.main.payload.CardResponse;
 import com.example.main.payload.DefaultResponse;
 import com.example.main.payload.FullInfoUserResponse;
 import com.example.main.payload.UserResponse;
-import com.example.main.security.jwt.JwtUtils;
 import com.example.main.service.CardService;
 import com.example.main.service.TypeService;
 import com.example.main.service.UserService;
-import com.sun.istack.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 

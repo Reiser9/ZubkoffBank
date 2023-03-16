@@ -15,7 +15,7 @@ public class CardResponse {
     private String cardNum;
     private String cvc;
     private Date expDate;
-    private double money;
+    private double balance;
     private String firstName;
     private String secondName;
     private int type;
@@ -26,7 +26,7 @@ public class CardResponse {
         this.cardNum = card.getCardNum();
         this.cvc = card.getCvc();
         this.expDate = card.getExpDate();
-        this.money = card.getMoney();
+        this.balance = card.getMoney();
         this.firstName = card.getFirstName();
         this.secondName = card.getSecondName();
         this.type = card.getTypeId();

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class FullInfoUserResponse {
-    private Long userid;
+    private Long id;
     private String phoneNum;
     private String verified;
     private List<String> roles;

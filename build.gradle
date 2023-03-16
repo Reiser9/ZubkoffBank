@@ -1,12 +1,15 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.springframework.boot' version '2.5.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-group 'com.example'
+group = 'com.example.main'
 version '1.0'
-
+application {
+    mainClass = 'BankSpringBootApplication.main'
+}
 repositories {
     mavenCentral()
 }

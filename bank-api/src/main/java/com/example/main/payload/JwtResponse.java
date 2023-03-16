@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class JwtResponse {
-	private String type;
-	private String access_token;
+	private String typeToken;
+	private String accessToken;
 	private String refreshToken;
 }
