@@ -67,7 +67,8 @@ public class AuthController {
 			return ResponseEntity.badRequest().body("User already exists!");
 		User newUser = userService.createUser(user);
 		userService.saveUser(newUser);
-		return createAuthenticationTokenAfterRegistration(newUser);
+		return ResponseEntity.ok("1");
+//		return createAuthenticationTokenAfterRegistration(newUser);
 	}
 
 //	@PostMapping("/code")

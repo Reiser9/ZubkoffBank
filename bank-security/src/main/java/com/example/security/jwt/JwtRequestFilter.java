@@ -37,14 +37,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				final String phoneNum = jwtUtils.extractPhoneNum(jwt);
 				final List<String> roles = jwtUtils.extractRoles(jwt);
 				final UserDetails userDetails = new User(phoneNum, "", roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-				logger.error(phoneNum);
-				logger.error(roles.get(0));
-				logger.error(userDetails.getUsername());
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-//				logger.error(String.valueOf(usernamePasswordAuthenticationToken.getAuthorities()));
-//				logger.error(String.valueOf(SecurityContextHolder.getContext()));
 			}
 		} catch (Exception e) {
 			logger.error(String.valueOf(e.fillInStackTrace()));

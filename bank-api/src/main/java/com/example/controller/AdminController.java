@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.payload.DefaultResponse;
 import com.example.model.User;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,17 +19,17 @@ public class AdminController {
 	private UserService userService;
 	
 	@PostMapping("/validate")
-	public ResponseEntity<?> validate(@RequestBody User user) {
+	public ResponseEntity.BodyBuilder validate(@RequestBody User user) {
 		try {
 			userService.saveUser(user);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			return ResponseEntity.status(200);
 		}
 		catch (Exception e) {
-			return ResponseEntity.badRequest().body("Error admin 1");
+			return ResponseEntity.status(404);
 		}
 	}
 
-	@GetMapping("/user_info")
+	@GetMapping("/users")
 	public Page<User> getAll(
 			@RequestParam(value = "offset", defaultValue = "0") Integer offset,
 			@RequestParam(value = "limit", defaultValue = "10") Integer limit

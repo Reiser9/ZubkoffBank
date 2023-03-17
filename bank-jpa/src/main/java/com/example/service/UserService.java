@@ -53,7 +53,7 @@ public class UserService {
 //	}
 
 	public User saveUser(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 		Role userRole = roleRepository.findByRole("user");
 		user.setRoles(Arrays.asList(userRole));
         return user = userRepository.save(user);
@@ -69,7 +69,7 @@ public class UserService {
 	public User createUser(Map<String, String> regDataUser) {
 		User user = new User();
 		user.setPhoneNum(regDataUser.get("phoneNum"));
-		user.setPassword(regDataUser.get("password"));
+		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
 		user.setVerify("not verified");
 		//Data users
 		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullname"))));
