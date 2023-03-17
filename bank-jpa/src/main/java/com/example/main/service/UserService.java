@@ -28,8 +28,9 @@ import com.example.main.model.User;
 @Setter
 @AllArgsConstructor
 public class UserService {
-	@Value("${code.codeExp}")
-	private Long codeDurationMs;
+//	@Autowired
+//	@Value("${code.codeExp}")
+//	private Long codeDurationMs;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -51,9 +52,9 @@ public class UserService {
 		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
 	}
 
-	public String sendCode(String numberPhone) {
-		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
-	}
+//	public String sendCode(String numberPhone) {
+//		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
+//	}
 
 	public User saveUser(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

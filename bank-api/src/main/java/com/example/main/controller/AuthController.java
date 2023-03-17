@@ -70,10 +70,10 @@ public class AuthController {
 		return createAuthenticationTokenAfterRegistration(newUser);
 	}
 
-	@PostMapping("/code")
-	public ResponseEntity<?> sendCode(@RequestBody String numberPhone) throws Exception {
-		return userService.sendCode(numberPhone);
-	}
+//	@PostMapping("/code")
+//	public ResponseEntity<?> sendCode(@RequestBody String numberPhone) throws Exception {
+//		return userService.sendCode(numberPhone);
+//	}
 	
 	@PostMapping("/logout")
 	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
