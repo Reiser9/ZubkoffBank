@@ -2,6 +2,7 @@ package com.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -33,10 +34,11 @@ public class DataUser {
     @Column(name = "passport_serial")
     private String passportSer;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "issued")
+    private String issued;
 
     @Column(name = "birthdate")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthdate;
 
     @Column(name = "sex")
@@ -54,7 +56,7 @@ public class DataUser {
                 ", middleName='" + middleName + '\'' +
                 ", passportNum='" + passportNum + '\'' +
                 ", passportSer='" + passportSer + '\'' +
-                ", address='" + address + '\'' +
+                ", address='" + issued + '\'' +
                 ", birthdate=" + birthdate +
                 ", sex=" + sex +
                 ", userId=" + userId +

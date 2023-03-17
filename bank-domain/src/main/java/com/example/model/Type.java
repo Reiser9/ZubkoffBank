@@ -25,7 +25,7 @@ public class Type {
     private int limit;
 
     @Column(name = "description", length = 1000)
-    private int description;
+    private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_id_type", referencedColumnName = "id")

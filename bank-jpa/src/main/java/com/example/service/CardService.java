@@ -23,6 +23,7 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
+    public Card findCardById(Long id) { return cardRepository.getById(id);}
 
     public List<Card> findCardByUserId(Long id) {
         return cardRepository.findByUserId(id);
@@ -56,6 +57,18 @@ public class CardService {
 
     public Card findCardByCardNum(String cardNum) {
         return cardRepository.findByCardNum(cardNum);
+    }
+
+    public void setBlockCard(long id) {
+        Card card = cardRepository.findById(id).get();
+        card.setLock(true);
+        save(card);
+    }
+
+    public void setUnblockCard(long id) {
+        Card card = cardRepository.findById(id).get();
+        card.setLock(false);
+        save(card);
     }
 
     public void save(Card card) {

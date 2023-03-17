@@ -1,6 +1,11 @@
 package com.example.service;
 
+import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.example.model.DataUser;
@@ -18,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.model.Role;
 import com.example.model.User;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Getter
@@ -52,12 +58,36 @@ public class UserService {
 //		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
 //	}
 
-	public User saveUser(User user) {
+	public User findById(long id) { return userRepository.findById(id).get(); }
 
+	public User saveUser(User user) {
 		Role userRole = roleRepository.findByRole("user");
 		user.setRoles(Arrays.asList(userRole));
         return user = userRepository.save(user);
 	}
+
+	public void setBlockUser(long id) {
+		User user = userRepository.findById(id).get();
+		List<Role> roles = user.getRoles();
+		if (!roles.contains(roleRepository.findByRole("blocked")))
+			roles.add(roleRepository.findByRole("blocked"));
+		user.setRoles(roles);
+		saveUser(user);
+	}
+
+	public void setUnblockUser(long id) {
+		User user = userRepository.findById(id).get();
+		List<Role> roles = user.getRoles();
+		if (roles.contains(roleRepository.findByRole("blocked")))
+			roles.remove(roleRepository.findByRole("blocked"));
+		user.setRoles(roles);
+		saveUser(user);
+	}
+
+	public void setDataUser(Principal user, Map<String, String> data) throws ParseException {
+
+	}
+
 	
 	public User saveAdmin(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

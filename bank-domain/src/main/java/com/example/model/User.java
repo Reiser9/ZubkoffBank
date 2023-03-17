@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.stereotype.Component;
 
 
@@ -31,6 +32,8 @@ public class User {
 	private String verify;
 
 	@Column(name = "password")
+//	@JsonIgnore
+//	@JsonProperty(value = "user_password")
 	private String password;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

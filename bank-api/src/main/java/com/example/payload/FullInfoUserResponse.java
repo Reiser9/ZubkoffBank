@@ -3,6 +3,7 @@ package com.example.payload;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ public class FullInfoUserResponse {
     private String passportNum;
     private String passportSer;
     private String address;
-    private Date birthdate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date issue;
     private Boolean sex;
 }

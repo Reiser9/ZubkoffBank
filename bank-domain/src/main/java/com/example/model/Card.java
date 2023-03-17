@@ -2,6 +2,7 @@ package com.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,6 +25,7 @@ public class Card {
     private String cvc;
 
     @Column(name = "exp_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Timestamp expDate;
 
     @Column(name = "money")

@@ -7,21 +7,33 @@ import com.example.payload.CardResponse;
 import com.example.payload.DefaultResponse;
 import com.example.payload.FullInfoUserResponse;
 import com.example.payload.UserResponse;
+import com.example.security.jwt.JwtRequestFilter;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.Array;
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
+	private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 	@Value("${bank.id}")
 	private String bankId;
 	@Autowired
@@ -67,12 +79,12 @@ public class UserController {
 				dataUser.getMiddleName(),
 				dataUser.getPassportNum(),
 				dataUser.getPassportSer(),
-				dataUser.getAddress(),
+				dataUser.getIssued(),
 				dataUser.getBirthdate(),
 				dataUser.getSex()));
 	}
 
-	@PatchMapping("/card")
+	@PostMapping("/card/block")
 	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardNum) {
 		try {
 			Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
@@ -86,19 +98,42 @@ public class UserController {
 	}
 
 	@PostMapping("/card")
-	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> data_card) {
-		if (Integer.parseInt(data_card.get("type")) > typeService.getLength())
+	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> dataCard) {
+		if (Integer.parseInt(dataCard.get("type")) > typeService.getLength())
 			return ResponseEntity.badRequest().body(
 					new DefaultResponse("Not Successful", "invalid card type"));
 		User userInfo = userService.findUserByPhoneNum(user.getName());
-		Card newCard = cardService.createCard(data_card, bankId);
+		Card newCard = cardService.createCard(dataCard, bankId);
 		userInfo.getCards().add(newCard);
 		userInfo.setCards(userInfo.getCards());
 		userService.saveUser(userInfo);
 		return ResponseEntity.ok(new CardResponse(newCard));
 	}
 
+	@PostMapping("/data")
+	public ResponseEntity<?> setDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
+		try {
+			User userInfo = userService.findUserByPhoneNum(user.getName());
+			List<DataUser> dataUsers = userInfo.getDataUsers();
+			DataUser dataUser = dataUsers.get(userInfo.getDataUsers().size() - 1);
+			logger.error(dataUser.toString());
+			dataUser.setIssued(data.get("issued"));
 
+			dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
+			dataUser.setIssued(data.get("issued"));
+			dataUser.setPassportSer(data.get("passportSer"));
+			dataUser.setPassportNum(data.get("passportNum"));
+			dataUser.setSex(Boolean.valueOf(data.get("sex")));
+			dataUsers.set(userInfo.getDataUsers().size() - 1, dataUser);
+			userInfo.setDataUsers(dataUsers);
+			userService.saveUser(userInfo);
+			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+		}
+		catch (Exception e) {
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+
+	}
 
 	@PostMapping("/")
 	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
