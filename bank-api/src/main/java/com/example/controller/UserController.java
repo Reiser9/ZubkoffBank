@@ -40,7 +40,7 @@ public class UserController {
 			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()));
 		}
 		catch (Exception e) {
-			return (ResponseEntity<?>) ResponseEntity.status(404);
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user phone"));
 		}
 	}
 
@@ -72,16 +72,16 @@ public class UserController {
 				dataUser.getSex()));
 	}
 
-	@PostMapping("/block")
+	@PatchMapping("/card")
 	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardNum) {
 		try {
 			Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
 			card.setLock(true);
 			cardService.save(card);
-			return (ResponseEntity<?>) ResponseEntity.ok();
+			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
 		catch (Exception e) {
-			return (ResponseEntity<?>) ResponseEntity.status(404);
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user phone"));
 		}
 	}
 
@@ -101,15 +101,15 @@ public class UserController {
 
 
 	@PostMapping("/")
-	public ResponseEntity.BodyBuilder changePassword(Principal user, @RequestBody Map<String, String> pass) {
+	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
 		User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
 		if (passwordEncoder.matches(pass.get("pass"), userByPhoneNum.getPassword())) {
 			userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("new_pass")));
 			userService.saveUser(userByPhoneNum);
-			return ResponseEntity.status(200);
+			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
 		else {
-			return ResponseEntity.status(403);
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
 		}
 	}
 }

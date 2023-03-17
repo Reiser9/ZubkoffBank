@@ -46,7 +46,7 @@ public class CardService {
         card.setCardNum(cardNum);
         card.setCvc(String.valueOf((int)(100 + (Math.random() * (999 - 100)))));
         card.setExpDate(date);
-        card.setMoney(0);
+        card.setBalance(0);
         card.setFirstName(data_card.get("firstName"));
         card.setSecondName(data_card.get("secondName"));
         card.setLock(false);

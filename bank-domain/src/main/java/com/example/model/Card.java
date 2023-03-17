@@ -27,7 +27,7 @@ public class Card {
     private Timestamp expDate;
 
     @Column(name = "money")
-    private double money;
+    private double balance;
 
     @Column(name = "first_name")
     private String firstName;
@@ -51,7 +51,7 @@ public class Card {
                 ", cardNum='" + cardNum + '\'' +
                 ", cvc='" + cvc + '\'' +
                 ", expDate=" + expDate +
-                ", money=" + money +
+                ", money=" + balance +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
                 ", userId=" + userId +

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.example.model.RefreshToken;
 import com.example.model.User;
+import com.example.payload.DefaultResponse;
 import com.example.payload.JwtResponse;
 import com.example.security.jwt.JwtUtils;
 import com.example.security.jwt.RefreshTokenService;
@@ -43,7 +44,7 @@ public class AuthController {
 		try {
 			auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getPhoneNum(), user.getPassword()));
 		} catch (BadCredentialsException e) {
-			return ResponseEntity.badRequest().body("Incorrect credentials!");
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Incorrect credentials!"));
 		}
 		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) auth.getPrincipal();
 		final String jwt = jwtUtils.generateToken(userDetailsImpl);
@@ -51,24 +52,18 @@ public class AuthController {
 
 		return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.getRefreshToken()));
 	}
-
-	public ResponseEntity<?> createAuthenticationTokenAfterRegistration(User user) throws Exception {
-		Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getPhoneNum(), user.getPassword()));
-		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) auth.getPrincipal();
-		final String jwt = jwtUtils.generateToken(userDetailsImpl);
-		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetailsImpl.getId());
-		return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.getRefreshToken()));
-	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) throws Exception {
+		if (user.get("password").length() < 8 && user.get("password").length() > 20) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too long"));
+		}
 		User regUser = userService.findUserByPhoneNum(user.get("phoneNum"));
 		if(regUser != null)
-			return ResponseEntity.badRequest().body("User already exists!");
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User already exist"));
 		User newUser = userService.createUser(user);
 		userService.saveUser(newUser);
-		return ResponseEntity.ok("1");
-//		return createAuthenticationTokenAfterRegistration(newUser);
+		return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 	}
 
 //	@PostMapping("/code")
@@ -79,7 +74,7 @@ public class AuthController {
 	@PostMapping("/logout")
 	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
 		refreshTokenService.deleteByUserId(userid.get("id"));    
-	    return ResponseEntity.ok().body("User logged out");
+	    return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
 	}
 	
 	@PostMapping("/refresh")
@@ -92,7 +87,7 @@ public class AuthController {
 			String jwt = jwtUtils.createToken(claims, user.getAccountNum());
 			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("token")));
 		}
-		return ResponseEntity.badRequest().body("Refresh token expired!");
+		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
 	}
 	
 }

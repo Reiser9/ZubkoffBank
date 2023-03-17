@@ -25,7 +25,7 @@ public class CardResponse {
         this.cardNum = card.getCardNum();
         this.cvc = card.getCvc();
         this.expDate = card.getExpDate();
-        this.balance = card.getMoney();
+        this.balance = card.getBalance();
         this.firstName = card.getFirstName();
         this.secondName = card.getSecondName();
         this.type = card.getTypeId();
