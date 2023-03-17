@@ -4,29 +4,14 @@ plugins {
     id 'org.springframework.boot' version '2.5.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
-version '1.0'
-repositories {
-    mavenCentral()
-}
-dependencies {
 
-}
-springBoot { mainClass = 'com.example.main.Application' }
+springBoot { mainClass = 'com.example.Application' }
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-
-    // указываем основной класс для каждого модуля
-    bootJar {
-        mainClassName = "com.example.main.${name.capitalize()}Application"
-    }
-
-    // другие настройки для всех модулей
-
 }
-
 allprojects {
-    group 'com.example.main'
+    group 'com.example'
     version '1.0'
 
     repositories {
