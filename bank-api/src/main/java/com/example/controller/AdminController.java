@@ -113,12 +113,15 @@ public class AdminController {
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestBody Map<String, String> type) throws IOException {
+	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+											 @RequestParam("description") String description,
+											 @RequestParam("typeName") String typeName,
+											 @RequestParam("limit") int limit) throws IOException {
 		String fileName = file.getOriginalFilename();
 		byte[] bytes = file.getBytes();
 		Path path = Paths.get("/home/uploads/" + fileName);
 		Files.write(path, bytes);
-		typeService.saveType(fileName, path.toString(), type.get("description"), type.get("typeName"), Integer.parseInt(type.get("limit")));
+		typeService.saveType(fileName, path.toString(), description, typeName, limit);
 		return ResponseEntity.ok("File uploaded successfully");
 	}
 
