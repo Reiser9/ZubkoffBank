@@ -121,17 +121,5 @@ public class AdminController {
 		return ResponseEntity.ok("File uploaded successfully");
 	}
 
-//	@GetMapping("/types")
-//	public ResponseEntity<Resource> GetTypeCards(@RequestParam("id") int id) throws IOException {
-//		Type type = typeService.findTypeById(id);
-//		Path path = Paths.get("uploads/" + "filename");
-//		Resource resource = new UrlResource(path.toUri());
-//		return ResponseEntity.ok()
-//				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-//				.header("type", type.getType())
-//				.header("description", type.getDescription())
-//				.header("limit", String.valueOf(type.getLimit()))
-//				.contentType(MediaType.IMAGE_PNG)
-//				.body(resource);
-//	}
+
 }
