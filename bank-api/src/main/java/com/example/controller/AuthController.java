@@ -4,11 +4,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.model.RefreshToken;
+import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
 import com.example.payload.JwtResponse;
 import com.example.security.jwt.JwtUtils;
 import com.example.security.jwt.RefreshTokenService;
+import com.example.service.TypeService;
 import com.example.service.UserService;
 import com.example.service.impl.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,6 +35,7 @@ public class AuthController {
 	private RefreshTokenService refreshTokenService;
 	@Autowired
 	private UserService userService;
+
 	
 	@PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) throws Exception {
