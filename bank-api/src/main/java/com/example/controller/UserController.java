@@ -118,7 +118,6 @@ public class UserController {
 			DataUser dataUser = dataUsers.get(userInfo.getDataUsers().size() - 1);
 			logger.error(dataUser.toString());
 			dataUser.setIssued(data.get("issued"));
-
 			dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
 			dataUser.setIssued(data.get("issued"));
 			dataUser.setPassportSer(data.get("passportSer"));
