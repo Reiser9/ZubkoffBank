@@ -56,16 +56,6 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/")
-	public ResponseEntity<?> getUserWithName(Principal user) {
-		User userInfo = userService.findUserByPhoneNum(user.getName());
-		return ResponseEntity.ok(new UserResponse(
-				userInfo.getId(), userInfo.getPhoneNum(),
-				userInfo.getVerify(),
-				userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
-				userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1).getFirstName()));
-	}
-
 	@GetMapping("/info")
 	public ResponseEntity<?> getFullInfoUser(Principal user) {
 		User userInfo = userService.findUserByPhoneNum(user.getName());
