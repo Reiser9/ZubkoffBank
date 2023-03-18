@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.model.Card;
+import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
 import com.example.service.CardService;
+import com.example.service.TypeService;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class AdminController {
 	@Autowired
 	@Lazy
 	private CardService cardService;
+	@Autowired
+	@Lazy
+	private TypeService typeService;
 	
 	@PostMapping("/verified")
 	public ResponseEntity<DefaultResponse> verified(@RequestBody long id) {
@@ -88,5 +93,15 @@ public class AdminController {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
+
+	@GetMapping("/types")
+	public Page<Type> getTypes(
+			@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+			@RequestParam(value = "limit", defaultValue = "10") Integer limit
+	) {
+		return typeService.findAll(offset, limit);
+	}
+
+
 
 }
