@@ -10,9 +10,19 @@ import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -100,6 +110,25 @@ public class AdminController {
 			@RequestParam(value = "limit", defaultValue = "10") Integer limit
 	) {
 		return typeService.findAll(offset, limit);
+	}
+
+	@PostMapping("/upload")
+	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @RequestBody Map<String, String> type) throws IOException {
+		String fileName = file.getOriginalFilename();
+		byte[] bytes = file.getBytes();
+		Path path = Paths.get("/home/uploads/" + fileName);
+		Files.write(path, bytes);
+		typeService.saveType(fileName, path.toString(), type.get("description"), type.get("typeName"), Integer.parseInt(type.get("limit")));
+		return ResponseEntity.ok("File uploaded successfully");
+	}
+
+	@GetMapping("/download/{fileName:.+}")
+	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws IOException {
+		Path path = Paths.get("/home/uploads/" + fileName);
+		Resource resource = new UrlResource(path.toUri());
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+				.body(resource);
 	}
 
 

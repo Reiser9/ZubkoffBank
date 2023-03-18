@@ -24,10 +24,18 @@ public class Type {
     @Column(name = "lim")
     private int limit;
 
+    @Column(name = "nameFile")
+    private String name;
+
+    @Column(name = "pathFile")
+    private String path;
+
     @Column(name = "description", length = 1000)
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_id_type", referencedColumnName = "id")
     private List<Card> card;
+
+
 }

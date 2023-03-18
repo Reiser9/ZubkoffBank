@@ -13,6 +13,7 @@ import com.example.repository.CodeRepository;
 import com.example.repository.RoleRepository;
 import com.example.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class UserService {
 		if (!roles.contains(roleRepository.findByRole("blocked")))
 			roles.add(roleRepository.findByRole("blocked"));
 		user.setRoles(roles);
-		saveUser(user);
+		userRepository.save(user);
 	}
 
 	public void setUnblockUser(long id) {
@@ -81,11 +82,21 @@ public class UserService {
 		if (roles.contains(roleRepository.findByRole("blocked")))
 			roles.remove(roleRepository.findByRole("blocked"));
 		user.setRoles(roles);
-		saveUser(user);
+		userRepository.save(user);
 	}
 
-	public void setDataUser(Principal user, Map<String, String> data) throws ParseException {
-
+	public void setDataUser(User user, Map<String, String> data) throws ParseException {
+		List<DataUser> dataUsers = user.getDataUsers();
+		DataUser dataUser = dataUsers.get(user.getDataUsers().size() - 1);
+		dataUser.setIssued(data.get("issued"));
+		dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
+		dataUser.setIssued(data.get("issued"));
+		dataUser.setPassportSer(data.get("passportSer"));
+		dataUser.setPassportNum(data.get("passportNum"));
+		dataUser.setSex(Boolean.valueOf(data.get("sex")));
+		dataUsers.set(user.getDataUsers().size() - 1, dataUser);
+		user.setDataUsers(dataUsers);
+		userRepository.save(user);
 	}
 
 	

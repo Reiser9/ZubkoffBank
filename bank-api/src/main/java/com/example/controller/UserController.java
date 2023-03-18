@@ -101,21 +101,10 @@ public class UserController {
 	}
 
 	@PostMapping("/data")
-	public ResponseEntity<?> setDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
+	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
-			List<DataUser> dataUsers = userInfo.getDataUsers();
-			DataUser dataUser = dataUsers.get(userInfo.getDataUsers().size() - 1);
-			logger.error(dataUser.toString());
-			dataUser.setIssued(data.get("issued"));
-			dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
-			dataUser.setIssued(data.get("issued"));
-			dataUser.setPassportSer(data.get("passportSer"));
-			dataUser.setPassportNum(data.get("passportNum"));
-			dataUser.setSex(Boolean.valueOf(data.get("sex")));
-			dataUsers.set(userInfo.getDataUsers().size() - 1, dataUser);
-			userInfo.setDataUsers(dataUsers);
-			userService.saveUser(userInfo);
+			userService.setDataUser(userInfo, data);
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
 		catch (Exception e) {
