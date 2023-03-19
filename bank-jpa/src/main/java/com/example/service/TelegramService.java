@@ -1,13 +1,10 @@
-package com.example.service;
+package com.example;
 
 
 import com.example.model.Code;
 import com.example.model.User;
-import com.example.repository.CardRepository;
 import com.example.repository.CodeRepository;
 import com.example.repository.UserRepository;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,11 +16,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
-@Service
+@Component
 public class TelegramService extends TelegramLongPollingBot {
     @Autowired
     private UserRepository userRepository;
@@ -38,14 +34,35 @@ public class TelegramService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        update.getMessage().hasContact();
-        if (update.getMessage().getText().equals("/start")) {
-            if (update.hasMessage() && update.getMessage().hasContact()) {
-                setChatIdAndPhoneNum(
-                        update.getMessage().getChatId(),
-                        update.getMessage().getContact().getPhoneNumber()
-                );
-            }
+//        update.getMessage().hasContact();
+//        if (update.getMessage().getText().equals("/start")) {
+//            if (update.hasMessage() && update.getMessage().hasContact()) {
+//                setChatIdAndPhoneNum(
+//                        update.getMessage().getChatId(),
+//                        update.getMessage().getContact().getPhoneNumber()
+//                );
+//            }
+//        }
+//        else {
+//            logger.error("1");
+//            setChatIdAndPhoneNum(
+//                    update.getMessage().getChatId(),
+//                    update.getMessage().getContact().getPhoneNumber()
+//            );
+//        }
+//        SendMessage sendMessage = new SendMessage()
+//                .setChatId(update.getMessage().getChatId())
+//                .setText("message");
+//        try {
+//            execute(sendMessage);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+        try {
+            execute(new SendMessage().setChatId(update.getMessage().getChatId())
+                    .setText("Hi!"));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
 
     }
@@ -75,9 +92,13 @@ public class TelegramService extends TelegramLongPollingBot {
         saveCode(phoneNumber, code, typeCode);
     }
 
-    public Boolean checkCode(String phoneNumber, int code) {
+    public Boolean checkCode(String phoneNumber, int checkCode) {
         Long id = userRepository.findByPhoneNum(phoneNumber).getId();
-        if (codeRepository.findByUserId(id).getCode() == code) {
+        Code code = codeRepository.findByUserId(id);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
+        Timestamp date = new Timestamp(cal.getTime().getTime());
+        if (code.getCode() == checkCode && date.after(code.getExpDate())) {
             return true;
         }
         return false;
