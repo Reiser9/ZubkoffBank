@@ -1,6 +1,5 @@
 import React from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import "./App.css";
 
@@ -8,7 +7,7 @@ import {withSuspense} from './hoc/withSuspense';
 
 import DefaultWrapper from './components/Wrappers/DefaultWrapper';
 import EmptyWrapper from './components/Wrappers/EmptyWrapper';
-import Notify from './components/Notify';
+import Notifies from './components/Notify';
 
 const Main = React.lazy(() => import('./pages/Main'));
 const Cards = React.lazy(() => import('./pages/Cards'));
@@ -21,11 +20,9 @@ const Admin = React.lazy(() => import('./pages/Admin'));
 const Api = React.lazy(() => import('./pages/Api'));
 
 const App = () => {
-    const notifyState = useSelector(state => state.notify);
-
     return (
         <>
-            <Routes>    
+            <Routes>
                 <Route path="/" element={<DefaultWrapper />}>
                     <Route index element={withSuspense(Main)} />
                     <Route path="cards" element={withSuspense(Cards)} />
@@ -43,9 +40,7 @@ const App = () => {
                 </Route>
             </Routes>
 
-            {notifyState.notify.length > 0 && <div className="notifies">
-                {notifyState.notify.map((data, id) => <Notify key={id} data={data} />)}
-            </div>}
+            <Notifies />
         </>
     );
 };

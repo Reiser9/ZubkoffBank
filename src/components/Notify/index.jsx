@@ -1,47 +1,18 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import './index.css';
+import NotifyItem from './NotifyItem';
 
-import {removeNotify} from '../../redux/slices/notify';
-import { NOTIFY } from '../../consts/NOTIFY';
+const Notifies = () => {
+    const notify = useSelector(state => state.notify);
 
-const notifyArr = {
-    "success": NOTIFY.SUCCESS,
-    "info": NOTIFY.INFO,
-    "warn": NOTIFY.WARN,
-    "error": NOTIFY.ERROR,
-};
-
-const Notify = ({data}) => {
-    const {id, title, text, type, time} = data;
-
-    const dispatch = useDispatch();
-
-    const remove = () => {
-        dispatch(removeNotify(id));
-    }
-
-    const removeClick = () => {
-        clearTimeout(notifyTimeout);
-        remove();
-    }
-
-    const notifyTimeout = setTimeout(remove, time);
-
-    // Сделать прогресс бар 😡
-    
-    return(
-        <div className={`notifies__item ${notifyArr[type].TYPE}`} onClick={removeClick}>
-            {notifyArr[type].ICON}
-
-            <div className="notifies__content">
-                <h4 className="notifies__title">{title}</h4>
-
-                <p className="notifies__text">{text}</p>
-            </div>
-        </div>
+    return (
+        <>
+            {notify.notify.length > 0 && <div className="notifies">
+                {notify.notify.map((data, id) => <NotifyItem key={id} data={data} />)}
+            </div>}
+        </>
     )
 }
 
-export default Notify;
+export default Notifies;

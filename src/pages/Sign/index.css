@@ -3,7 +3,7 @@
     position: relative;
     flex-grow: 1;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .sign:before {
@@ -24,7 +24,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 5rem 0;
+    padding: 15rem 0 5rem 0;
 }
 
 .sign__content,
@@ -160,7 +160,7 @@
     background-color: var(--mainC);
     width: 0;
     z-index: 1;
-    transition: .2s linear .2s;
+    transition: .1s linear .1s;
 }
 
 .sign__step:not(:first-child)::after {
@@ -171,12 +171,12 @@
 .sign__step.active {
     border: 1px solid var(--mainC);
     color: var(--mainC);
-    transition: .2s linear .2s;
+    transition: .1s linear .1s;
 }
 
 .sign__step.active::before {
     width: 48px;
-    transition: .2s linear;
+    transition: .1s linear;
 }
 
 .sign__title {
@@ -253,7 +253,7 @@
     background: var(--mainC);
     border: none;
     opacity: 0;
-    transition: .2s linear;
+    transition: .1s linear;
 }
 
 .sign__button--inner {

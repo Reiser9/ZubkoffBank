@@ -1,4 +1,5 @@
 import React from 'react';
+import InputMask from 'react-input-mask';
 
 import './index.css';
 
@@ -13,7 +14,7 @@ const Input = ({value, setValue, password = false, className, ...props}) => {
 
     return(
         <div className="input__inner">
-            <input value={value} onChange={(e) => setValue(e.target.value)} type={password ? (view ? 'text' : 'password') : 'text'} className={`input default__input${className ? " " + className : ""}${password ? " password__input" : ""}`} {...props} />
+            <InputMask maskChar={null} value={value} onChange={(e) => setValue(e.target.value)} type={password ? (view ? 'text' : 'password') : 'text'} className={`input default__input${className ? " " + className : ""}${password ? " password__input" : ""}`} {...props} />
 
             {password && (view ? <Blind className="input__icon" onClick={changeView} /> : <Eye className="input__icon" onClick={changeView} />)}
         </div>

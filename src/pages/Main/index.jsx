@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
-import { Dollar, Fast, Phone, Invest, Card } from '../../components/Icons';
+import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
 
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
@@ -11,25 +11,11 @@ import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
 
-import useNotify from '../../hooks/useNotify';
-
 const Main = () => {
-    const {alertNotify} = useNotify();
-
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank`;
         window.scrollTo(0, 0);
     }, []);
-
-    const login = () => {
-        window.localStorage.setItem("accessToken", "egor228");
-        alertNotify("Успешно", "Вы авторизовались!", "success", 2000);
-    }
-
-    const logout = () => {
-        window.localStorage.removeItem("accessToken");
-        alertNotify("Успешно", "Вы вышли :(", "success", 2000);
-    }
 
     return (
         <>
@@ -37,9 +23,9 @@ const Main = () => {
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title" onClick={login}>Привет 👋</h1>
+                            <h1 className="main-block__title title">Привет 👋</h1>
                                 
-                            <p className="main-block__text" onClick={logout}>Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
+                            <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
                             <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
@@ -95,11 +81,11 @@ const Main = () => {
                         <h2 className="cashback__title title">Кэшбек с {process.env.REACT_APP_BANK_NAME} Bank</h2>
 
                         <div className="cashback__items">
-                            <CashbackItem title="До 30% у партнеров" text="Самый большой кэшбэк — за покупки по спецпредложениям партнеров банка" />
+                            <CashbackItem icon={<Percent />} title="До 30% у партнеров" text="Самый большой кэшбэк — за покупки по спецпредложениям партнеров банка" />
 
-                            <CashbackItem title="До 15% кэшбэка" text="Каждый месяц выбирайте четыре категории покупок, в которых будете получать кэшбэк" />
+                            <CashbackItem icon={<CoinStack />} title="До 15% кэшбэка" text="Каждый месяц выбирайте четыре категории покупок, в которых будете получать кэшбэк" />
 
-                            <CashbackItem title="До 6% на остаток" text={`Ежемесячно получайте до 6% годовых с подпиской ${process.env.REACT_APP_BANK_NAME} Pro`} light />
+                            <CashbackItem icon={<Banknotes />} title="До 6% на остаток" text={`Ежемесячно получайте до 6% годовых с подпиской ${process.env.REACT_APP_BANK_NAME} Pro`} light />
                         </div>
                     </div>
                 </div>

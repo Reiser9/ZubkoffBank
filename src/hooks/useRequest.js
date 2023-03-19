@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH} from '../consts/API_URLS';
@@ -19,7 +20,7 @@ export const REQUEST_TYPE = {
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-    const [error, setError] = React.useState(null);
+    const [error, setError] = React.useState(false);
 
     const authInfo = useSelector(state => state.auth);
     const accessToken = window.sessionStorage.getItem("accessToken") || authInfo.accessToken;
@@ -43,14 +44,15 @@ const useRequest = () => {
         [REQUEST_TYPE.USER, userRequest]
     ]);
 
-    const request = async ({
+    const request = async (
         requestType = REQUEST_TYPE.USER,
         url,
         method = HTTP_METHODS.GET,
         isAuth = false,
         data = {},
         headers = {}
-    }) => {
+    ) => {
+        setError(false);
         setIsLoading(true);
 
         const axiosInstance = axiosInstancesMap.get(requestType);
