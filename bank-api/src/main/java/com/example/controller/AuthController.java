@@ -10,6 +10,7 @@ import com.example.payload.DefaultResponse;
 import com.example.payload.JwtResponse;
 import com.example.security.jwt.JwtUtils;
 import com.example.security.jwt.RefreshTokenService;
+import com.example.service.TelegramService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
 import com.example.service.impl.UserDetailsImpl;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -33,6 +35,8 @@ public class AuthController {
 	private JwtUtils jwtUtils;
 	@Autowired
 	private RefreshTokenService refreshTokenService;
+	@Autowired
+	private TelegramService telegramService;
 	@Autowired
 	private UserService userService;
 
@@ -52,11 +56,37 @@ public class AuthController {
 
 		return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.getRefreshToken()));
 	}
+
+	@PostMapping("/send_code")
+	public ResponseEntity<?> sendCode(@RequestParam("phoneNumber") String phoneNumber) {
+		try {
+			telegramService.sendCode(phoneNumber, String.valueOf(type.REGISTER));
+			return ResponseEntity.ok().body("YTTT");
+		}
+		catch (Exception e) {
+			return ResponseEntity.ok().body("YTTT");
+		}
+	}
+
+	@PostMapping("/check_code")
+	public ResponseEntity<String> checkCode(@RequestParam("phoneNumber") String phoneNumber,
+											@RequestParam("code") int code)
+	{
+		try {
+			if (telegramService.checkCode(phoneNumber, code))
+				return ResponseEntity.ok().body("YTTT");
+			else
+				return ResponseEntity.ok().body("YTTT");
+		}
+		catch (Exception e) {
+			return ResponseEntity.ok().body("YTTT");
+		}
+	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) throws Exception {
 		if (user.get("password").length() < 8 && user.get("password").length() > 20) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too long"));
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 		}
 		User regUser = userService.findUserByPhoneNum(user.get("phoneNum"));
 		if(regUser != null)
@@ -65,11 +95,6 @@ public class AuthController {
 		userService.saveUser(newUser);
 		return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 	}
-
-//	@PostMapping("/code")
-//	public ResponseEntity<?> sendCode(@RequestBody String numberPhone) throws Exception {
-//		return userService.sendCode(numberPhone);
-//	}
 	
 	@PostMapping("/logout")
 	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
@@ -88,6 +113,12 @@ public class AuthController {
 			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("accessToken")));
 		}
 		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
+	}
+
+	public enum type {
+		REGISTER,
+		RECOVERY,
+		TRANSFER
 	}
 	
 }

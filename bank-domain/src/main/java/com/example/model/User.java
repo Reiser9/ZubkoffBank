@@ -2,6 +2,8 @@ package com.example.model;
 
 import java.util.List;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
@@ -32,9 +34,12 @@ public class User {
 	private String verify;
 
 	@Column(name = "password")
-//	@JsonIgnore
-//	@JsonProperty(value = "user_password")
+	@JsonIgnore
 	private String password;
+
+	@Column(name = "groupId", unique = true)
+	@JsonIgnore
+	private Long groupId;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_role"))
@@ -49,6 +54,11 @@ public class User {
 	@JoinColumn(name = "fk_id_user", referencedColumnName = "id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<DataUser> dataUsers;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "fk_id_code", referencedColumnName = "id")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Code> codes;
 
 	@Override
 	public String toString() {

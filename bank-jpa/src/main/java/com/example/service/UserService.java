@@ -109,7 +109,7 @@ public class UserService {
 
 	public User createUser(Map<String, String> regDataUser) {
 		User user = new User();
-		user.setPhoneNum(regDataUser.get("phoneNum"));
+//		user.setPhoneNum(regDataUser.get("phoneNum"));
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
 		user.setVerify("not verified");
 		//Data users

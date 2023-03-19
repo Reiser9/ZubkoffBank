@@ -5,7 +5,9 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,7 +15,6 @@ import java.time.Instant;
 @Table(name = "codes")
 @Component
 public class Code {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,10 +25,10 @@ public class Code {
 
     @Column(name = "type")
     private String type;
+
     @Column(name = "exp_date")
-    private Instant expDate;
+    private Timestamp expDate;
 
-    @Column(name = "phone_number")
-    private String phoneNum;
-
+    @Column(name = "fk_id_user")
+    private Long userId;
 }
