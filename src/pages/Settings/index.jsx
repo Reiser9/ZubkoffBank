@@ -61,6 +61,7 @@ const Settings = () => {
                                         <div className="setting__item"><Input readOnly className="setting__input" placeholder="Отчество" /></div>
                                         <div className="setting__item"><Input readOnly className="setting__input" placeholder="Номер телефона" /></div>
                                         <div className="setting__item"><Input readOnly className="setting__input" placeholder="Пол" /></div>
+                                        <div className="setting__item"><Input className="setting__input" placeholder="Дата рождения" /></div>
                                     </div>
                                 </div>
                                 <div className="setting__block">
@@ -87,6 +88,7 @@ const Settings = () => {
                                         <div className="setting__item"><Input className="setting__input" placeholder="Серия и номер паспорта" /></div>
                                         <div className="setting__item"><Input className="setting__input" placeholder="Кем выдан" /></div>
                                         <div className="setting__item"><Input className="setting__input" placeholder="Дата выдачи" /></div>
+                                        <div className="setting__item"><Input className="setting__input" placeholder="Дата рождения" /></div>
                                     </div>
                                 </div>
                                 <div className="setting__block">
