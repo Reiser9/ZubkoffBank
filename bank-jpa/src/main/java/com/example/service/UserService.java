@@ -31,9 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Setter
 @AllArgsConstructor
 public class UserService {
-//	@Autowired
-//	@Value("${code.codeExp}")
-//	private Long codeDurationMs;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -54,10 +51,6 @@ public class UserService {
 	public Page<User> findAll(int offset, int limit) {
 		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
 	}
-
-//	public String sendCode(String numberPhone) {
-//		return userRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));
-//	}
 
 	public User findById(long id) { return userRepository.findById(id).get(); }
 
@@ -88,9 +81,8 @@ public class UserService {
 	public void setDataUser(User user, Map<String, String> data) throws ParseException {
 		List<DataUser> dataUsers = user.getDataUsers();
 		DataUser dataUser = dataUsers.get(user.getDataUsers().size() - 1);
-		dataUser.setIssued(data.get("issued"));
 		dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
-		dataUser.setIssued(data.get("issued"));
+		dataUser.setGranted(data.get("granted"));
 		dataUser.setPassportSer(data.get("passportSer"));
 		dataUser.setPassportNum(data.get("passportNum"));
 		dataUser.setSex(Boolean.valueOf(data.get("sex")));
@@ -107,9 +99,7 @@ public class UserService {
         return user = userRepository.save(user);
 	}
 
-	public User createUser(Map<String, String> regDataUser) {
-		User user = new User();
-//		user.setPhoneNum(regDataUser.get("phoneNum"));
+	public User createUser(User user, Map<String, String> regDataUser) {
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
 		user.setVerify("not verified");
 		//Data users

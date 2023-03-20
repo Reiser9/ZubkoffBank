@@ -36,13 +36,14 @@ public class TypeService {
         return typeRepository.findById(id).get();
     }
 
-    public void saveType(String name, String path, String description, String typeName, int limit) {
+    public Type saveType(String name, String path, String description, String typeName, int limit) {
         Type type = new Type();
         type.setName(name);
-        type.setPath(path);
+        type.setImg(path);
         type.setLimit(limit);
         type.setDescription(description);
         type.setType(typeName);
         typeRepository.save(type);
+        return type;
     }
 }

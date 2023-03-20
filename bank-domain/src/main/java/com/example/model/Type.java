@@ -32,7 +32,7 @@ public class Type {
     private String name;
 
     @Column(name = "pathFile")
-    private String path;
+    private String img;
 
     @Column(name = "description", length = 1000)
     private String description;

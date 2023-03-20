@@ -24,17 +24,16 @@ public class User {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "phone_number")
+	@Column(name = "phone_number", unique = true)
 	private String phoneNum;
 
-	@Column(name = "account_number")
+	@Column(name = "account_number", unique = true)
 	private String accountNum;
 
 	@Column(name = "verify")
 	private String verify;
 
 	@Column(name = "password")
-	@JsonIgnore
 	private String password;
 
 	@Column(name = "groupId", unique = true)
@@ -56,7 +55,7 @@ public class User {
 	private List<DataUser> dataUsers;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_id_code", referencedColumnName = "id")
+	@JoinColumn(name = "fk_id_user", referencedColumnName = "id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Code> codes;
 

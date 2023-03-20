@@ -69,7 +69,7 @@ public class UserController {
 				dataUser.getMiddleName(),
 				dataUser.getPassportNum(),
 				dataUser.getPassportSer(),
-				dataUser.getIssued(),
+				dataUser.getGranted(),
 				dataUser.getBirthdate(),
 				dataUser.getSex()));
 	}
@@ -115,7 +115,7 @@ public class UserController {
 
 	}
 
-	@PostMapping("/")
+	@PostMapping("/change_pass")
 	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
 		User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
 		if (passwordEncoder.matches(pass.get("pass"), userByPhoneNum.getPassword())) {

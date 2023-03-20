@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import com.example.model.Card;
 import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
@@ -8,17 +7,12 @@ import com.example.security.jwt.JwtRequestFilter;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
-import com.sun.istack.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +37,7 @@ public class AdminController {
 	@Lazy
 	private TypeService typeService;
 	
-	@PostMapping("/verified")
+	@PostMapping("/user/verify")
 	public ResponseEntity<DefaultResponse> verified(@RequestBody long id) {
 		try {
 			User user = userService.findById(id);
@@ -108,17 +102,17 @@ public class AdminController {
 		}
 	}
 
-	@PostMapping("/types")
-	public ResponseEntity<String> createTypeCard(@RequestParam("file") MultipartFile file,
-												 @RequestParam("description") String description,
-												 @RequestParam("typeName") String typeName,
-												 @RequestParam("limit") String limit) throws IOException {
+	@PostMapping("/type")
+	public ResponseEntity<Type> createTypeCard(@RequestParam("file") MultipartFile file,
+											   @RequestParam("description") String description,
+											   @RequestParam("name") String typeName,
+											   @RequestParam("limit") String limit) throws IOException {
 		String fileName = file.getOriginalFilename();
 		byte[] bytes = file.getBytes();
 		Path path = Paths.get("uploads/" + fileName);
 		Files.write(path, bytes);
-		typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
-		return ResponseEntity.ok("File uploaded successfully");
+		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
+		return ResponseEntity.ok(type);
 	}
 
 

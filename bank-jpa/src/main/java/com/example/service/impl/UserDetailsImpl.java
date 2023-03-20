@@ -53,10 +53,6 @@ public class UserDetailsImpl implements UserDetails {
 		return id;
 	}
 
-	public String getAccountNum() {
-		return accountNum;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;

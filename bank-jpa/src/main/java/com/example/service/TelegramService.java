@@ -1,89 +1,119 @@
-package com.example;
+package com.example.service;
 
 
+import com.example.config.BotConfig;
 import com.example.model.Code;
 import com.example.model.User;
 import com.example.repository.CodeRepository;
 import com.example.repository.UserRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
 @Component
 public class TelegramService extends TelegramLongPollingBot {
+    final BotConfig config;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private CodeRepository codeRepository;
-    @Value("telegram.bot.username")
-    private String botUsername;
-    @Value("telegram.bot.token")
-    private String botToken;
-    @Value("telegram.regExp")
-    private String expTime;
 
-    @Override
-    public void onUpdateReceived(Update update) {
-//        update.getMessage().hasContact();
-//        if (update.getMessage().getText().equals("/start")) {
-//            if (update.hasMessage() && update.getMessage().hasContact()) {
-//                setChatIdAndPhoneNum(
-//                        update.getMessage().getChatId(),
-//                        update.getMessage().getContact().getPhoneNumber()
-//                );
-//            }
-//        }
-//        else {
-//            logger.error("1");
-//            setChatIdAndPhoneNum(
-//                    update.getMessage().getChatId(),
-//                    update.getMessage().getContact().getPhoneNumber()
-//            );
-//        }
-//        SendMessage sendMessage = new SendMessage()
-//                .setChatId(update.getMessage().getChatId())
-//                .setText("message");
-//        try {
-//            execute(sendMessage);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
+
+    public TelegramService(BotConfig config) {
+        this.config = config;
+        List<BotCommand> commands = new ArrayList<>();
+        commands.add(new BotCommand("/start", "Привязать свой телеграмм"));
+        commands.add(new BotCommand("/replay", "Повторно получить код"));
         try {
-            execute(new SendMessage().setChatId(update.getMessage().getChatId())
-                    .setText("Hi!"));
+            this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+            switch (messageText) {
+                case "/start":
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
+                    sendMessage.setText("Отправить номер телефона");
+
+                    // create keyboard
+                    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+                    sendMessage.setReplyMarkup(replyKeyboardMarkup);
+                    replyKeyboardMarkup.setSelective(true);
+                    replyKeyboardMarkup.setResizeKeyboard(true);
+                    replyKeyboardMarkup.setOneTimeKeyboard(true);
+
+                    // new list
+                    List<KeyboardRow> keyboard = new ArrayList<>();
+
+                    // first keyboard line
+                    KeyboardRow keyboardFirstRow = new KeyboardRow();
+                    KeyboardButton keyboardButton = new KeyboardButton();
+                    keyboardButton.setText("Подтвердить");
+                    keyboardButton.setRequestContact(true);
+                    keyboardFirstRow.add(keyboardButton);
+
+                    // add array to list
+                    keyboard.add(keyboardFirstRow);
+
+                    // add list to our keyboard
+                    replyKeyboardMarkup.setKeyboard(keyboard);
+                    executeMessage(sendMessage);
+                    break;
+                case "/replay":
+                    break;
+            }
+
+        }
+        if (update.getMessage().hasContact()) {
+            startCommandReceived(update, update.getMessage().getChatId(), update.getMessage().getContact().getPhoneNumber());
         }
 
     }
 
-    @Override
-    public String getBotUsername() {
-        return botUsername;
+    private void startCommandReceived(Update update, long chatId, String phoneNum) throws TelegramApiException {
+        setChatIdAndPhoneNum(chatId,phoneNum);
     }
 
-    @Override
-    public String getBotToken() {
-        return botToken;
+    private void executeMessage(SendMessage message){
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendCode(String phoneNumber, String typeCode) {
         int code = generateCode();
         String message = String.format("Ваш 6-значный код: %06d", code);
 
-        SendMessage sendMessage = new SendMessage()
-                .setChatId(getChatIdByPhoneNumber(phoneNumber))
-                .setText(message);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(getChatIdByPhoneNumber(phoneNumber));
+        sendMessage.setText(message);
+
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
@@ -98,24 +128,29 @@ public class TelegramService extends TelegramLongPollingBot {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
         Timestamp date = new Timestamp(cal.getTime().getTime());
-        if (code.getCode() == checkCode && date.after(code.getExpDate())) {
+        if (code.getCode() == checkCode && date.before(code.getExpDate())) {
             return true;
         }
         return false;
     }
 
-    private void setChatIdAndPhoneNum(Long groupId, String numberPhone) {
-        User user = userRepository.findByPhoneNum(numberPhone);
+    private void setChatIdAndPhoneNum(Long groupId, String phoneNum) throws TelegramApiException {
+        User regUser = userRepository.findByPhoneNum(phoneNum);
+        if (regUser != null)
+            throw new TelegramApiException("Пользователь зарегестирован");
+        User user = new User();
+        user.setPhoneNum(phoneNum);
         user.setGroupId(groupId);
         userRepository.save(user);
     }
 
-    private long getChatIdByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNum(phoneNumber).getGroupId();
+    private String getChatIdByPhoneNumber(String phoneNumber) {
+        return String.valueOf(userRepository.findByPhoneNum(phoneNumber).getGroupId());
     }
 
     private void saveCode(String phoneNumber, int checkCode, String typeCode) {
-        List<Code> codes = userRepository.findByPhoneNum(phoneNumber).getCodes();
+        User user = userRepository.findByPhoneNum(phoneNumber);
+        List<Code> codes = user.getCodes();
         Code code = new Code();
         code.setCode(checkCode);
         Calendar cal = Calendar.getInstance();
@@ -125,12 +160,28 @@ public class TelegramService extends TelegramLongPollingBot {
         code.setExpDate(date);
         code.setType(typeCode);
         codes.add(code);
-        codeRepository.save(code);
+        user.setCodes(codes);
+        userRepository.save(user);
     }
 
     private int generateCode() {
         // Генерация 6-значного кода
         return (int) (Math.random() * 900000) + 100000;
+    }
+
+    @Override
+    public String getBotUsername() {
+        return config.getBotName();
+    }
+
+    @Override
+    public String getBotToken() {
+        return config.getToken();
+    }
+
+    @Override
+    public void onRegister() {
+        super.onRegister();
     }
 
     public enum type {

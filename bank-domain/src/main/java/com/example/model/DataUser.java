@@ -34,8 +34,8 @@ public class DataUser {
     @Column(name = "passport_serial")
     private String passportSer;
 
-    @Column(name = "issued")
-    private String issued;
+    @Column(name = "granted")
+    private String granted;
 
     @Column(name = "birthdate")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -56,7 +56,7 @@ public class DataUser {
                 ", middleName='" + middleName + '\'' +
                 ", passportNum='" + passportNum + '\'' +
                 ", passportSer='" + passportSer + '\'' +
-                ", address='" + issued + '\'' +
+                ", address='" + granted + '\'' +
                 ", birthdate=" + birthdate +
                 ", sex=" + sex +
                 ", userId=" + userId +

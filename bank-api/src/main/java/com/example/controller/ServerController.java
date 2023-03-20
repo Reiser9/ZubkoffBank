@@ -25,8 +25,8 @@ public class ServerController {
     @Autowired
     private TypeService typeService;
 
-    @PostMapping("/health")
-    public ResponseEntity<?> checkHealth(@RequestBody Map<String, String> user) {
+    @GetMapping("/health")
+    public ResponseEntity<?> checkHealth() {
         return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
     }
 
