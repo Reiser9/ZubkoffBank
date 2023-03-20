@@ -2,9 +2,9 @@ import React from 'react';
 
 import './index.css';
 
-import { Lock } from '../Icons';
+import { Lock } from '../../components/Icons';
 
-const ApiBlock = ({data}) => {
+const ApiItem = ({data}) => {
     const {method, url, request, response, isAuth} = data;
 
     return (
@@ -18,6 +18,7 @@ const ApiBlock = ({data}) => {
             </div>
 
             <div className="item-api__content">
+                {/* Мы вкурсе, что можно было выделить в компонент, просто нам лень */}
                 <div className="item-api__column">
                     <p className="item-api__label">request</p>
 
@@ -38,4 +39,4 @@ const ApiBlock = ({data}) => {
     )
 }
 
-export default ApiBlock;
+export default ApiItem;

@@ -118,8 +118,109 @@
     width: 24px;
     height: 24px;
 }
+.item-api {
+    width: calc(100% / 2 - 24px / 2);
+    display: flex;
+    flex-direction: column;
+}
+
+.item-api__header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 0.8rem;
+}
+
+.item-api__method {
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.item-api__method_post {
+    color: #FF9900;
+}
+
+.item-api__method_get {
+    color: #45EE0A;
+}
+
+.item-api__method_patch {
+    color: var(--mainC);
+}
+
+.item-api__method_delete {
+    color: var(--notifError);
+}
+
+.item-api__link {
+    font-weight: 600;
+    font-size: 1.6rem;
+}
+
+.item-api__content {
+    background: var(--creditCardBg);
+    border-radius: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 2rem 1.6rem 3.2rem;
+    flex-grow: 1;
+}
+
+.item-api__column {
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.item-api__label {
+    font-weight: 600;
+    font-size: 1.6rem;
+}
+
+.item-api__list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.item-api__icon {
+    width: 24px;
+    height: 24px;
+}
 
 @media (max-width:768px) {
+    .api {
+        padding: 4rem 0;
+    }
+    
+    .api__title {
+        font-size: 3rem;
+    }
+    
+    .api__columns {
+        margin-top: 2.4rem;
+        gap: 24px;
+    }
+    
+    .api__items {
+        gap: 2rem;
+    }
+    
+    .item-api {
+        width: 100%;
+    }
+    
+    .item-api__header {
+        gap: 8px;
+    }
+
     .api {
         padding: 4rem 0;
     }
@@ -151,9 +252,18 @@
         width: 20px;
         height: 20px;
     }
+
+    .item-api__icon {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 @media (max-width:375px) {
+    .api__title {
+        font-size: 2.5rem;
+    }
+
     .api__title {
         font-size: 2.5rem;
     }
