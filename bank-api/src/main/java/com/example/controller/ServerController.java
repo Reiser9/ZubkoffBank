@@ -40,18 +40,4 @@ public class ServerController {
         }
         return typesResponse;
     }
-
-    @GetMapping("/image")
-	public ResponseEntity<Resource> GetImageCard(@RequestParam("id") int id) throws IOException {
-		Type type = typeService.findTypeById(id);
-		Path path = Paths.get("uploads/" + "filename");
-		Resource resource = new UrlResource(path.toUri());
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-//                .header("type", type.getType())
-//                .header("description", type.getDescription())
-//                .header("limit", String.valueOf(type.getLimit()))
-				.contentType(MediaType.IMAGE_PNG)
-				.body(resource);
-	}
 }

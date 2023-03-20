@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.example.enums.UserVerify;
 import com.example.model.DataUser;
 import com.example.repository.CodeRepository;
 import com.example.repository.RoleRepository;
@@ -101,7 +102,7 @@ public class UserService {
 
 	public User createUser(User user, Map<String, String> regDataUser) {
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
-		user.setVerify("not verified");
+		user.setVerify(UserVerify.FIRST_STATUS.toString());
 		//Data users
 		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullname"))));
 		// Gen accountNum

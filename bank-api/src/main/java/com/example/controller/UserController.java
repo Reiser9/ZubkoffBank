@@ -11,6 +11,7 @@ import com.example.security.jwt.JwtRequestFilter;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
 import java.lang.reflect.Array;
 import java.security.Principal;
 import java.text.ParseException;
@@ -52,11 +54,35 @@ public class UserController {
 			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()));
 		}
 		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user phone"));
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user card"));
 		}
 	}
 
-	@GetMapping("/info")
+	@GetMapping("/short_info")
+	public ResponseEntity<?> getShortInfoUser(Principal user) {
+		try {
+			User userInfo = userService.findUserByPhoneNum(user.getName());
+			DataUser dataUser = userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1);
+			return ResponseEntity.ok(new FullInfoUserResponse(
+					userInfo.getId(), userInfo.getPhoneNum(),
+					userInfo.getVerify(),
+					userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
+					dataUser.getFirstName(),
+					dataUser.getSecondName(),
+					dataUser.getMiddleName(),
+					dataUser.getPassportNum(),
+					dataUser.getPassportSer(),
+					dataUser.getGranted(),
+					dataUser.getBirthdate(),
+					dataUser.getSex()));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.ok(new DefaultResponse("Not Successful", "Not found user"));
+		}
+
+	}
+
+	@GetMapping("/full_info")
 	public ResponseEntity<?> getFullInfoUser(Principal user) {
 		User userInfo = userService.findUserByPhoneNum(user.getName());
 		DataUser dataUser = userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1);
@@ -82,8 +108,8 @@ public class UserController {
 			cardService.save(card);
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user phone"));
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -91,16 +117,19 @@ public class UserController {
 	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> dataCard) {
 		if (Integer.parseInt(dataCard.get("typeId")) > typeService.getLength())
 			return ResponseEntity.badRequest().body(
-					new DefaultResponse("Not Successful", "invalid card type"));
-		User userInfo = userService.findUserByPhoneNum(user.getName());
-		Card newCard = cardService.createCard(dataCard, bankId);
-		userInfo.getCards().add(newCard);
-		userInfo.setCards(userInfo.getCards());
-		userService.saveUser(userInfo);
-		return ResponseEntity.ok(new CardResponse(newCard));
+					new DefaultResponse("Not Successful", "Invalid card type"));
+		try {
+			User userInfo = userService.findUserByPhoneNum(user.getName());
+			Card newCard = cardService.createCard(dataCard, bankId);
+			userInfo.getCards().add(newCard);
+			userInfo.setCards(userInfo.getCards());
+			userService.saveUser(userInfo);
+			return ResponseEntity.ok(new CardResponse(newCard));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		}
 	}
-
-
 
 	@PostMapping("/data")
 	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
@@ -109,22 +138,28 @@ public class UserController {
 			userService.setDataUser(userInfo, data);
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
-		catch (Exception e) {
-				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		}
-
+		catch (ParseException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Incorrect date format"));
+		}
 	}
 
 	@PostMapping("/change_pass")
 	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
-		User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
-		if (passwordEncoder.matches(pass.get("pass"), userByPhoneNum.getPassword())) {
-			userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("new_pass")));
-			userService.saveUser(userByPhoneNum);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+		try {
+			User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
+			if (passwordEncoder.matches(pass.get("pass"), userByPhoneNum.getPassword())) {
+				userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("new_pass")));
+				userService.saveUser(userByPhoneNum);
+				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			} else {
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+			}
 		}
-		else {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.enums.UserVerify;
 import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
@@ -41,11 +42,11 @@ public class AdminController {
 	public ResponseEntity<DefaultResponse> verified(@RequestBody long id) {
 		try {
 			User user = userService.findById(id);
-			user.setVerify("Verified");
+			user.setVerify(UserVerify.THIRD_STATUS.toString());
 			userService.saveUser(user);
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
-		catch (Exception e) {
+		catch (NullPointerException e) {
 			return ResponseEntity.ok(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
@@ -113,6 +114,7 @@ public class AdminController {
 		Files.write(path, bytes);
 		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
 		return ResponseEntity.ok(type);
+		// Проверка на название файла
 	}
 
 

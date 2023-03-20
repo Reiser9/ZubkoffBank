@@ -3,6 +3,7 @@ package com.example.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.enums.CardType;
 import com.example.service.TelegramService;
 import com.example.model.RefreshToken;
 import com.example.model.User;
@@ -22,6 +23,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -59,24 +61,37 @@ public class AuthController {
 
 	@PostMapping("/send_code_register")
 	public ResponseEntity<?> sendCode(@RequestBody Map<String, String> phoneNumber) {
-		telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(type.REGISTER));
-		return ResponseEntity.ok().body("YTTT1");
-
+		try {
+			telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CardType.REGISTER));
+			return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
+		}
+		catch (TelegramApiException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		}
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) throws Exception {
-		if (telegramService.checkCode(user.get("phoneNum"), Integer.parseInt(user.get("code")))) {
-			if (user.get("password").length() < 8 && user.get("password").length() > 20) {
-				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
-			}
+	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) {
+		try {
+			if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")))) {
+				if (user.get("password").length() < 8 && user.get("password").length() > 20) {
+					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
+				}
 
-			User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
-			userService.saveUser(newUser);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+				User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
+				userService.saveUser(newUser);
+				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			}
+			else
+				return ResponseEntity.ok().body(new DefaultResponse("Not Successful", "Invalid code"));
 		}
-		else
-			return ResponseEntity.ok().body("YTTT");
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
+		}
+
 
 	}
 	
@@ -88,21 +103,15 @@ public class AuthController {
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshtoken(@RequestBody Map<String, String> refreshToken) {
-		RefreshToken token = refreshTokenService.findByRefreshToken(refreshToken.get("accessToken"));
+		RefreshToken token = refreshTokenService.findByRefreshToken(refreshToken.get("refreshToken"));
 		if(token != null && refreshTokenService.verifyExpiration(token) != null) {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
 			String jwt = jwtUtils.createToken(claims, user.getAccountNum());
-			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("accessToken")));
+			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("refreshToken")));
 		}
 		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
-	}
-
-	public enum type {
-		REGISTER,
-		RECOVERY,
-		TRANSFER
 	}
 	
 }

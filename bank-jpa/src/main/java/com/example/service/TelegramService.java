@@ -39,8 +39,7 @@ public class TelegramService extends TelegramLongPollingBot {
     public TelegramService(BotConfig config) {
         this.config = config;
         List<BotCommand> commands = new ArrayList<>();
-        commands.add(new BotCommand("/start", "Привязать свой телеграмм"));
-        commands.add(new BotCommand("/replay", "Повторно получить код"));
+        commands.add(new BotCommand("/start", "Привязать свой телеграмм аккаунт"));
         try {
             this.execute(new SetMyCommands(commands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -83,19 +82,13 @@ public class TelegramService extends TelegramLongPollingBot {
                     replyKeyboardMarkup.setKeyboard(keyboard);
                     executeMessage(sendMessage);
                     break;
-                case "/replay":
-                    break;
             }
 
         }
         if (update.getMessage().hasContact()) {
-            startCommandReceived(update, update.getMessage().getChatId(), update.getMessage().getContact().getPhoneNumber());
+            setChatIdAndPhoneNum(update.getMessage().getChatId(), update.getMessage().getContact().getPhoneNumber());
         }
 
-    }
-
-    private void startCommandReceived(Update update, long chatId, String phoneNum) throws TelegramApiException {
-        setChatIdAndPhoneNum(chatId,phoneNum);
     }
 
     private void executeMessage(SendMessage message){
@@ -106,7 +99,7 @@ public class TelegramService extends TelegramLongPollingBot {
         }
     }
 
-    public void sendCode(String phoneNumber, String typeCode) {
+    public void sendCode(String phoneNumber, String typeCode) throws TelegramApiException {
         int code = generateCode();
         String message = String.format("Ваш 6-значный код: %06d", code);
 
@@ -114,15 +107,11 @@ public class TelegramService extends TelegramLongPollingBot {
         sendMessage.setChatId(getChatIdByPhoneNumber(phoneNumber));
         sendMessage.setText(message);
 
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
+        execute(sendMessage);
         saveCode(phoneNumber, code, typeCode);
     }
 
-    public Boolean checkCode(String phoneNumber, int checkCode) {
+    public Boolean compareCode(String phoneNumber, int checkCode) {
         Long id = userRepository.findByPhoneNum(phoneNumber).getId();
         Code code = codeRepository.findByUserId(id);
         Calendar cal = Calendar.getInstance();
@@ -137,7 +126,13 @@ public class TelegramService extends TelegramLongPollingBot {
     private void setChatIdAndPhoneNum(Long groupId, String phoneNum) throws TelegramApiException {
         User regUser = userRepository.findByPhoneNum(phoneNum);
         if (regUser != null)
-            throw new TelegramApiException("Пользователь зарегестирован");
+        {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(getChatIdByPhoneNumber(phoneNum));
+            sendMessage.setText("Данный телеграм аккаунт уже привязан");
+            execute(sendMessage);
+            return;
+        }
         User user = new User();
         user.setPhoneNum(phoneNum);
         user.setGroupId(groupId);
@@ -182,12 +177,6 @@ public class TelegramService extends TelegramLongPollingBot {
     @Override
     public void onRegister() {
         super.onRegister();
-    }
-
-    public enum type {
-        REGISTER,
-        RECOVERY,
-        TRANSFER
     }
 
 
