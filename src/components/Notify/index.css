@@ -5,12 +5,11 @@
     right: 0;
     display: flex;
     justify-content: flex-start;
-    align-items: flex-start;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
-    max-width: 600px;
-    padding: 8px;
+    max-width: 500px;
+    padding: 4px;
 }
 
 .notifies__item {
@@ -20,22 +19,57 @@
     gap: 12px;
     padding: 1.6rem 2rem 2rem;
     cursor: pointer;
+    position: relative;
 }
 
-.notify-warning {
-    background-color: #FEF5E4;
+.notify-warning{
+    background: #FEF5E4;
 }
 
-.notify-ok {
+.notify-warning .notify__progress{
+    background: var(--notifyWarning);
+}
+
+.notify-ok{
     background: #DBF5EB;
 }
 
-.notify-error {
+.notify-ok .notify__progress{
+    background: var(--notifyOk);
+}
+
+.notify-error{
     background: #FDE2E2;
 }
 
-.notify-info {
+.notify-error .notify__progress{
+    background: var(--notifyError);
+}
+
+.notify-info{
     background: #DCEAFB;
+}
+
+.notify-info .notify__progress{
+    background: var(--notifyInfo);
+}
+
+.notify__progress{
+    height: 3px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    animation: fadeOut 2s linear;
+}
+
+@keyframes fadeOut{
+    0%{
+        width: 100%;
+    }
+    100%{
+        width: 0%;
+    }
 }
 
 .notifies__item svg {
@@ -51,7 +85,7 @@
 }
 
 .notify-error svg path {
-    stroke: var(--notifError);
+    stroke: var(--notifyError);
 }
 
 .notify-info svg path {

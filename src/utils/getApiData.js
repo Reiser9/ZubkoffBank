@@ -70,7 +70,11 @@ const getWeather = async (lat, lon) => {
 
 const getOneCurrency = async (from = "USD") => {
     try{
-        const data = await currency.get(`convert?to=RUB&from=${from}&amount=1&apikey=${process.env.REACT_APP_CURRENCY_TOKEN}`);
+        const data = await currency.get(`convert?to=RUB&from=${from}&amount=1`, {
+            headers: {
+                "apikey": process.env.REACT_APP_CURRENCY_TOKEN
+            }
+        });
 
         const currencyResult = data.data.result.toFixed(2);
 

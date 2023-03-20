@@ -37,9 +37,9 @@ const Profile = () => {
                 <div className="profile__inner">
                     <div className="profile__sidebar">
                         <SidebarItem title="Счета и карты">
-                            <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
+                            {/* <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
                             <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
-                            <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
+                            <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" /> */}
 
                             <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setModal(true)}>
                                 <div className="profile__sidebar--check--icon--inner">

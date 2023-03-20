@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import '../Sign/index.css';
 import './index.css';
 
-import { LoginIcon, RegisterIcon, Save, RecoveryIcon } from '../../components/Icons';
+import { RecoveryIcon } from '../../components/Icons';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 
@@ -30,7 +30,7 @@ const Recovery = () => {
                                 <div className={`sign__step${step > 2 ? " active" : ""}`}>3</div>
                             </div>
 
-                            <p className="sign__title recovery__title">
+                            <p className="sign__title">
                                 Восстановление пароля
                             </p>
 
@@ -41,7 +41,7 @@ const Recovery = () => {
                                         <Input placeholder="Введите номер телефона" value={phoneEnter} setValue={setPhoneEnter} />
                                     </div>
 
-                                    <Link to="/sign" className="recovery__link">Вспомнили пароль?</Link>
+                                    <Link to="/sign" className="sign__link">Вспомнили пароль?</Link>
 
                                     <div className="recovery__btns">
                                         <Button className="sign__btn recovery__btn" onClick={() => setStep(2)}>

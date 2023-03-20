@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
-import { Dollar, Fast, Phone, Invest, Card } from '../../components/Icons';
+import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
 
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
@@ -61,15 +61,15 @@ const Main = () => {
                         <h2 className="services__title title">Сервисы и услуги</h2>
 
                         <div className="services__items">
-                            <ServiceItem icon={<Invest className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
+                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
 
-                            <ServiceItem icon={<Card className="item-services__icon" />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
+                            <ServiceItem icon={<Card />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
 
-                            <ServiceItem icon={<Dollar className="item-services__icon" />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
+                            <ServiceItem icon={<Dollar />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
 
-                            <ServiceItem icon={<Fast className="item-services__icon" />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
+                            <ServiceItem icon={<Fast />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
 
-                            <ServiceItem icon={<Phone className="item-services__icon" />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
+                            <ServiceItem icon={<Phone />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
                         </div>
                     </div>
                 </div>
@@ -81,11 +81,11 @@ const Main = () => {
                         <h2 className="cashback__title title">Кэшбек с {process.env.REACT_APP_BANK_NAME} Bank</h2>
 
                         <div className="cashback__items">
-                            <CashbackItem title="До 30% у партнеров" text="Самый большой кэшбэк — за покупки по спецпредложениям партнеров банка" />
+                            <CashbackItem icon={<Percent />} title="До 30% у партнеров" text="Самый большой кэшбэк — за покупки по спецпредложениям партнеров банка" />
 
-                            <CashbackItem title="До 15% кэшбэка" text="Каждый месяц выбирайте четыре категории покупок, в которых будете получать кэшбэк" />
+                            <CashbackItem icon={<CoinStack />} title="До 15% кэшбэка" text="Каждый месяц выбирайте четыре категории покупок, в которых будете получать кэшбэк" />
 
-                            <CashbackItem title="До 6% на остаток" text={`Ежемесячно получайте до 6% годовых с подпиской ${process.env.REACT_APP_BANK_NAME} Pro`} light />
+                            <CashbackItem icon={<Banknotes />} title="До 6% на остаток" text={`Ежемесячно получайте до 6% годовых с подпиской ${process.env.REACT_APP_BANK_NAME} Pro`} light />
                         </div>
                     </div>
                 </div>

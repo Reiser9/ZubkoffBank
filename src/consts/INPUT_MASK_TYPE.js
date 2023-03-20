@@ -1,0 +1,7 @@
+export const INPUT_MASK_TYPE = {
+    PHONE: "+7(999) 999 99-99",
+    CARD: "9999 9999 9999 9999",
+    CONFIRM_CODE: "999 999",
+    PASSPORT_DATA: "9999 999999",
+    DATE: "99.99.9999"
+}

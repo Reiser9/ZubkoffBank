@@ -26,7 +26,7 @@
 }
 
 .cards-popup.active .cards-popup__inner {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
 }
 
 .cards-popup__container {
@@ -37,7 +37,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: .2s linear;
 }
 
 .cards-popup__inner {
@@ -46,7 +45,8 @@
     background-color: #fff;
     border-radius: 8px;
     position: relative;
-    transform: scale(0);
+    transform: scale(.9) translateY(80px);
+    transition: .2s ease-in-out;
 }
 
 .cards-popup__close-btn {

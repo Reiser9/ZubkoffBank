@@ -43,12 +43,12 @@
     margin-bottom: 2.4rem;
 }
 
-.item-services__icon {
+.item-services__icon--inner svg {
     width: 24px;
     height: 24px;
 }
 
-.item-services__icon path {
+.item-services__icon--inner svg path {
     stroke: var(--mainC);
 }
 

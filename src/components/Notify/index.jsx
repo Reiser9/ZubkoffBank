@@ -1,19 +1,18 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-import './index.css';
+import NotifyItem from './NotifyItem';
 
-const Notify = ({title, text, type}) => {
-    return(
-        <div className={`notifies__item ${type.TYPE}`}>
-            {type.ICON}
+const Notifies = () => {
+    const notify = useSelector(state => state.notify);
 
-            <div className="notifies__content">
-                <h4 className="notifies__title">{title}</h4>
-
-                <p className="notifies__text">{text}</p>
-            </div>
-        </div>
+    return (
+        <>
+            {notify.notify.length > 0 && <div className="notifies">
+                {notify.notify.map((data, id) => <NotifyItem key={id} data={data} />)}
+            </div>}
+        </>
     )
 }
 
-export default Notify;
+export default Notifies;

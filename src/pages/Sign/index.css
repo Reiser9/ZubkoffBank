@@ -172,7 +172,7 @@
     background-color: var(--mainC);
     width: 0;
     z-index: 1;
-    transition: .2s linear .2s;
+    transition: .1s linear .1s;
 }
 
 .sign__step:not(:first-child)::after {
@@ -183,12 +183,12 @@
 .sign__step.active {
     border: 1px solid var(--mainC);
     color: var(--mainC);
-    transition: .2s linear .2s;
+    transition: .1s linear .1s;
 }
 
 .sign__step.active::before {
     width: 48px;
-    transition: .2s linear;
+    transition: .1s linear;
 }
 
 .sign__title {
@@ -265,7 +265,7 @@
     background: var(--mainC);
     border: none;
     opacity: 0;
-    transition: .2s linear;
+    transition: .1s linear;
 }
 
 .sign__button--inner {
@@ -299,7 +299,7 @@
 .sign__warning {
     font-weight: 400;
     font-size: 1.5rem;
-    color: var(--notifError);
+    color: var(--notifyError);
 }
 
 .sign__warning_1 {

@@ -15,7 +15,7 @@ const useCurrency = () => {
     const getCurrencyData = async () => {
         setIsLoad(true);
 
-        if(Object.keys(currencyState.currency).length != 0){
+        if(Object.keys(currencyState.currency).length !== 0){
             setCurrency(currencyState.currency);
         }
         else{

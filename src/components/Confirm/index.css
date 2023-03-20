@@ -74,7 +74,7 @@
 }
 
 .default__button.red-btn {
-    background-color: var(--notifError);
+    background-color: var(--notifyError);
 }
 
 .default__button.red-btn:hover {
