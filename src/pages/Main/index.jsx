@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
+import useNotify from '../../hooks/useNotify';
+
 import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
 
 import Button from '../../components/Button';
@@ -17,13 +19,19 @@ const Main = () => {
         window.scrollTo(0, 0);
     }, []);
 
+    const {alertNotify} = useNotify();
+
+    const test = () => {
+        alertNotify("Тест", "Тест", "info");
+    }
+
     return (
         <>
             <section className="main-block">
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title">Привет 👋</h1>
+                            <h1 className="main-block__title title" onClick={test}>Привет 👋</h1>
                                 
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 

@@ -9,7 +9,7 @@ const Notifies = () => {
     return (
         <>
             {notify.notify.length > 0 && <div className="notifies">
-                {notify.notify.map((data, id) => <NotifyItem key={id} data={data} />)}
+                {notify.notify.map((data) => <NotifyItem key={data.id} data={data} />)}
             </div>}
         </>
     )

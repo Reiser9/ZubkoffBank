@@ -15,7 +15,7 @@ const notifyArr = {
 
 const NotifyItem = ({data}) => {
     const {id, title, text, type, time} = data;
-    let notifyTimeout;
+    const notifyTimeout = React.useRef(0);
     const dispatch = useDispatch();
 
     const remove = () => {
@@ -28,7 +28,9 @@ const NotifyItem = ({data}) => {
     }
 
     React.useEffect(() => {
-        notifyTimeout = setTimeout(remove, time);
+        notifyTimeout.current = window.setTimeout(remove, time);
+
+        return () => clearTimeout(notifyTimeout.current);
     }, []);
     
     return(
@@ -40,8 +42,10 @@ const NotifyItem = ({data}) => {
 
                 <p className="notifies__text">{text}</p>
             </div>
+
+            <div className="notify__progress"></div>
         </div>
     )
 }
 
-export default NotifyItem;
+export default React.memo(NotifyItem);
