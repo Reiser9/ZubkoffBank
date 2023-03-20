@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
+import com.example.payload.TypeResponse;
 import com.example.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +33,12 @@ public class ServerController {
     }
 
     @GetMapping("/types")
-    public List<Type> getTypes() {
-        return typeService.findAll();
+    public List<TypeResponse> getTypes() {
+        List<TypeResponse> typesResponse = new ArrayList<>();
+        for (Type type: typeService.findAll()) {
+            typesResponse.add(new TypeResponse(type));
+        }
+        return typesResponse;
     }
 
     @GetMapping("/image")
