@@ -89,7 +89,7 @@ public class UserController {
 
 	@PostMapping("/card")
 	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> dataCard) {
-		if (Integer.parseInt(dataCard.get("type")) > typeService.getLength())
+		if (Integer.parseInt(dataCard.get("typeId")) > typeService.getLength())
 			return ResponseEntity.badRequest().body(
 					new DefaultResponse("Not Successful", "invalid card type"));
 		User userInfo = userService.findUserByPhoneNum(user.getName());

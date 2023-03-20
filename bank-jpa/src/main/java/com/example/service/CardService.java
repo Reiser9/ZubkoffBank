@@ -51,7 +51,7 @@ public class CardService {
         card.setFirstName(data_card.get("firstName"));
         card.setSecondName(data_card.get("secondName"));
         card.setLock(false);
-        card.setTypeId(Integer.parseInt(data_card.get("type")));
+        card.setTypeId(Integer.parseInt(data_card.get("typeId")));
         return card;
     }
 
