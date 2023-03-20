@@ -16,7 +16,7 @@ const Sign = () => {
 
     return (
         <div className="sign">
-            <div className="container">
+            <div className="container sign__container">
                 <div className="sign__inner">
                     <div className="sign__content">
                         <div className="sign__tabs">

@@ -1,0 +1,352 @@
+[
+    {
+        "title": "AUTH",
+        "data": [
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/auth/login",
+                "request": [
+                    "phoneNum",
+                    "password"
+                ],
+                "response": [
+                    "typeToken",
+                    "accessToken",
+                    "refreshToken"
+                ]
+            },
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/auth/register",
+                "request": [
+                    "phoneNum",
+                    "password",
+                    "fullName"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/auth/refresh",
+                "request": [
+                    "accessToken"
+                ],
+                "response": [
+                    "typeToken",
+                    "accessToken",
+                    "refreshToken"
+                ]
+            },
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/auth/send_code_register",
+                "request": [
+                    "phoneNum"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            }
+        ]
+    },
+    {
+        "title": "USER",
+        "data": [
+            {
+                "isAuth": true,
+                "method": "GET",
+                "url": "/user/cards",
+                "request": [
+                ],
+                "response": [
+                    "id",
+                    "cardNum",
+                    "cvc",
+                    "expDate",
+                    "balance",
+                    "firstName",
+                    "secondName",
+                    "userId",
+                    "lock",
+                    "typeId"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "GET",
+                "url": "/user/short_info",
+                "request": [
+                ],
+                "response": [
+                    "id",
+                    "phoneNum",
+                    "verified",
+                    "roles",
+                    "firstName"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "GET",
+                "url": "/user/info",
+                "request": [
+                ],
+                "response": [
+                    "id",
+                    "phoneNum",
+                    "verified",
+                    "roles",
+                    "firstName",
+                    "secondName",
+                    "middleName",
+                    "passportNum",
+                    "passportSer",
+                    "address",
+                    "birthdate",
+                    "sex"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/user/card",
+                "request": [
+                    "firstName",
+                    "secondName",
+                    "type"
+                ],
+                "response": [
+                    "id",
+                    "cardNum",
+                    "cvc",
+                    "expDate",
+                    "balance",
+                    "firstName",
+                    "secondName",
+                    "type",
+                    "lock"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/user/card/block",
+                "request": [
+                    "cardNum"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/user/change_pass",
+                "request": [
+                    "pass",
+                    "newPass"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            }
+        ]
+    },
+    {
+        "title": "ADMIN",
+        "data": [
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/full_info?offset=0&limit=5",
+                "request": [
+                    "cardNum"
+                ],
+                "response": [
+                    "id",
+                    "phoneNum",
+                    "accountNum",
+                    "verify",
+                    "roles",
+                    "cards",
+                    "dataUsers"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/card/block",
+                "request": [
+                    "id",
+                    "cardNum"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/card/unblock",
+                "request": [
+                    "id",
+                    "cardNum"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/user/block",
+                "request": [
+                    "id"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/user/unblock",
+                "request": [
+                    "id"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/verify",
+                "request": [
+                    "id"
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "POST",
+                "url": "/admin/type",
+                "request": [
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ],
+                "response": [
+                    "id",
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "GET",
+                "url": "/admin/type",
+                "request": [
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ],
+                "response": [
+                    "id",
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "PATCH",
+                "url": "/admin/type",
+                "request": [
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ],
+                "response": [
+                    "id",
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ]
+            },
+            {
+                "isAuth": true,
+                "method": "DELETE",
+                "url": "/admin/type",
+                "request": [
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ],
+                "response": [
+                    "id",
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ]
+            }
+        ]
+    },
+    {
+        "title": "SERVER",
+        "data": [
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/health",
+                "request": [
+                ],
+                "response": [
+                    "status",
+                    "error"
+                ]
+            },
+            {
+                "isAuth": false,
+                "method": "POST",
+                "url": "/types",
+                "request": [
+                ],
+                "response": [
+                    "id",
+                    "type",
+                    "limit",
+                    "name",
+                    "img",
+                    "description"
+                ]
+            }
+        ]
+    }
+]
