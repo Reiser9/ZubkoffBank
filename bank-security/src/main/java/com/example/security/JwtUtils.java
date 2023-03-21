@@ -1,4 +1,4 @@
-package com.example.security.jwt;
+package com.example.security;
 
 import java.util.Date;
 import java.util.HashMap;

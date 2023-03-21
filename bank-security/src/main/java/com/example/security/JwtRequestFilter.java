@@ -1,4 +1,4 @@
-package com.example.security.jwt;
+package com.example.security;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		try {
 			String jwt = parseJwt(request);
-			
+			// jwt token filter //
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 				final String phoneNum = jwtUtils.extractPhoneNum(jwt);
 				final List<String> roles = jwtUtils.extractRoles(jwt);

@@ -6,29 +6,20 @@ import com.example.model.User;
 import com.example.payload.CardResponse;
 import com.example.payload.DefaultResponse;
 import com.example.payload.FullInfoUserResponse;
-import com.example.payload.UserResponse;
-import com.example.security.jwt.JwtRequestFilter;
+import com.example.security.JwtRequestFilter;
+import com.example.service.RefreshTokenService;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.Null;
-import java.lang.reflect.Array;
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -40,6 +31,8 @@ public class UserController {
 	private String bankId;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RefreshTokenService refreshTokenService;
 	@Autowired
 	private TypeService typeService;
 	@Autowired
@@ -129,6 +122,12 @@ public class UserController {
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		}
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
+		refreshTokenService.deleteByUserId(userid.get("id"));
+		return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
 	}
 
 	@PostMapping("/data")

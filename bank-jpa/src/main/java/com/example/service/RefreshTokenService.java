@@ -1,4 +1,4 @@
-package com.example.security.jwt;
+package com.example.service;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class RefreshTokenService {
 	@Value("${jwt.refreshExp}")
 	private Long refreshTokenDurationMs;
 	@Autowired
-	private RefreshTokenRepository refreshTokenDAO;
+	private RefreshTokenRepository refreshTokenRepository;
 	@Autowired
 	private UserRepository userRepository;
 
@@ -26,7 +26,7 @@ public class RefreshTokenService {
 	}
 
 	public RefreshToken findByRefreshToken(String token) {
-		return refreshTokenDAO.findByRefreshToken(token);
+		return refreshTokenRepository.findByRefreshToken(token);
 	}
 
 	public RefreshToken createRefreshToken(Long userId) {
@@ -35,14 +35,14 @@ public class RefreshTokenService {
 		refreshToken.setUser(userRepository.findById(userId).get());
 		refreshToken.setExpDate(Instant.now().plusMillis(refreshTokenDurationMs));
 		refreshToken.setRefreshToken(UUID.randomUUID().toString());
-		refreshToken = refreshTokenDAO.save(refreshToken);
+		refreshToken = refreshTokenRepository.save(refreshToken);
 
 		return refreshToken;
 	}
 
 	public RefreshToken verifyExpiration(RefreshToken token) {
 		if (token.getExpDate().compareTo(Instant.now()) < 0) {
-			refreshTokenDAO.delete(token);
+			refreshTokenRepository.delete(token);
 			return null;
 		}
 
@@ -51,7 +51,7 @@ public class RefreshTokenService {
 
 	@Transactional
 	public int deleteByUserId(Long userId) {
-		return refreshTokenDAO.deleteByUser(userRepository.findById(userId).get());
+		return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
 	}
 	
 }

@@ -1,10 +1,11 @@
 package com.example.controller;
 
 import com.example.enums.UserVerify;
+import com.example.model.Card;
 import com.example.model.Type;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
-import com.example.security.jwt.JwtRequestFilter;
+import com.example.security.JwtRequestFilter;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
@@ -13,15 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -81,6 +83,18 @@ public class AdminController {
 		}
 	}
 
+	@PostMapping("/user/money")
+	public ResponseEntity<?> setMoney(@RequestBody Map<String, Long> card_data) {
+		try {
+			Card card = cardService.findCardById(card_data.get("id"));
+			card.setBalance(card_data.get("balance"));
+			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+		}
+		catch (Exception e) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+		}
+	}
+
 	@PostMapping("/card/unblock")
 	public ResponseEntity<?> unblockCard(@RequestBody long id) {
 		try {
@@ -118,6 +132,19 @@ public class AdminController {
 		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
 		return ResponseEntity.ok(type);
 	}
+
+//	@DeleteMapping(value = "/type/{id}")
+//	@CrossOrigin(origins = "*")
+//	public ResponseEntity<?> deleteTypeCard(@PathVariable int id) throws IOException {
+//		try {
+//			typeService.deleteTypeById(id);
+//			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+//		}
+//		catch (EmptyResultDataAccessException exception) {
+//			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found type"));
+//		}
+//
+//	}
 
 
 }

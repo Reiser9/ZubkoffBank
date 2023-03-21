@@ -15,8 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import com.example.security.jwt.JwtRequestFilter;
 import com.example.service.impl.UserDetailsServiceImpl;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -35,8 +37,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
     CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS", "DELETE"));
+		configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "Content-Length", "X-Requested-With"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 	
@@ -45,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth
 			.userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder());
+
     }
 	
 	@Override
@@ -70,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 			http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 			http.headers().frameOptions().disable();
+			http.cors().and().csrf().disable();
 	}
 
 }

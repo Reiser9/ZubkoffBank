@@ -9,9 +9,9 @@ import com.example.model.RefreshToken;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
 import com.example.payload.JwtResponse;
-import com.example.security.jwt.JwtRequestFilter;
-import com.example.security.jwt.JwtUtils;
-import com.example.security.jwt.RefreshTokenService;
+import com.example.security.JwtRequestFilter;
+import com.example.security.JwtUtils;
+import com.example.service.RefreshTokenService;
 import com.example.service.UserService;
 import com.example.service.impl.UserDetailsImpl;
 import org.slf4j.Logger;
@@ -95,11 +95,7 @@ public class AuthController {
 
 	}
 	
-	@PostMapping("/logout")
-	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
-		refreshTokenService.deleteByUserId(userid.get("id"));    
-	    return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
-	}
+
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshtoken(@RequestBody Map<String, String> refreshToken) {

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -32,6 +33,11 @@ public class TypeService {
     public List<Type> findAll() {
         return typeRepository.findAll();
     }
+
+//    @Transactional
+//    public void deleteTypeById(int id) {
+//        typeRepository.deleteById(id);
+//    }
 
 
     public Type findTypeById(int id) {
