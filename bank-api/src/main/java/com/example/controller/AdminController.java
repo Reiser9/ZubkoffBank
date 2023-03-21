@@ -104,17 +104,19 @@ public class AdminController {
 	}
 
 	@PostMapping("/type")
-	public ResponseEntity<Type> createTypeCard(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<?> createTypeCard(@RequestParam("file") MultipartFile file,
 											   @RequestParam("description") String description,
 											   @RequestParam("name") String typeName,
 											   @RequestParam("limit") String limit) throws IOException {
 		String fileName = file.getOriginalFilename();
 		byte[] bytes = file.getBytes();
 		Path path = Paths.get("uploads/" + fileName);
+		if (Files.exists(path)) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "File already exist"));
+		}
 		Files.write(path, bytes);
 		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
 		return ResponseEntity.ok(type);
-		// Проверка на название файла
 	}
 
 

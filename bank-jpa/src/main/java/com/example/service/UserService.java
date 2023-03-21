@@ -104,7 +104,7 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
 		user.setVerify(UserVerify.FIRST_STATUS.toString());
 		//Data users
-		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullname"))));
+		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullName"))));
 		// Gen accountNum
 		user.setAccountNum(generateAccountNum());
 		return user;

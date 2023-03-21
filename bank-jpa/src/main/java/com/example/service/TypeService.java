@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dao.TypeDAO;
 import com.example.model.Type;
+import com.example.model.User;
 import com.example.repository.TypeRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class TypeService {
     public List<Type> findAll() {
         return typeRepository.findAll();
     }
+
 
     public Type findTypeById(int id) {
         return typeRepository.findById(id).get();
