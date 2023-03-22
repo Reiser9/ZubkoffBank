@@ -383,6 +383,7 @@
     top: 16px;
     width: 100%;
     height: 24px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .bil-payment_black {
@@ -399,22 +400,6 @@
 
 .bil-payment_drive {
     background-color: var(--cardDriveC);
-}
-
-.bil-payment_black::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_junior::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_platinum::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_drive::before {
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .bil-payment__type {

@@ -637,8 +637,6 @@ const Admin = () => {
                             <div className="number__btn">3</div>
                         </div>
                     </div>}
-
-                    Создание карты
                 </div>
             </div>
         </section >
