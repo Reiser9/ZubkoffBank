@@ -1,0 +1,300 @@
+.admin__content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.admin__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.admin__title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.limit {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.limit__label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.number__btns {
+    display: flex;
+    gap: 8px;
+}
+
+.number__btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--creditCardBg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .2s linear;
+}
+
+.number__btn:hover {
+    opacity: 0.7;
+}
+
+.number__btn.active {
+    background-color: var(--mainC);
+    color: #fff;
+}
+
+.admin__items {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.item-admin {
+    background-color: #fff;
+    padding: 0 12px;
+    width: 100%;
+}
+
+.item-admin__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 12px 0;
+}
+
+.item-admin__title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.item-admin__number {
+    background-color: var(--creditCardBg);
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--mainC);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-admin__name {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.item-admin__open-btn {
+    width: 32px;
+    height: 32px;
+    background-color: var(--creditCardBg);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-admin__arrow {
+    width: 18px;
+    height: 18px;
+    stroke: var(--mainC);
+}
+
+.item-admin.active .item-admin__arrow {
+    transform: rotate(-180deg);
+}
+
+.item-admin__content {
+    display: none;
+    padding: 12px 0 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-admin.active .item-admin__content {
+    display: flex;
+}
+
+.section-admin {
+    background-color: var(--backgroundC);
+    border-radius: 4px;
+    padding: 0 8px;
+    width: 100%;
+}
+
+.section-admin__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.section-admin__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+
+.section-admin__icon {
+    width: 20px;
+    height: 20px;
+    stroke: #000;
+}
+
+.section-admin__arrow {
+    width: 16px;
+    height: 16px;
+    stroke: #000;
+}
+
+.section-admin.active .section-admin__arrow {
+    transform: rotate(-180deg);
+}
+
+.section-admin__content {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 24px;
+    padding: 8px 0 20px;
+}
+
+.section-admin.active .section-admin__content {
+    display: flex;
+}
+
+.section-admin__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+}
+
+.section-admin__item {
+    background-color: var(--creditCardBg);
+    width: calc(100% / 2 - 12px / 2);
+    padding: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.section-admin__item_full {
+    width: 100%;
+}
+
+.section-admin__label {
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.section-admin__value {
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.default__button.section-admin__btn {
+    padding: 0.8rem 3.2rem;
+}
+
+.section-admin__text {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.section-admin__item_card {
+    width: calc(100% / 3 - 2 * 12px / 3);
+    padding: 16px 8px;
+    gap: unset;
+}
+
+.section-admin__item_card .section-admin__text-btn {
+    align-self: start;
+}
+
+.section-admin__card-img {
+    width: 100%;
+    max-width: 150px;
+    align-self: center;
+}
+
+.section-admin__card-items {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 1.6rem 0 2rem 0;
+}
+
+.section-admin__card-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: calc(100% / 2 - 8px / 2);
+}
+
+.section-admin__card-item_full {
+    width: 100%;
+}
+
+.section-admin__copy-icon {
+    width: 16px;
+    height: 16px;
+    stroke: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.section-admin__text-btn {
+    font-weight: 500;
+    font-size: 1.4rem;
+    color: var(--notifyError);
+    align-self: center;
+    cursor: pointer;
+    transition: .2s linear;
+}
+
+.section-admin__text-btn:hover {
+    opacity: 0.7;
+}
+
+.section-admin__text-btn:not(:last-child) {
+    margin-bottom: 8px;
+}
+
+.section-admin__text-btn_blue {
+    color: var(--mainC);
+}
+
+.pagination {
+    margin: 0 auto;
+}
