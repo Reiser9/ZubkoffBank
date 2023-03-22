@@ -13,11 +13,18 @@
 	--cashBackItemC : #333;
 	--cashBackItemLightC : #EAECEE;
 	--notifyWarning: #FABD48;
+
+	/* Цвета уведомления */
 	--notifyOk: #10B97B;
 	--notifyError: #EF3B3B;
 	--errorHover: #d42b2b;
 	--notifyInfo: var(--mainC);
 
+	/* Цвета карт */
+	--cardBlackC: #000;
+	--cardJuniorC: #FF8C1B;
+	--cardPlatinumC: #C0C0C0;
+	--cardDriveC: #7FB56C;
 }
 
 body{

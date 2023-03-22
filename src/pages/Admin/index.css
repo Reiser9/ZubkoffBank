@@ -10,6 +10,22 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    gap: 12px;
+}
+
+@media (max-width:998px) {
+    .admin__header_users {
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column-reverse;
+    }
+}
+
+@media (max-width:480px) {
+    .admin__header_cards {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
 
 .admin__title {
@@ -17,10 +33,29 @@
     font-size: 18px;
 }
 
+@media (max-width:768) {
+    .admin__title {
+        font-size: 17px;
+    }
+}
+
+@media (max-width:480px) {
+    .admin__title {
+        font-size: 16px;
+    }
+}
+
 .limit {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+@media (max-width:998px) {
+    .limit {
+        width: 100%;
+        justify-content: space-between;
+    }
 }
 
 .limit__label {
@@ -45,6 +80,14 @@
     font-size: 12px;
     cursor: pointer;
     transition: .2s linear;
+    flex-shrink: 0;
+}
+
+@media (max-width:480px) {
+    .number__btn {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .number__btn:hover {
@@ -67,7 +110,6 @@
 
 .item-admin {
     background-color: #fff;
-    padding: 0 12px;
     width: 100%;
 }
 
@@ -76,13 +118,20 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 12px 0;
+    padding: 12px;
+    gap: 20px;
 }
 
 .item-admin__title {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+@media (max-width:480px) {
+    .item-admin__title {
+        gap: 12px;
+    }
 }
 
 .item-admin__number {
@@ -96,11 +145,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
+}
+
+@media (max-width:480px) {
+    .item-admin__number {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
 }
 
 .item-admin__name {
     font-weight: 600;
     font-size: 16px;
+}
+
+@media (max-width:480px) {
+    .item-admin__name {
+        font-size: 12px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 100px;
+        overflow: hidden;
+    }
 }
 
 .item-admin__open-btn {
@@ -111,12 +179,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
+}
+
+@media (max-width:480px) {
+    .item-admin__open-btn {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .item-admin__arrow {
     width: 18px;
     height: 18px;
     stroke: var(--mainC);
+    flex-shrink: 0;
+}
+
+@media (max-width:480px) {
+    .item-admin__arrow {
+        width: 14px;
+        height: 14px;
+    }
 }
 
 .item-admin.active .item-admin__arrow {
@@ -125,7 +209,7 @@
 
 .item-admin__content {
     display: none;
-    padding: 12px 0 20px;
+    padding: 12px 12px 20px;
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
@@ -139,7 +223,6 @@
 .section-admin {
     background-color: var(--backgroundC);
     border-radius: 4px;
-    padding: 0 8px;
     width: 100%;
 }
 
@@ -148,7 +231,7 @@
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 8px 0;
+    padding: 8px;
 }
 
 .section-admin__title {
@@ -163,12 +246,14 @@
     width: 20px;
     height: 20px;
     stroke: #000;
+    flex-shrink: 0;
 }
 
 .section-admin__arrow {
     width: 16px;
     height: 16px;
     stroke: #000;
+    flex-shrink: 0;
 }
 
 .section-admin.active .section-admin__arrow {
@@ -181,7 +266,26 @@
     align-items: center;
     flex-direction: column;
     gap: 24px;
-    padding: 8px 0 20px;
+    padding: 8px 8px 20px;
+}
+
+@media (max-width:998px) {
+    .section-admin__content {
+        padding: 8px 8px 16px;
+    }
+}
+
+@media (max-width:768px) {
+    .section-admin__content {
+        gap: 16px;
+    }
+}
+
+@media (max-width:480px) {
+    .section-admin__content {
+        padding: 8px 8px 12px;
+        gap: 12px;
+    }
 }
 
 .section-admin.active .section-admin__content {
@@ -206,6 +310,12 @@
     gap: 4px;
 }
 
+@media (max-width:480px) {
+    .section-admin__item {
+        width: 100%;
+    }
+}
+
 .section-admin__item_full {
     width: 100%;
 }
@@ -224,8 +334,25 @@
     gap: 8px;
 }
 
-.default__button.section-admin__btn {
+.default__button.admin__btn {
     padding: 0.8rem 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+}
+
+@media (max-width:480px) {
+    .admin__btn {
+        width: 100%;
+    }
+}
+
+.admin__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .section-admin__text {
@@ -239,6 +366,36 @@
     gap: unset;
 }
 
+.section-admin__item_card .section-admin__card-img {
+    align-self: center;
+}
+
+@media (max-width:1200px) {
+    .section-admin__item_card {
+        width: calc(100% / 2 - 12px / 2);
+    }
+}
+
+@media (max-width:860px) {
+    .section-admin__item_card {
+        width: 100%;
+    }
+}
+
+@media (max-width:768px) {
+    .section-admin__item_card {
+        width: calc(100% / 2 - 12px / 2);
+    }
+}
+
+@media (max-width:576px) {
+    .section-admin__item_card {
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+}
+
 .section-admin__item_card .section-admin__text-btn {
     align-self: start;
 }
@@ -246,7 +403,6 @@
 .section-admin__card-img {
     width: 100%;
     max-width: 150px;
-    align-self: center;
 }
 
 .section-admin__card-items {
@@ -254,6 +410,18 @@
     gap: 8px;
     flex-wrap: wrap;
     margin: 1.6rem 0 2rem 0;
+}
+
+@media (max-width:768px) {
+    .section-admin__card-items {
+        margin: 1.2rem 0 1.6rem 0   ;
+    }
+}
+
+@media (max-width:480px) {
+    .section-admin__card-items {
+        margin: 0.8rem 0 1.2rem 0;
+    }
 }
 
 .section-admin__card-item {
@@ -272,6 +440,7 @@
     height: 16px;
     stroke: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+    flex-shrink: 0;
 }
 
 .section-admin__text-btn {
@@ -297,4 +466,20 @@
 
 .pagination {
     margin: 0 auto;
+}
+
+.default__button.admin__back-btn {
+    display: none;
+}
+
+@media (max-width:768px) {
+    .default__button.admin__back-btn {
+        display: flex;
+    }
+}
+
+@media (max-width:480px) {
+    .default__button.admin__back-btn {
+        width: auto;
+    }
 }
