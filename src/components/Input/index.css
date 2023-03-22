@@ -19,6 +19,10 @@
     border: 1px solid var(--mainC);
 }
 
+.default__input:read-only:focus{
+    border: 1px solid var(--inputC);
+}
+
 .input__icon{
     width: 24px;
     position: absolute;

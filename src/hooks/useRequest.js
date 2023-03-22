@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 
 import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH} from '../consts/API_URLS';
 
@@ -21,10 +20,6 @@ export const REQUEST_TYPE = {
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
-
-    const authInfo = useSelector(state => state.auth);
-    const accessToken = window.sessionStorage.getItem("accessToken") || authInfo.accessToken;
-    const typeToken = window.sessionStorage.getItem("typeToken") || authInfo.typeToken;
 
     const userRequest = axios.create({
         baseURL: BASE_API_URL_USER
@@ -55,6 +50,9 @@ const useRequest = () => {
         setError(false);
         setIsLoading(true);
 
+        const accessToken = localStorage.getItem("accessToken");
+        const typeToken = localStorage.getItem("typeToken");
+
         const axiosInstance = axiosInstancesMap.get(requestType);
 
         let reqHeaders = headers;
@@ -67,9 +65,9 @@ const useRequest = () => {
         }
 
         try{
-            const reqHeaders = {
+            reqHeaders = {
                 'Content-Type': 'application/json',
-                ...headers,
+                ...reqHeaders,
             };
 
             const response = await axiosInstance.request({
@@ -81,14 +79,13 @@ const useRequest = () => {
 
             setIsLoading(false);
 
-            return {
-                data: response.data
-            };
+            return response.data;
         }
         catch(err){
-            console.log(err);
             setError(true);
             setIsLoading(false);
+
+            return err.response.data;
         }
     }
 

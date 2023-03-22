@@ -17,7 +17,6 @@
 	--notifyError: #EF3B3B;
 	--errorHover: #d42b2b;
 	--notifyInfo: var(--mainC);
-
 }
 
 body{
@@ -85,10 +84,6 @@ input::-webkit-inner-spin-button{
 
 .input::placeholder{
 	color: rgba(0, 0, 0, .5);
-}
-
-.input:focus::placeholder{
-	opacity: 0;	
 }
 
 .container{
