@@ -7,6 +7,7 @@ import './index.css';
 
 const Header = () => {
     const auth = useSelector(state => state.auth);
+    const user = useSelector(state => state.user);
 
     return(
         <header className="header">
@@ -20,7 +21,7 @@ const Header = () => {
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 
-                        Личный кабинет
+                        {user.user.firstName}
                     </Link>
                     : <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />

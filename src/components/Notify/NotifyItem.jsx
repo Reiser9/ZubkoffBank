@@ -15,11 +15,16 @@ const notifyArr = {
 
 const NotifyItem = ({data}) => {
     const {id, title, text, type, time} = data;
-    const notifyTimeout = React.useRef(0);
+
+    let notifyTimeout;
+    let notifyInterval;
+
+    const [progress, setProgress] = React.useState(100);
+
     const dispatch = useDispatch();
 
     const remove = () => {
-        dispatch(removeNotify(id))
+        dispatch(removeNotify(id));
     }
 
     const removeOnClick = () => {
@@ -28,9 +33,16 @@ const NotifyItem = ({data}) => {
     }
 
     React.useEffect(() => {
-        notifyTimeout.current = window.setTimeout(remove, time);
+        notifyTimeout = window.setTimeout(remove, time);
 
-        return () => clearTimeout(notifyTimeout.current);
+        notifyInterval = window.setInterval(() => {
+            setProgress(progress => progress - 1);
+        }, time / 100);
+
+        return () => {
+            clearTimeout(notifyTimeout);
+            clearInterval(notifyInterval);
+        }
     }, []);
     
     return(
@@ -43,9 +55,9 @@ const NotifyItem = ({data}) => {
                 <p className="notifies__text">{text}</p>
             </div>
 
-            <div className="notify__progress"></div>
+            <div className="notify__progress" style={{width: `${progress}%`}}></div>
         </div>
     )
 }
 
-export default React.memo(NotifyItem);
+export default NotifyItem;
