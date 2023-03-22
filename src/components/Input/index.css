@@ -6,13 +6,14 @@
 .default__input{
     width: 100%;
     border: 1px solid var(--inputC);
-    padding: 1.4rem 2rem;
+    padding: 1.2rem 2rem;
     border-radius: 50px;
     color: #000;
+    background: #fff;
 }
 
 .password__input{
-    padding: 1.4rem 5.6rem 1.4rem 2rem;
+    padding: 1.2rem 5.6rem 1.2rem 2rem;
 }
 
 .default__input:focus{

@@ -74,7 +74,7 @@
 }
 
 .item-api__method_delete {
-    color: var(--notifError);
+    color: var(--notifyError);
 }
 
 .item-api__link {
@@ -135,22 +135,6 @@
 .item-api__method {
     font-weight: 700;
     font-size: 2rem;
-}
-
-.item-api__method_post {
-    color: #FF9900;
-}
-
-.item-api__method_get {
-    color: #45EE0A;
-}
-
-.item-api__method_patch {
-    color: var(--mainC);
-}
-
-.item-api__method_delete {
-    color: var(--notifError);
 }
 
 .item-api__link {
@@ -220,31 +204,6 @@
     .item-api__header {
         gap: 8px;
     }
-
-    .api {
-        padding: 4rem 0;
-    }
-    
-    .api__title {
-        font-size: 3rem;
-    }
-    
-    .api__columns {
-        margin-top: 2.4rem;
-        gap: 24px;
-    }
-    
-    .api__items {
-        gap: 2rem;
-    }
-    
-    .item-api {
-        width: 100%;
-    }
-    
-    .item-api__header {
-        gap: 8px;
-    }
 }
 
 @media (max-width:480px) {
@@ -252,18 +211,9 @@
         width: 20px;
         height: 20px;
     }
-
-    .item-api__icon {
-        width: 20px;
-        height: 20px;
-    }
 }
 
 @media (max-width:375px) {
-    .api__title {
-        font-size: 2.5rem;
-    }
-
     .api__title {
         font-size: 2.5rem;
     }
