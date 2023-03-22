@@ -3,7 +3,7 @@ import {Outlet} from 'react-router-dom';
 
 import HeaderEmpty from '../Headers/HeaderEmpty';
 
-const EmptyWrapper = ({children}) => {
+const EmptyWrapper = () => {
     return(
         <>
             <HeaderEmpty />

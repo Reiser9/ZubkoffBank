@@ -9,13 +9,17 @@ import App from "./App";
 
 import { store } from './redux/store';
 
+import InitialWrapper from "./components/Wrappers/InitialWrapper";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
     <Provider store={store}>
         <BrowserRouter>
             <SkeletonTheme baseColor="#eee" highlightColor="#d7d7d7">
-                <App />
+                <InitialWrapper>
+                    <App />
+                </InitialWrapper>
             </SkeletonTheme>
         </BrowserRouter>
     </Provider>

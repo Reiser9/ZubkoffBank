@@ -1,10 +1,14 @@
 import React from 'react';
 import {User} from '../../components/Icons';
 import {Link} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
 const Header = () => {
+    const auth = useSelector(state => state.auth);
+    const user = useSelector(state => state.user);
+
     return(
         <header className="header">
             <div className="container">
@@ -12,12 +16,18 @@ const Header = () => {
                     <Link to="/" className="header__logo--inner">
                         <img src="/assets/img/logo1.svg" alt="logo" className="header__logo" />
                     </Link>
-                        
-                    <Link to="/sign" className="header__profile">
+                    
+                    {auth.isAuth
+                    ? <Link to="/profile" className="header__profile">
+                        <User className="header__profile--icon" />
+
+                        {user.user.firstName}
+                    </Link>
+                    : <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />
 
                         Вход
-                    </Link>
+                    </Link>}
                 </div>
             </div>
         </header>

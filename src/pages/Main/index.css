@@ -92,13 +92,11 @@
 .credit-card__icon {
     width: 100%;
     max-width: 324px;
-    min-height: 206px;
 }
 
 @media (max-width:768px) {
     .credit-card__icon {
         max-width: 260px;
-        min-height: unset;
     }
 }
 

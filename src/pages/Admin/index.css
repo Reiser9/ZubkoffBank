@@ -335,12 +335,13 @@
 }
 
 .default__button.admin__btn {
-    padding: 0.8rem 3.2rem;
+    padding: 0.8rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     gap: 8px;
+    font-size: 14px;
 }
 
 @media (max-width:480px) {

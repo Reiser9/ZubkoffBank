@@ -255,7 +255,6 @@
 
 .transfer__title {
     font-weight: 600;
-    font-size: 1.6rem;
 }
 
 .transfer__payment-methods {
@@ -297,6 +296,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: .2s linear;
 }
 
 .payment-method__icon {
@@ -313,13 +313,13 @@
     stroke: unset;
 }
 
-.payment-method.active .payment-method__icon--inner {
+.payment-method.active .payment-method__icon--inner, .payment-method:hover .payment-method__icon--inner {
     background-color: #fff;
 }
 
 .payment-method__text {
     font-weight: 600;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .transfer__bil-payments {
@@ -409,7 +409,6 @@
 
 .bil-payment__balance {
     font-weight: 600;
-    font-size: 16px;
 }
 
 .bil-payment__number {
@@ -420,7 +419,7 @@
 }
 
 .transfer__text {
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
 }
 

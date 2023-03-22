@@ -60,16 +60,6 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    animation: fadeOut 2s linear;
-}
-
-@keyframes fadeOut{
-    0%{
-        width: 100%;
-    }
-    100%{
-        width: 0%;
-    }
 }
 
 .notifies__item svg {

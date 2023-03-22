@@ -72,6 +72,7 @@ li{
 
 h1, h2, h3, h4, h5, h5, p{
 	font-weight: normal;
+	font-size: unset;
 }
 
 input::-webkit-outer-spin-button,
@@ -92,10 +93,6 @@ input::-webkit-inner-spin-button{
 
 .input::placeholder{
 	color: rgba(0, 0, 0, .5);
-}
-
-.input:focus::placeholder{
-	opacity: 0;	
 }
 
 .container{
