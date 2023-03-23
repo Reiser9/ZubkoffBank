@@ -5,4 +5,8 @@ include 'bank-application'
 include 'bank-domain'
 include 'bank-jpa'
 include 'bank-security'
+include 'transfer-api'
+include 'transfer-application'
+include 'transfer-domain'
+include 'transfer-jpa'
 
