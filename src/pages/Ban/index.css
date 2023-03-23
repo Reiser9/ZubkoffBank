@@ -1,0 +1,61 @@
+/* 404 */
+.ban{
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ban__inner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.ban__icon{
+    width: 270px;
+    max-width: 90%;
+    height: auto;
+}
+
+.ban__title{
+    margin-top: 4rem;
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.ban__text{
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.ban__link{
+    margin-top: 3.2rem;
+}
+
+@media (max-width:768px) {
+    .ban__link{
+        margin-top: 2rem;
+    }
+}
+
+@media(max-width: 768px){
+    .ban__title{
+        font-size: 2rem;
+    }
+}
+@media(max-width: 480px){
+    .ban__title{
+        font-size: 1.6rem;
+        margin-top: 3.2rem;
+    }
+
+    .ban__text{
+        font-size: 1.4rem;
+        margin-top: 1.2rem;
+    }
+}
