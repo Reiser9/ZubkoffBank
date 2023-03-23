@@ -104,7 +104,7 @@ public class AuthController {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
-			String jwt = jwtUtils.createToken(claims, user.getAccountNum());
+			String jwt = jwtUtils.createToken(claims, user.getPhoneNum());
 			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("refreshToken")));
 		}
 		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
