@@ -80,7 +80,7 @@ const Profile = () => {
                                 </div>
                             </SidebarItem>
 
-                            <SidebarItem title="Настройки">
+                            <SidebarItem title="Меню">
                                 <div className="sidebar__tabs">
                                     <SidebarTab text="Настройки" icon={<SettingsIcon />} isLink to="/settings" />
                                 </div>

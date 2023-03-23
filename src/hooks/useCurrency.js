@@ -12,7 +12,7 @@ const useCurrency = () => {
     const currencyState = useSelector(state => state.api);
     const dispatch = useDispatch();
 
-    const getCurrencyData = async () => {
+    const getCurrencyData = React.useCallback(async () => {
         setIsLoad(true);
 
         if(Object.keys(currencyState.currency).length !== 0){
@@ -36,11 +36,11 @@ const useCurrency = () => {
         }
 
         setIsLoad(false);
-    }
+    }, [dispatch, currencyState.currency]);
 
     React.useEffect(() => {
         getCurrencyData();
-    }, []);
+    }, [getCurrencyData]);
 
     return {isLoadCurrency: isLoad, errorCurrency: error, currency};
 }

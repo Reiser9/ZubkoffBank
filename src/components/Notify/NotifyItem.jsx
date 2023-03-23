@@ -16,8 +16,8 @@ const notifyArr = {
 const NotifyItem = ({data}) => {
     const {id, title, text, type, time} = data;
 
-    let notifyTimeout;
-    let notifyInterval;
+    const notifyTimeout = React.useRef(0);
+    const notifyInterval = React.useRef(0);
 
     const [progress, setProgress] = React.useState(100);
 
@@ -33,9 +33,9 @@ const NotifyItem = ({data}) => {
     }
 
     React.useEffect(() => {
-        notifyTimeout = window.setTimeout(remove, time);
+        notifyTimeout.current = window.setTimeout(remove, time);
 
-        notifyInterval = window.setInterval(() => {
+        notifyInterval.current = window.setInterval(() => {
             setProgress(progress => progress - 1);
         }, time / 100);
 
@@ -43,7 +43,7 @@ const NotifyItem = ({data}) => {
             clearTimeout(notifyTimeout);
             clearInterval(notifyInterval);
         }
-    }, []);
+    }, [remove, time]);
     
     return(
         <div className={`notifies__item ${notifyArr[type].TYPE}`} onClick={removeOnClick}>

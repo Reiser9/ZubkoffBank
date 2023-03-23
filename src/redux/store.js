@@ -4,12 +4,14 @@ import authSlice from './slices/auth';
 import apiSlice from './slices/api';
 import notifySlice from './slices/notify';
 import userSlice from './slices/user';
+import cardTypesSlice from './slices/cardTypes';
 
 export const store = configureStore({
     reducer: {
         auth: authSlice,
         api: apiSlice,
         notify: notifySlice,
-        user: userSlice
+        user: userSlice,
+        cardTypes: cardTypesSlice
     }
 });

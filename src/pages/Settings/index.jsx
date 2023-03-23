@@ -2,13 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import '../Admin/index.css';
 import '../Profile/index.css';
 import './index.css';
+
+import {maskPhone} from '../../utils/maskPhone';
 
 import SidebarItem from '../../components/SidebarItem';
 import SidebarTab from '../../components/SidebarTab';
 
-import { NotifyOkIcon, Lock, SettingsIcon } from '../../components/Icons';
+import { NotifyOkIcon, Lock, SettingsIcon, Back } from '../../components/Icons';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import AuthWrapper from '../../components/Wrappers/AuthWrapper';
@@ -33,10 +36,11 @@ const settingsTabs = [
 
 const Settings = () => {
     const [tab, setTab] = React.useState("verify");
+    const [active, setActive] = React.useState(false);
 
     const user = useSelector(state => state.user);
 
-    const {firstName, secondName, middleName, phoneNum, sex, } = user.user;
+    const {firstName, secondName, middleName, phoneNum, sex} = user.user;
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Настройки`;
@@ -48,25 +52,29 @@ const Settings = () => {
             <section className="profile">
                 <div className="container">
                     <div className="profile__inner">
-                        <div className="profile__sidebar">
+                        <div className={`profile__sidebar${active ? " active" : ""}`}>
                             <SidebarItem title="Настройки">
                                 <div className="sidebar__tabs">
-                                    {settingsTabs.map((data, id) => <SidebarTab key={id} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
+                                    {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
                                 </div>
                             </SidebarItem>
                         </div>
 
-                        <div className="profile__content">
-                            {/* данные */}
+                        <div className={`profile__content${active ? " active" : ""}`}>
                             {tab === "data" &&
                                 <div className="setting">
+                                    <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
+                                        <Back className="admin__icon" />
+                                        Назад
+                                    </Button>
+
                                     <div className="setting__block">
                                         <h4 className="setting__title">Информация</h4>
                                         <div className="setting__items">
                                             <div className="setting__item"><Input value={firstName} readOnly className="setting__input" placeholder="Имя" /></div>
                                             <div className="setting__item"><Input value={secondName} readOnly className="setting__input" placeholder="Фамилия" /></div>
                                             <div className="setting__item"><Input value={middleName} readOnly className="setting__input" placeholder="Отчество" /></div>
-                                            <div className="setting__item"><Input value={phoneNum} readOnly className="setting__input" placeholder="Номер телефона" /></div>
+                                            <div className="setting__item"><Input value={maskPhone(phoneNum)} readOnly className="setting__input" placeholder="Номер телефона" /></div>
                                             <div className="setting__item"><Input readOnly className="setting__input" placeholder="Пол" /></div>
                                             <div className="setting__item"><Input readOnly className="setting__input" placeholder="Дата рождения" /></div>
                                         </div>
@@ -82,16 +90,17 @@ const Settings = () => {
                                 </div>
                             }
 
-                            {/* верификация */}
                             {tab === "verify" &&
                                 // не верифицировано
                                 <div className="setting">
+                                    <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
+                                        <Back className="admin__icon" />
+                                        Назад
+                                    </Button>
+
                                     <div className="setting__block">
                                         <h4 className="setting__title">Информация</h4>
                                         <div className="setting__items">
-                                            <div className="setting__item"><Input className="setting__input" placeholder="Имя" /></div>
-                                            <div className="setting__item"><Input className="setting__input" placeholder="Фамилия" /></div>
-                                            <div className="setting__item"><Input className="setting__input" placeholder="Отчество" /></div>
                                             <div className="setting__item"><Input className="setting__input" placeholder="Серия и номер паспорта" /></div>
                                             <div className="setting__item"><Input className="setting__input" placeholder="Кем выдан" /></div>
                                             <div className="setting__item"><Input className="setting__input" placeholder="Дата выдачи" /></div>
@@ -131,6 +140,11 @@ const Settings = () => {
 
                             {tab === "save" &&
                                 <div className="setting">
+                                    <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
+                                        <Back className="admin__icon" />
+                                        Назад
+                                    </Button>
+
                                     <div className="setting__block">
                                         <h4 className="setting__title">Смена пароля</h4>
                                         <div className="setting__items">

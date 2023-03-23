@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH} from '../consts/API_URLS';
+import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY} from '../consts/API_URLS';
 
 export const HTTP_METHODS = {
     GET: 'GET',
@@ -14,7 +14,8 @@ export const HTTP_METHODS = {
 export const REQUEST_TYPE = {
     USER: 'user',
     ADMIN: 'admin',
-    AUTH: 'auth'
+    AUTH: 'auth',
+    EMPTY: 'empty'
 };
 
 const useRequest = () => {
@@ -33,10 +34,15 @@ const useRequest = () => {
         baseURL: BASE_API_URL_AUTH
     });
 
+    const emptyRequest = axios.create({
+        baseURL: BASE_API_URL_EMPTY
+    });
+
     const axiosInstancesMap = new Map([
         [REQUEST_TYPE.AUTH, authRequest],
         [REQUEST_TYPE.ADMIN, adminRequest],
-        [REQUEST_TYPE.USER, userRequest]
+        [REQUEST_TYPE.USER, userRequest],
+        [REQUEST_TYPE.EMPTY, emptyRequest]
     ]);
 
     const request = async (
@@ -82,12 +88,13 @@ const useRequest = () => {
             return response.data;
         }
         catch(err){
+            // ПРОВЕРЯТЬ ЕСЛИ ЛЕЖИТ СЕРВЕР ОТСЫЛАТЬ СООТВЕТСТВУЮЩУЮ ОШИБКУ
             setError(true);
             setIsLoading(false);
 
             return err.response.data;
         }
-    }
+    };
 
     return {isLoading, error, request};
 }

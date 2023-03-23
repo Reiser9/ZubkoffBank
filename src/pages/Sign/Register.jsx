@@ -26,7 +26,7 @@ const Register = () => {
     const [agree, setAgree] = React.useState(false);
 
     const {alertNotify} = useNotify();
-    const {sendCodeRegister} = useAuth();
+    const {sendCodeRegister, register} = useAuth();
 
     const goToSmsCode = () => {
         if(phoneRegister.length < 17){
@@ -68,14 +68,15 @@ const Register = () => {
     const sendSmsCode = async () => {
         sendCodeRegister(phoneRegister);
 
+        // Не идти дальше, если не ок с отправкой кода
         setIsCodeAgain(false);
         setSeconds(60);
 
         setStage(3);
     }
 
-    const register = async () => {
-        
+    const registerFunc = async () => {
+        await register(phoneRegister, passwordRegister, nameRegister, registerCode);
     }
 
     return (
@@ -132,7 +133,7 @@ const Register = () => {
                 </div>
 
                 {stage >= 3 && <div className="sign__form sign__form_telegram">
-                    <Input placeholder="Код подтверждения" value={registerCode} setValue={setRegisterCode} />
+                    <Input mask={INPUT_MASK_TYPE.CONFIRM_CODE} placeholder="Код подтверждения" value={registerCode} setValue={setRegisterCode} />
                 </div>}
 
                 {isCodeAgain && <div className="sign__link sign__send" onClick={sendSmsCode}>Выслать код</div>}
@@ -143,7 +144,7 @@ const Register = () => {
                     </div>}
 
                     <div className="sign__button--inner">
-                        <Button className="register__button" onClick={register} disabled={!agree}>
+                        <Button className="register__button" onClick={registerFunc} disabled={!agree}>
                             Регистрация
                         </Button>
                     </div>

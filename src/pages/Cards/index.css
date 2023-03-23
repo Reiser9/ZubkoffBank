@@ -1,6 +1,7 @@
 .card{
     width: 100%;
     padding: 6rem 0;
+    min-height: calc(100vh - 57px);
 }
 
 .card__inner{
@@ -23,6 +24,42 @@
     align-items: flex-start;
     margin-top: 3.2rem;
     gap: 24px;
+}
+
+.card__title--skeleton, .card__for--skeleton, .card__button--skeleton, .card__img--skeleton, .card__item--title--skeleton,
+.card__item--text--skeleton{
+    width: 100%;
+    max-width: 268px;
+    height: 49px;
+}
+
+.card__for--skeleton{
+    max-width: 166px;
+    height: 48px;
+}
+
+.card__button--skeleton{
+    max-width: 274;
+    height: 47px;
+}
+
+.card__img--skeleton{
+    max-width: 291px;
+    height: 185px;
+}
+
+.card__item--title--skeleton{
+    max-width: 100%;
+    height: 34px;
+}
+
+.card__item--text--skeleton{
+    height: 57px;
+}
+
+.card__item--point.card__item--point--skeleton{
+    height: 51px;
+    display: block;
 }
 
 @media(max-width: 768px){

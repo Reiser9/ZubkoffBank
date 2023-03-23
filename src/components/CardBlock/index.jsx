@@ -2,54 +2,39 @@ import React from 'react';
 
 import './index.css';
 
-import {Cart, Dollar, Car} from '../Icons';
+import {Cart} from '../Icons';
 import Button from '../Button';
 import CardPoint from './CardPoint';
 
-const forCardInit = {
-    "buy": {
-        text: "Для покупок",
-        icon: <Cart />
-    },
-    "limit": {
-        text: "Для транжир",
-        icon: <Dollar />
-    },
-    "drive": {
-        text: "Для автомобилистов",
-        icon: <Car />
-    }
-}
-
 const CardBlock = ({data}) => {
-    const {forCard, title, text, card, points} = data;
+    const {name, description, img, limit} = data;
 
     return(
         <div className="card__item">
             <div className="card__item--for">
-                {forCardInit[forCard].icon}
+                <Cart />
 
                 <p className="card__item--for--text">
-                    {forCardInit[forCard].text}
+                    Для покупок
                 </p>
             </div>
 
             <div className="card__item--content">
                 <div className="card__item--box">
                     <p className="card__item--title">
-                        {title}
+                        Дебетовая карта {process.env.REACT_APP_BANK_NAME} {name}
                     </p>
 
                     <p className="card__item--text">
-                        {text}
+                        {description}
                     </p>
 
                     <div className="card__item--points">
-                        {points.map((data, id) => <CardPoint key={id} title={data.title} text={data.text} />)}
+                        <CardPoint title={`${limit} ₽`} text="Лимит карты" />
                     </div>
                 </div>
 
-                <img src={`/assets/img/card-${card}.svg`} alt="card" className="card__item--img" />
+                <img src={`/assets/img/${img.replace("null", "")}`} alt="card" className="card__item--img" />
             </div>
 
             <div className="card__item--buttons">

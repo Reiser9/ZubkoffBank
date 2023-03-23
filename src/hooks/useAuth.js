@@ -47,6 +47,10 @@ const useAuth = () => {
 
         if(data.status === 500 || data.status === 403){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
+            
+            if(newTokens.status === "Not Successful"){
+                return clearData();
+            }
 
             localStorage.setItem("accessToken", newTokens.accessToken);
             localStorage.setItem("refreshToken", newTokens.refreshToken);
@@ -59,6 +63,7 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
     }
 
+    // ЗАПРАШИВАТЬ SHORT INFO
     const login = async (phone, password, withoutNotify = false) => {
         if(phone.length < 17){
             return alertNotify("Ошибка", "Введите корректный номер телефона", "error");
@@ -106,13 +111,17 @@ const useAuth = () => {
     }
     
     const register = async (phone, password, fullName, code) => {
+        if(code.length < 6){
+            return alertNotify("Ошибка", "Код не может быть меньше 6 символов", "warn");
+        }
+
         const data = await request(REQUEST_TYPE.AUTH, "/register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), fullName, password, code});
 
         if(data.status === "Not Successful"){
             return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
         }
 
-        await login(phone, password, true); // <-- Уговорить Леху сделать возврат токенов после регистрации, а не заниматься такой херней
+        await login(phone, password, true);
 
         alertNotify("Успешно", "Вы зарегистрировались", "success");
     }

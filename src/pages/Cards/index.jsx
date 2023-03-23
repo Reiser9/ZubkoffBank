@@ -2,14 +2,22 @@ import React from 'react';
 
 import './index.css';
 
+import useCardTypes from '../../hooks/useCardTypes';
+
 import CardBlock from '../../components/CardBlock';
-import cardData from '../../cardData.json';
+import CardsSkeleton from './CardsSkeleton';
 
 const Cards = () => {
+    const {error, isLoad, cardTypes} = useCardTypes();
+
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Наши карты`;
         window.scrollTo(0, 0);
     }, []);
+
+    if(isLoad){
+        return <CardsSkeleton />
+    }
 
     return (
         <section className="card">
@@ -20,7 +28,9 @@ const Cards = () => {
                     </h1>
 
                     <div className="card__content">
-                        {cardData.map((data, id) => <CardBlock key={id} data={data} />)}
+                        {error
+                        ? <div>Ошибка</div>
+                        : cardTypes?.content?.map((data, id) => <CardBlock key={id} data={data} />)}
                     </div>
                 </div>
             </div>

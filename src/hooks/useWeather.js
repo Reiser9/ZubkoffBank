@@ -48,7 +48,7 @@ const useWeather = () => {
 
     React.useEffect(() => {
         getCityData();
-    }, []);
+    }, [getCityData]);
 
     return {isLoadWeather: isLoad, errorWeather: error, weather};
 }
