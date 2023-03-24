@@ -18,7 +18,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.example.service.impl.UserDetailsServiceImpl;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -71,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/h2-console/**", "/health/**", "/types/**").permitAll()
 			.antMatchers("/user/**").hasAnyAuthority("user")
 			.antMatchers("/admin/**").hasAuthority("admin")
+			.antMatchers("/admin/user/**").hasAuthority("admin")
 			.anyRequest().authenticated()
 			.and().sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
