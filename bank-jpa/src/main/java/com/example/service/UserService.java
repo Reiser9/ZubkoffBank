@@ -61,35 +61,32 @@ public class UserService {
         return user = userRepository.save(user);
 	}
 
+	public User save(User user) {
+		return user = userRepository.save(user);
+	}
+
+
 	public void setBlockUser(long id) {
-		User user = userRepository.findById(id).get();
-		List<Role> roles = user.getRoles();
-		if (!roles.contains(roleRepository.findByRole("blocked")))
-			roles.add(roleRepository.findByRole("blocked"));
-		user.setRoles(roles);
-		userRepository.save(user);
+
 	}
 
 	public void setUnblockUser(long id) {
-		User user = userRepository.findById(id).get();
-		List<Role> roles = user.getRoles();
-		if (roles.contains(roleRepository.findByRole("blocked")))
-			roles.remove(roleRepository.findByRole("blocked"));
-		user.setRoles(roles);
-		userRepository.save(user);
+
 	}
 
-	public void setDataUser(User user, Map<String, String> data) throws ParseException {
+	public DataUser setDataUser(User user, Map<String, String> data) throws ParseException {
 		List<DataUser> dataUsers = user.getDataUsers();
 		DataUser dataUser = dataUsers.get(user.getDataUsers().size() - 1);
-		dataUser.setBirthdate(new SimpleDateFormat("MMMM d yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
+		dataUser.setBirthdate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.get("birthDate")));
 		dataUser.setGranted(data.get("granted"));
-		dataUser.setPassportSer(data.get("passportSer"));
-		dataUser.setPassportNum(data.get("passportNum"));
+		dataUser.setPassportSer(data.get("passport").split(" ")[0]);
+		dataUser.setPassportNum(data.get("passport").split(" ")[1]);
+		dataUser.setGrantedDate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.get("grantedDate")));
 		dataUser.setSex(Boolean.valueOf(data.get("sex")));
 		dataUsers.set(user.getDataUsers().size() - 1, dataUser);
 		user.setDataUsers(dataUsers);
 		userRepository.save(user);
+		return dataUser;
 	}
 
 	

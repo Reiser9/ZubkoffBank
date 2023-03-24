@@ -60,9 +60,7 @@ public class CardService {
     }
 
     public void setBlockCard(long id) {
-        Card card = cardRepository.findById(id).get();
-        card.setLock(true);
-        save(card);
+
     }
 
     public void setUnblockCard(long id) {
