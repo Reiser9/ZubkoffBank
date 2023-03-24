@@ -14,16 +14,17 @@ const useCardTypes = () => {
     const dispatch = useDispatch();
     const {request, error: requestError} = useRequest();
 
-    const getCardTypes = async () => {
+    const getCardTypes = React.useCallback(async () => {
         setIsLoad(true);
 
         if(Object.keys(cardTypesData.cardTypes).length !== 0){
             setCardTypes(cardTypesData.cardTypes);
         }
         else{
-            const data = await request(REQUEST_TYPE.EMPTY, "/types", HTTP_METHODS.GET);
+            const data = await request(REQUEST_TYPE.CARD, "/types", HTTP_METHODS.GET);
 
-            if(requestError){
+            if(!data){
+                console.log(requestError);
                 setError(true);
             }
             else{
@@ -33,7 +34,7 @@ const useCardTypes = () => {
         }
 
         setIsLoad(false);
-    }
+    }, [requestError, cardTypesData.cardTypes, dispatch, request]);
 
     React.useEffect(() => {
         getCardTypes();

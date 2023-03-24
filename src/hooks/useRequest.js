@@ -1,7 +1,11 @@
 import React from 'react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY} from '../consts/API_URLS';
+import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY, BASE_API_URL_CARD} from '../consts/API_URLS';
+
+import useNotify from './useNotify';
+import {setIsServerAvailable} from '../redux/slices/server';
 
 export const HTTP_METHODS = {
     GET: 'GET',
@@ -15,12 +19,17 @@ export const REQUEST_TYPE = {
     USER: 'user',
     ADMIN: 'admin',
     AUTH: 'auth',
+    CARD: 'card',
     EMPTY: 'empty'
 };
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
+
+    const dispatch = useDispatch();
+    const server = useSelector(state => state.server);
+    const {alertNotify} = useNotify();
 
     const userRequest = axios.create({
         baseURL: BASE_API_URL_USER
@@ -34,6 +43,10 @@ const useRequest = () => {
         baseURL: BASE_API_URL_AUTH
     });
 
+    const cardRequest = axios.create({
+        baseURL: BASE_API_URL_CARD
+    });
+
     const emptyRequest = axios.create({
         baseURL: BASE_API_URL_EMPTY
     });
@@ -42,10 +55,20 @@ const useRequest = () => {
         [REQUEST_TYPE.AUTH, authRequest],
         [REQUEST_TYPE.ADMIN, adminRequest],
         [REQUEST_TYPE.USER, userRequest],
+        [REQUEST_TYPE.CARD, cardRequest],
         [REQUEST_TYPE.EMPTY, emptyRequest]
     ]);
 
-    const request = async (
+    const getHealthServer = async () => {
+        try{
+            await emptyRequest.get("/health");
+        }catch(error){
+            alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
+            dispatch(setIsServerAvailable(false));
+        }
+    }
+
+    const request = React.useCallback(async (
         requestType = REQUEST_TYPE.USER,
         url,
         method = HTTP_METHODS.GET,
@@ -53,6 +76,11 @@ const useRequest = () => {
         data = {},
         headers = {}
     ) => {
+        if(!server.isServerAvailable){
+            // Сделать возврат ошибки, что бы запросы дальше не шли, пример - логин
+            return;
+        }
+
         setError(false);
         setIsLoading(true);
 
@@ -61,7 +89,10 @@ const useRequest = () => {
 
         const axiosInstance = axiosInstancesMap.get(requestType);
 
-        let reqHeaders = headers;
+        let reqHeaders = {
+            ...headers,
+            'Content-Type': 'application/json'
+        }
 
         if(isAuth){
             reqHeaders = {
@@ -71,11 +102,6 @@ const useRequest = () => {
         }
 
         try{
-            reqHeaders = {
-                'Content-Type': 'application/json',
-                ...reqHeaders,
-            };
-
             const response = await axiosInstance.request({
                 method,
                 url,
@@ -88,13 +114,13 @@ const useRequest = () => {
             return response.data;
         }
         catch(err){
-            // ПРОВЕРЯТЬ ЕСЛИ ЛЕЖИТ СЕРВЕР ОТСЫЛАТЬ СООТВЕТСТВУЮЩУЮ ОШИБКУ
+            await getHealthServer();
             setError(true);
             setIsLoading(false);
 
-            return err.response.data;
+            console.log("useRequest", err);
         }
-    };
+    }, [server]);
 
     return {isLoading, error, request};
 }

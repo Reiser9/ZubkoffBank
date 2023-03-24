@@ -45,10 +45,10 @@ const useAuth = () => {
 
         const data = await getUserInfo();
 
-        if(data.status === 500 || data.status === 403){
+        if(!data){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
             
-            if(newTokens.status === "Not Successful"){
+            if(!newTokens){
                 return clearData();
             }
 
@@ -79,7 +79,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
         
-        if(data.status === "Not Successful"){
+        if(!data){ //Проверять другое, обобщить ошибку сервера
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
 
@@ -103,7 +103,7 @@ const useAuth = () => {
     const sendCodeRegister = async (phone) => {
         const data = await request(REQUEST_TYPE.AUTH, "/send_code_register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone)});
 
-        if(data.status === "Not Successful"){
+        if(!data){
             return alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
         }
 
@@ -117,7 +117,7 @@ const useAuth = () => {
 
         const data = await request(REQUEST_TYPE.AUTH, "/register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), fullName, password, code});
 
-        if(data.status === "Not Successful"){
+        if(!data){
             return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
         }
 

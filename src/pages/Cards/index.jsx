@@ -28,9 +28,10 @@ const Cards = () => {
                     </h1>
 
                     <div className="card__content">
-                        {error
-                        ? <div>Ошибка</div>
-                        : cardTypes?.content?.map((data, id) => <CardBlock key={id} data={data} />)}
+                        {!error ? (cardTypes.content
+                        ? cardTypes?.content?.map((data, id) => <CardBlock key={id} data={data} />)
+                        : <div>Данных нет</div>)
+                        : <div>Ошибка</div>}
                     </div>
                 </div>
             </div>

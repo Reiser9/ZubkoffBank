@@ -37,6 +37,12 @@
     align-items: flex-start;
 }
 
+.card__item--img--inner{
+    width: 100%;
+    max-width: 291px;
+    display: flex;
+}
+
 .card__item--img{
     flex-shrink: 0;
     max-width: 100%;

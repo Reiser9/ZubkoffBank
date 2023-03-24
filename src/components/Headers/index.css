@@ -2,7 +2,7 @@
 .header{
 	width: 100%;
 	padding: 1.2rem 0;
-	border-bottom: 1px solid var(--borderC);
+	border-bottom: 1px solid var(--backgroundC);
 }
 
 .header__inner{

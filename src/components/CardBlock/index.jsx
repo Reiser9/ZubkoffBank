@@ -30,11 +30,13 @@ const CardBlock = ({data}) => {
                     </p>
 
                     <div className="card__item--points">
-                        <CardPoint title={`${limit} ₽`} text="Лимит карты" />
+                        <CardPoint title={`${limit.toLocaleString()} ₽`} text="Лимит карты" />
                     </div>
                 </div>
 
-                <img src={`/assets/img/${img.replace("null", "")}`} alt="card" className="card__item--img" />
+                <div className="card__item--img--inner">
+                    <img src={img} alt="card" className="card__item--img" />
+                </div>
             </div>
 
             <div className="card__item--buttons">

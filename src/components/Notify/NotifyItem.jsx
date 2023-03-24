@@ -16,32 +16,32 @@ const notifyArr = {
 const NotifyItem = ({data}) => {
     const {id, title, text, type, time} = data;
 
-    const notifyTimeout = React.useRef(0);
-    const notifyInterval = React.useRef(0);
+    const notifyTimeout = React.useRef();
+    const notifyInterval = React.useRef();
 
     const [progress, setProgress] = React.useState(100);
 
     const dispatch = useDispatch();
 
-    const remove = () => {
+    const remove = React.useCallback(() => {
         dispatch(removeNotify(id));
-    }
+    }, [dispatch, id]);
 
     const removeOnClick = () => {
         remove();
-        clearTimeout(notifyTimeout);
+        clearTimeout(notifyTimeout.current);
     }
 
     React.useEffect(() => {
-        notifyTimeout.current = window.setTimeout(remove, time);
+        notifyTimeout.current = setTimeout(remove, time);
 
-        notifyInterval.current = window.setInterval(() => {
+        notifyInterval.current = setInterval(() => {
             setProgress(progress => progress - 1);
         }, time / 100);
 
         return () => {
-            clearTimeout(notifyTimeout);
-            clearInterval(notifyInterval);
+            clearInterval(notifyInterval.current);
+            clearTimeout(notifyTimeout.current);
         }
     }, [remove, time]);
     
@@ -60,4 +60,4 @@ const NotifyItem = ({data}) => {
     )
 }
 
-export default NotifyItem;
+export default React.memo(NotifyItem);
