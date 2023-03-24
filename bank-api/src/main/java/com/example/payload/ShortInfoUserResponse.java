@@ -11,18 +11,10 @@ import java.util.List;
 @Setter
 @Getter
 @AllArgsConstructor
-public class FullInfoUserResponse {
+public class ShortInfoUserResponse {
     private Long id;
     private String phoneNum;
     private String verified;
     private List<String> roles;
     private String firstName;
-    private String secondName;
-    private String middleName;
-    private String passportNum;
-    private String passportSer;
-    private String birthdate;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date granted;
-    private Boolean sex;
 }

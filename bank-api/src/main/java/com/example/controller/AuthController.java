@@ -8,7 +8,7 @@ import com.example.service.TelegramService;
 import com.example.model.RefreshToken;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
-import com.example.payload.JwtResponse;
+import com.example.payload.RefreshResponse;
 import com.example.security.JwtRequestFilter;
 import com.example.security.JwtUtils;
 import com.example.service.RefreshTokenService;
@@ -56,13 +56,15 @@ public class AuthController {
 		final String jwt = jwtUtils.generateToken(userDetailsImpl);
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetailsImpl.getId());
 
-		return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.getRefreshToken()));
+		return ResponseEntity.ok(new RefreshResponse("Bearer", jwt, refreshToken.getRefreshToken()));
 	}
 
 	@PostMapping("/send_code_register")
 	public ResponseEntity<?> sendCode(@RequestBody Map<String, String> phoneNumber) {
 		try {
-			telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CardType.REGISTER));
+			boolean status = telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CardType.REGISTER));
+			if (!status)
+				throw new TelegramApiException();
 			return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
 		}
 		catch (TelegramApiException exception) {
@@ -82,6 +84,7 @@ public class AuthController {
 				}
 
 				User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
+
 				userService.saveUser(newUser);
 				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
@@ -104,8 +107,13 @@ public class AuthController {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
+
 			String jwt = jwtUtils.createToken(claims, user.getPhoneNum());
-			return ResponseEntity.ok(new JwtResponse("Bearer", jwt, refreshToken.get("refreshToken")));
+			Long id = refreshTokenService.findUserByRefreshToken(refreshToken.get("refreshToken"));
+			refreshTokenService.deleteByRefreshToken(refreshToken.get("refreshToken"));
+			RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(id);
+
+			return ResponseEntity.ok(new RefreshResponse("Bearer", jwt, newRefreshToken.getRefreshToken()));
 		}
 		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
 	}

@@ -6,11 +6,9 @@ import com.example.model.User;
 import com.example.payload.CardResponse;
 import com.example.payload.DefaultResponse;
 import com.example.payload.FullInfoUserResponse;
+import com.example.payload.ShortInfoUserResponse;
 import com.example.security.JwtRequestFilter;
-import com.example.service.RefreshTokenService;
-import com.example.service.CardService;
-import com.example.service.TypeService;
-import com.example.service.UserService;
+import com.example.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,18 +54,12 @@ public class UserController {
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
 			DataUser dataUser = userInfo.getDataUsers().get(userInfo.getDataUsers().size()-1);
-			return ResponseEntity.ok(new FullInfoUserResponse(
-					userInfo.getId(), userInfo.getPhoneNum(),
+			return ResponseEntity.ok(new ShortInfoUserResponse(
+					userInfo.getId(),
+					userInfo.getPhoneNum(),
 					userInfo.getVerify(),
 					userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
-					dataUser.getFirstName(),
-					dataUser.getSecondName(),
-					dataUser.getMiddleName(),
-					dataUser.getPassportNum(),
-					dataUser.getPassportSer(),
-					dataUser.getGranted(),
-					dataUser.getBirthdate(),
-					dataUser.getSex()));
+					dataUser.getFirstName()));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.ok(new DefaultResponse("Not Successful", "Not found user"));
@@ -99,7 +91,7 @@ public class UserController {
 			Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
 			card.setLock(true);
 			cardService.save(card);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			return ResponseEntity.ok(card);
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
@@ -134,8 +126,8 @@ public class UserController {
 	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
-			userService.setDataUser(userInfo, data);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			DataUser dataUser = userService.setDataUser(userInfo, data);
+			return ResponseEntity.ok(dataUser);
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
@@ -148,13 +140,19 @@ public class UserController {
 	@PostMapping("/change_pass")
 	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
 		try {
-			User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
-			if (passwordEncoder.matches(pass.get("pass"), userByPhoneNum.getPassword())) {
-				userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("new_pass")));
-				userService.saveUser(userByPhoneNum);
-				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
-			} else {
-				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+			if (pass.get("newPassword").length() < 8 && pass.get("newPassword").length() > 20) {
+				User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
+				if (passwordEncoder.matches(pass.get("password"), userByPhoneNum.getPassword())) {
+					userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("newPassword")));
+					userService.saveUser(userByPhoneNum);
+					refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
+					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+				} else {
+					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+				}
+			}
+			else {
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 			}
 		}
 		catch (NullPointerException exception) {
