@@ -34,6 +34,9 @@ public class DataUser {
     @Column(name = "passport_serial")
     private String passportSer;
 
+    @Column(name = "granted_date")
+    private Date grantedDate;
+
     @Column(name = "granted")
     private String granted;
 

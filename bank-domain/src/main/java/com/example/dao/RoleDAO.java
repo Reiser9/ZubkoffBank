@@ -5,7 +5,7 @@ import com.example.model.Role;
 
 
 public interface RoleDAO<T extends Role> extends JpaRepository<T, Long> {
-
+	Role findById(Integer roleId);
 	Role findByRole(String role);
 
 }

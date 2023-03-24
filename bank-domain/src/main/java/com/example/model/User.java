@@ -2,13 +2,11 @@ package com.example.model;
 
 import java.util.List;
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.stereotype.Component;
 
 
@@ -24,10 +22,10 @@ public class User {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "phone_number", unique = true)
+	@Column(name = "phone_number")
 	private String phoneNum;
 
-	@Column(name = "account_number", unique = true)
+	@Column(name = "account_number")
 	private String accountNum;
 
 	@Column(name = "verify")
