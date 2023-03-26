@@ -1447,7 +1447,7 @@ export const Back = ({ ...props }) => {
 export const SBP = ({ ...props }) => {
     return (
         <svg {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#clip0_305_278)">
+            <g clipPath="url(#clip0_305_278)">
                 <path d="M2.40039 5.22412L5.30678 10.4191V13.5879L2.40379 18.7727L2.40039 5.22412Z" fill="#5B57A2" />
                 <path d="M13.5596 8.52867L16.283 6.85947L21.8565 6.85425L13.5596 11.9371V8.52867Z" fill="#D90751" />
                 <path d="M13.5443 5.1934L13.5597 12.0714L10.6465 10.2814V0L13.5443 5.1934Z" fill="#FAB718" />

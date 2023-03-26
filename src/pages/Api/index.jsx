@@ -11,6 +11,7 @@ const Api = () => {
             <div className="container">
                 <div className="api__inner">
                     <h1 className="api__title">API</h1>
+                    
                     <div className="api__columns">
                         {apiConfig.map((data, id) => <ApiBlock key={id} data={data} />)}
                     </div>

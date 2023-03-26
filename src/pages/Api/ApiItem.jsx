@@ -18,7 +18,6 @@ const ApiItem = ({data}) => {
             </div>
 
             <div className="item-api__content">
-                {/* Мы вкурсе, что можно было выделить в компонент, просто нам лень */}
                 <div className="item-api__column">
                     <p className="item-api__label">request</p>
 

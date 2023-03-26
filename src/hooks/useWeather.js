@@ -11,14 +11,14 @@ const useWeather = () => {
     const [error, setError] = React.useState(false);
     const [isLoad, setIsLoad] = React.useState(false);
 
-    const weatherState = useSelector(state => state.api);
+    const {weather: weatherData} = useSelector(state => state.api);
     const dispatch = useDispatch();
 
-    const getCityData = async () => {
+    const getCityData = React.useCallback(async () => {
         setIsLoad(true);
 
-        if(Object.keys(weatherState.weather).length !== 0){
-            setWeather(weatherState.weather);
+        if(Object.keys(weatherData).length !== 0){
+            setWeather(weatherData);
         }
         else{
             const {cityName, timezone, error, wind, description, temp, humidity, feels_like, main} = await getCity();
@@ -44,7 +44,7 @@ const useWeather = () => {
         }
 
         setIsLoad(false);
-    }
+    }, [dispatch, weatherData]);
 
     React.useEffect(() => {
         getCityData();

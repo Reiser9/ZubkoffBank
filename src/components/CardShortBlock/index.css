@@ -13,10 +13,16 @@
 .cards-popup__card-icon--inner {
     width: 100%;
     max-width: 290px;
+    height: 185px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cards-popup__card-icon {
-    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
 }
 
 .cards-popup__btns {

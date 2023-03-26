@@ -6,6 +6,7 @@ import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_E
 
 import useNotify from './useNotify';
 import {setIsServerAvailable} from '../redux/slices/server';
+import {isBot} from '../utils/isBot';
 
 export const HTTP_METHODS = {
     GET: 'GET',
@@ -65,6 +66,8 @@ const useRequest = () => {
         }catch(error){
             alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
             dispatch(setIsServerAvailable(false));
+
+            return "Site not available";
         }
     }
 
@@ -76,9 +79,13 @@ const useRequest = () => {
         data = {},
         headers = {}
     ) => {
+        // if(!isBot()){
+        //     console.log("Вы бот!");
+        // }
+
         if(!server.isServerAvailable){
-            // Сделать возврат ошибки, что бы запросы дальше не шли, пример - логин
-            return;
+            alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
+            return "Site not available";
         }
 
         setError(false);
@@ -114,11 +121,11 @@ const useRequest = () => {
             return response.data;
         }
         catch(err){
-            await getHealthServer();
+            const serverHealth = await getHealthServer();
             setError(true);
             setIsLoading(false);
 
-            console.log("useRequest", err);
+            return serverHealth;
         }
     }, [server]);
 

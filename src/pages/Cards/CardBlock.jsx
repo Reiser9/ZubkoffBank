@@ -2,8 +2,8 @@ import React from 'react';
 
 import './index.css';
 
-import {Cart} from '../Icons';
-import Button from '../Button';
+import {Cart} from '../../components/Icons';
+import Button from '../../components/Button';
 import CardPoint from './CardPoint';
 
 const CardBlock = ({data}) => {

@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const cardTypesSlice = createSlice({
-    name: 'notify',
+    name: 'cardTypes',
     initialState,
     reducers: {
         initCardTypes: (state, action) => {

@@ -13,6 +13,7 @@
 .preloader__inner.page{
     position: relative;
     flex: 1;
+    min-height: calc(100vh - 59px);
 }
 
 .preloader__inner.fill{

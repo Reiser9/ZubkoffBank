@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './index.css';
+
 const CardPoint = ({title, text}) => {
     return(
         <div className="card__item--point">

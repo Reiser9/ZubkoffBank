@@ -9,6 +9,8 @@ const Header = () => {
     const auth = useSelector(state => state.auth);
     const user = useSelector(state => state.user);
 
+    const {firstName} = user.user;
+
     return(
         <header className="header">
             <div className="container">
@@ -21,7 +23,7 @@ const Header = () => {
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 
-                        {user.user.firstName}
+                        {firstName}
                     </Link>
                     : <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />

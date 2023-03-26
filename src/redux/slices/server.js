@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const serverSlice = createSlice({
-    name: 'notify',
+    name: 'server',
     initialState,
     reducers: {
         setIsServerAvailable: (state, action) => {

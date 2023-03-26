@@ -10,6 +10,7 @@ import CheckItem from '../../components/CheckItem';
 import Preloader from '../../components/Preloader';
 import { Back, Card, Phone, Plus, SBP, SettingsIcon } from '../../components/Icons';
 import useCurrency from '../../hooks/useCurrency';
+import useCardTypes from '../../hooks/useCardTypes';
 import Modal from '../../components/Modal';
 import CardShortBlock from '../../components/CardShortBlock';
 import SidebarTab from '../../components/SidebarTab';
@@ -26,6 +27,7 @@ const Profile = () => {
     const [modal, setModal] = React.useState(false);
 
     const { isLoadCurrency, errorCurrency, currency } = useCurrency();
+    const {error, isLoad, cardTypes} = useCardTypes();
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Профиль`;
@@ -39,9 +41,9 @@ const Profile = () => {
                     <div className="profile__inner">
                         <div className="profile__sidebar">
                             <SidebarItem title="Счета и карты">
-                                {/* <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
+                                <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
                                 <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
-                                <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" /> */}
+                                <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
 
                                 <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setModal(true)}>
                                     <div className="profile__sidebar--check--icon--inner">
@@ -83,18 +85,19 @@ const Profile = () => {
                             <SidebarItem title="Меню">
                                 <div className="sidebar__tabs">
                                     <SidebarTab text="Настройки" icon={<SettingsIcon />} isLink to="/settings" />
+                                    <SidebarTab text="Выйти" icon={<SettingsIcon />} isLink to="/settings" />
                                 </div>
                             </SidebarItem>
                         </div>
 
-                        {/* <div className="profile__content">
-                            <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
+                        <div className="profile__content">
+                            {/* <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
                                 <Button className="unavailable__button" isLink to="/settings">Пройти</Button>
                             </NotContentBlock>
 
                             <NotContentBlock text="Для проведения операций нужно открыть счет" icon="open-card">
                                 <Button className="unavailable__button" onClick={() => setModal(true)}>Открыть</Button>
-                            </NotContentBlock>
+                            </NotContentBlock> */}
                             
                             <div className="profile__content--card--inner">
                                 <img src="/assets/img/card-black-empty.svg" alt="card" className="profile__content--card--img" />
@@ -159,9 +162,9 @@ const Profile = () => {
                                     <Input value={cardCvv} setValue={setCardCvv} readOnly="readonly" />
                                 </div>
                             </div>
-                        </div> */}
+                        </div>
 
-                        <div className="profile__content transfer__content">
+                        {/* <div className="profile__content transfer__content">
                             <Button className="transfer__back-btn">
                                 <Back className="transfer__back-icon" />
                                 Назад
@@ -257,16 +260,13 @@ const Profile = () => {
                                     <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
                 <Modal active={modal} setActive={setModal}>
                     <div className="cards-popup__items">
-                        <CardShortBlock icon="black" />
-                        <CardShortBlock icon="junior" />
-                        <CardShortBlock icon="platinum" />
-                        <CardShortBlock icon="drive" />
+                        {isLoad ? <Preloader /> : cardTypes?.content?.map((data, id) => <CardShortBlock key={id} img={data.img} />)}
                     </div>
                 </Modal>
             </section>

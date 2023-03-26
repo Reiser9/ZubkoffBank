@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    userLoading: false,
+    userIsLoading: false,
     user: {}
 };
 
@@ -9,8 +9,8 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserLoading: (state, action) => {
-            state.userLoading = action.payload
+        setUserIsLoading: (state, action) => {
+            state.userIsLoading = action.payload
         },
         setUser: (state, action) => {
             state.user = {...state.user, ...action.payload}
@@ -19,7 +19,7 @@ export const userSlice = createSlice({
 });
 
 export const {
-    setUserLoading,
+    setUserIsLoading,
     setUser
 } = userSlice.actions;
 

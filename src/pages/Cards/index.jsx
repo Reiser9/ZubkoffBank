@@ -4,8 +4,8 @@ import './index.css';
 
 import useCardTypes from '../../hooks/useCardTypes';
 
-import CardBlock from '../../components/CardBlock';
-import CardsSkeleton from './CardsSkeleton';
+import CardBlock from './CardBlock';
+import CardSkeleton from './CardSkeleton';
 
 const Cards = () => {
     const {error, isLoad, cardTypes} = useCardTypes();
@@ -14,10 +14,6 @@ const Cards = () => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Наши карты`;
         window.scrollTo(0, 0);
     }, []);
-
-    if(isLoad){
-        return <CardsSkeleton />
-    }
 
     return (
         <section className="card">
@@ -28,9 +24,11 @@ const Cards = () => {
                     </h1>
 
                     <div className="card__content">
-                        {!error ? (cardTypes.content
-                        ? cardTypes?.content?.map((data, id) => <CardBlock key={id} data={data} />)
-                        : <div>Данных нет</div>)
+                        {isLoad
+                        ? [...Array(3)].map((_, id) => <CardSkeleton key={id} />)
+                        : !error
+                        ? cardTypes.content ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
+                        : <div>Карт нет</div>
                         : <div>Ошибка</div>}
                     </div>
                 </div>

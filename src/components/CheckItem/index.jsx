@@ -2,19 +2,13 @@ import React from 'react';
 
 import './index.css';
 
-import {Cart, Car, Dollar} from '../Icons';
+import {Dollar} from '../Icons';
 
-const checkIcon = {
-    "buy": <Cart />,
-    "limit": <Dollar />,
-    "drive": <Car />
-}
-
-const CheckItem = ({cardName, cardBalance, icon, active = false}) => {
+const CheckItem = ({cardName, cardBalance, active = false}) => {
     return(
         <div className={`profile__sidebar--check profile__sidebar--check--item${active ? " active" : ""}`}>
             <div className="profile__sidebar--check--icon--inner">
-                {checkIcon[icon]}
+                <Dollar />
             </div>
 
             <div className="profile__sidebar--check--text--inner">

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
 import { setAuthIsLoading, setLogin } from '../redux/slices/auth';
-import { setUser } from '../redux/slices/user';
+import { setUser, setUserIsLoading } from '../redux/slices/user';
 import useNotify from './useNotify';
 
 import {unmaskPhone} from '../utils/maskPhone';
@@ -24,10 +24,13 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
     }
 
-    const getUserInfo = async () => {
-        const data = await request(REQUEST_TYPE.USER, "/full_info", HTTP_METHODS.GET, true);
+    const getUserShortInfo = async () => {
+        dispatch(setUserIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/short_info", HTTP_METHODS.GET, true);
 
         dispatch(setUser(data));
+        dispatch(setUserIsLoading(false));
 
         return data;
     }
@@ -43,7 +46,7 @@ const useAuth = () => {
             return clearData();
         }
 
-        const data = await getUserInfo();
+        const data = await getUserShortInfo();
 
         if(!data){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
@@ -63,14 +66,13 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
     }
 
-    // ЗАПРАШИВАТЬ SHORT INFO
     const login = async (phone, password, withoutNotify = false) => {
         if(phone.length < 17){
-            return alertNotify("Ошибка", "Введите корректный номер телефона", "error");
+            return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
         }
 
         if(password.length < 8){
-            return alertNotify("Ошибка", "Пароль не может быть меньше 8 символов", "error");
+            return alertNotify("Предупреждение", "Пароль не может быть меньше 8 символов", "warn");
         }
 
         dispatch(setAuthIsLoading(true));
@@ -78,8 +80,12 @@ const useAuth = () => {
         const data = await request(REQUEST_TYPE.AUTH, "/login", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), password});
 
         dispatch(setAuthIsLoading(false));
+
+        if(data === "Site not available"){
+            return;
+        }
         
-        if(!data){ //Проверять другое, обобщить ошибку сервера
+        if(!data){
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
 
@@ -95,7 +101,7 @@ const useAuth = () => {
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("typeToken", typeToken);
 
-        await getUserInfo();
+        await getUserShortInfo();
 
         navigate("/");
     }
@@ -104,7 +110,9 @@ const useAuth = () => {
         const data = await request(REQUEST_TYPE.AUTH, "/send_code_register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone)});
 
         if(!data){
-            return alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
+            alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
+
+            return "Error";
         }
 
         alertNotify("Успешно", "Код отправлен", "success");

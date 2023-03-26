@@ -5,11 +5,11 @@ import './index.css';
 
 import Button from '../Button';
 
-const CardShortBlock = ({icon = "black"}) => {
+const CardShortBlock = ({img}) => {
     return(
         <div className="cards-popup__item">
             <div className="cards-popup__card-icon--inner">
-                <img src={`assets/img/card-${icon}.svg`} alt="card" className="cards-popup__card-icon"/>
+                <img src={img} alt="card" className="cards-popup__card-icon"/>
             </div>
 
             <div className="cards-popup__btns">

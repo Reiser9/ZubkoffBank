@@ -66,13 +66,14 @@ const Register = () => {
     }, [isCodeAgain, seconds]);
 
     const sendSmsCode = async () => {
-        sendCodeRegister(phoneRegister);
+        const data = await sendCodeRegister(phoneRegister);
 
-        // Не идти дальше, если не ок с отправкой кода
-        setIsCodeAgain(false);
-        setSeconds(60);
+        if(!data){
+            setIsCodeAgain(false);
+            setSeconds(60);
 
-        setStage(3);
+            setStage(3);
+        }
     }
 
     const registerFunc = async () => {

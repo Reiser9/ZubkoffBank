@@ -1,4 +1,4 @@
-export const isBot = (userAgent) => {
+export const isBot = (userAgent = window.navigator.userAgent) => {
     const bots = [
       'Googlebot',
       'Bingbot',

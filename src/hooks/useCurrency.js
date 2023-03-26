@@ -9,14 +9,14 @@ const useCurrency = () => {
     const [error, setError] = React.useState(false);
     const [currency, setCurrency] = React.useState({});
 
-    const currencyState = useSelector(state => state.api);
+    const {currency: currencyData} = useSelector(state => state.api);
     const dispatch = useDispatch();
 
     const getCurrencyData = React.useCallback(async () => {
         setIsLoad(true);
 
-        if(Object.keys(currencyState.currency).length !== 0){
-            setCurrency(currencyState.currency);
+        if(Object.keys(currencyData).length !== 0){
+            setCurrency(currencyData);
         }
         else{
             const {currencyUsd, currencyEur, error} = await getCurrency();
@@ -36,7 +36,7 @@ const useCurrency = () => {
         }
 
         setIsLoad(false);
-    }, [dispatch, currencyState.currency]);
+    }, [dispatch, currencyData]);
 
     React.useEffect(() => {
         getCurrencyData();

@@ -8,13 +8,14 @@ import './index.css';
 
 import {maskPhone} from '../../utils/maskPhone';
 
+import { NotifyOkIcon, Lock, SettingsIcon, Back } from '../../components/Icons';
 import SidebarItem from '../../components/SidebarItem';
 import SidebarTab from '../../components/SidebarTab';
-
-import { NotifyOkIcon, Lock, SettingsIcon, Back } from '../../components/Icons';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import AuthWrapper from '../../components/Wrappers/AuthWrapper';
+import Preloader from '../../components/Preloader';
+import useUser from '../../hooks/useUser';
 
 const settingsTabs = [
     {
@@ -38,9 +39,11 @@ const Settings = () => {
     const [tab, setTab] = React.useState("verify");
     const [active, setActive] = React.useState(false);
 
-    const user = useSelector(state => state.user);
+    const {userIsLoading} = useSelector(state => state.user);
 
-    const {firstName, secondName, middleName, phoneNum, sex} = user.user;
+    const {user} = useUser();
+
+    const {firstName, secondName, middleName, phoneNum, sex} = user;
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Настройки`;
@@ -61,38 +64,8 @@ const Settings = () => {
                         </div>
 
                         <div className={`profile__content${active ? " active" : ""}`}>
-                            {tab === "data" &&
-                                <div className="setting">
-                                    <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
-                                        <Back className="admin__icon" />
-                                        Назад
-                                    </Button>
-
-                                    <div className="setting__block">
-                                        <h4 className="setting__title">Информация</h4>
-                                        <div className="setting__items">
-                                            <div className="setting__item"><Input value={firstName} readOnly className="setting__input" placeholder="Имя" /></div>
-                                            <div className="setting__item"><Input value={secondName} readOnly className="setting__input" placeholder="Фамилия" /></div>
-                                            <div className="setting__item"><Input value={middleName} readOnly className="setting__input" placeholder="Отчество" /></div>
-                                            <div className="setting__item"><Input value={maskPhone(phoneNum)} readOnly className="setting__input" placeholder="Номер телефона" /></div>
-                                            <div className="setting__item"><Input readOnly className="setting__input" placeholder="Пол" /></div>
-                                            <div className="setting__item"><Input readOnly className="setting__input" placeholder="Дата рождения" /></div>
-                                        </div>
-                                    </div>
-                                    <div className="setting__block">
-                                        <h4 className="setting__title">Паспортные данные</h4>
-                                        <div className="setting__items">
-                                            <div className="setting__item"><Input readOnly className="setting__input" placeholder="Серия и номер паспорта" /></div>
-                                            <div className="setting__item"><Input readOnly className="setting__input" placeholder="Кем выдан" /></div>
-                                            <div className="setting__item"><Input readOnly className="setting__input" placeholder="Дата выдачи" /></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                            {tab === "verify" &&
-                                // не верифицировано
-                                <div className="setting">
+                            {tab === "verify" && <>
+                                {user.verified === "NOT VERIFIED" && <div className="setting">
                                     <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
                                         <Back className="admin__icon" />
                                         Назад
@@ -115,27 +88,60 @@ const Settings = () => {
                                         </div>
                                     </div>
                                     <Button className="setting__verify-btn">Верифицировать</Button>
+                                </div>}
+
+                                {/* <div className="setting">
+                                    <div className="setting__block setting__block_verif">
+                                        <div className="setting__verif-icon--inner setting__verif-icon--inner_process">
+                                            <img src="assets/img/verif-process.svg" alt="icon" className="setting__verif-icon"/>
+                                        </div>
+
+                                        <h4 className="setting__label setting__label_verif">Данные на этапе проверки, пожалуйста, ожидайте</h4>
+                                    </div>
+                                </div> */}
+
+                                {user.verified === "VERIFIED" && <div className="setting">
+                                    <div className="setting__block setting__block_verif">
+                                        <div className="setting__verif-icon--inner setting__verif-icon--inner_process">
+                                            <img src="assets/img/verif-ok.svg" alt="icon" className="setting__verif-icon"/>
+                                        </div>
+                                        <h4 className="setting__label setting__label_verif">Верификация успешно пройдена</h4>
+                                    </div>
+                                </div>}
+                            </>}
+
+                            {tab === "data" &&
+                                <div className="setting">
+                                    {userIsLoading
+                                    ? <Preloader />
+                                    : <>
+                                        <Button className="admin__btn admin__back-btn" onClick={() => setActive(false)}>
+                                            <Back className="admin__icon" />
+
+                                            Назад
+                                        </Button>
+
+                                        <div className="setting__block">
+                                            <h4 className="setting__title">Информация</h4>
+                                            <div className="setting__items">
+                                                <div className="setting__item"><Input value={firstName} readOnly className="setting__input" placeholder="Имя" /></div>
+                                                <div className="setting__item"><Input value={secondName} readOnly className="setting__input" placeholder="Фамилия" /></div>
+                                                <div className="setting__item"><Input value={middleName} readOnly className="setting__input" placeholder="Отчество" /></div>
+                                                <div className="setting__item"><Input value={maskPhone(phoneNum)} readOnly className="setting__input" placeholder="Номер телефона" /></div>
+                                                <div className="setting__item"><Input readOnly className="setting__input" placeholder="Пол" /></div>
+                                                <div className="setting__item"><Input readOnly className="setting__input" placeholder="Дата рождения" /></div>
+                                            </div>
+                                        </div>
+                                        <div className="setting__block">
+                                            <h4 className="setting__title">Паспортные данные</h4>
+                                            <div className="setting__items">
+                                                <div className="setting__item"><Input readOnly className="setting__input" placeholder="Серия и номер паспорта" /></div>
+                                                <div className="setting__item"><Input readOnly className="setting__input" placeholder="Кем выдан" /></div>
+                                                <div className="setting__item"><Input readOnly className="setting__input" placeholder="Дата выдачи" /></div>
+                                            </div>
+                                        </div>
+                                    </>}
                                 </div>
-
-                                // в процессе
-                                // <div className="setting">
-                                //     <div className="setting__block setting__block_verif">
-                                //         <div className="setting__verif-icon--inner setting__verif-icon--inner_process">
-                                //             <img src="assets/img/verif-process.svg" alt="icon" className="setting__verif-icon"/>
-                                //         </div>
-                                //         <h4 className="setting__label setting__label_verif">Данные на этапе проверки, пожалуйста, ожидайте</h4>
-                                //     </div>
-                                // </div>
-
-                                // верифицировано
-                                // <div className="setting">
-                                //     <div className="setting__block setting__block_verif">
-                                //         <div className="setting__verif-icon--inner setting__verif-icon--inner_process">
-                                //             <img src="assets/img/verif-ok.svg" alt="icon" className="setting__verif-icon"/>
-                                //         </div>
-                                //         <h4 className="setting__label setting__label_verif">Верификация успешно пройдена</h4>
-                                //     </div>
-                                // </div>
                             }
 
                             {tab === "save" &&
