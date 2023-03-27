@@ -5,14 +5,14 @@ import { Navigate } from 'react-router-dom';
 import Preloader from '../Preloader';
 
 const AuthWrapper = ({children}) => {
-    const auth = useSelector(state => state.auth);
+    const {authIsLoading, isAuth} = useSelector(state => state.auth);
 
-    if(auth.authIsLoading){
+    if(authIsLoading){
         return <Preloader fill />
     }
 
-    if(!auth.isAuth){
-        return <Navigate to="/" />
+    if(!isAuth){
+        return <Navigate to="/sign" />
     }
 
     return children;

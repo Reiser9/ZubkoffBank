@@ -39,8 +39,7 @@
     justify-content: space-between;
 }
 
-.sign__content,
-.sign__info {
+.sign__content{
     width: calc(50% - 48px);
     display: flex;
     flex-direction: column;
@@ -50,45 +49,6 @@
 .login__icon {
     width: 100%;
     max-width: 200px;
-}
-
-.register__icon {
-    width: 100%;
-    max-width: 392px;
-}
-
-.sign__info--title {
-    margin-top: 4rem;
-    font-size: 2rem;
-    font-weight: 500;
-}
-
-.sign__info--points {
-    width: 100%;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-}
-
-.sign__info--point {
-    position: relative;
-    padding-left: 1.8rem;
-    color: var(--textC);
-}
-
-.sign__info--point:before {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--mainC);
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
 }
 
 .sign__tabs {
@@ -325,16 +285,13 @@
         gap: 16px;
     }
 
-    .sign__content,
-    .sign__info {
+    .sign__content{
         width: calc(50% - 24px);
     }
 }
 
 @media(max-width: 768px) {
-
-    .sign:before,
-    .sign__info {
+    .sign:before{
         display: none;
     }
 

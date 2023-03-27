@@ -61,8 +61,11 @@ const useAuth = () => {
 
             checkAuth();
         }
+        
+        if(data !== "Site not available"){
+            dispatch(setLogin({accessToken, refreshToken, typeToken, isAuth: true}));
+        }
 
-        dispatch(setLogin({accessToken, refreshToken, typeToken, isAuth: true}));
         dispatch(setAuthIsLoading(false));
     }
 

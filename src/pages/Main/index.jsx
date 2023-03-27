@@ -5,6 +5,8 @@ import './index.css';
 
 import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
 
+import TitleWrapper from '../../components/Wrappers/TitleWrapper';
+
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
 import ServiceItem from '../../components/ServiceItem';
@@ -12,13 +14,8 @@ import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
 
 const Main = () => {
-    React.useEffect(() => {
-        document.title = `${process.env.REACT_APP_BANK_NAME} Bank`;
-        window.scrollTo(0, 0);
-    }, []);
-
     return (
-        <>
+        <TitleWrapper pageTitle="Главная">
             <section className="main-block">
                 <div className="container">
                     <div className="main-block__inner">
@@ -61,7 +58,7 @@ const Main = () => {
                         <h2 className="services__title title">Сервисы и услуги</h2>
 
                         <div className="services__items">
-                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
+                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" buttonLink="/profile" />
 
                             <ServiceItem icon={<Card />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
 
@@ -140,7 +137,7 @@ const Main = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </TitleWrapper>
     )
 }
 

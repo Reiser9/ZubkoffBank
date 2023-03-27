@@ -79,10 +79,6 @@ const useRequest = () => {
         data = {},
         headers = {}
     ) => {
-        // if(!isBot()){
-        //     console.log("Вы бот!");
-        // }
-
         if(!server.isServerAvailable){
             alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
             return "Site not available";
