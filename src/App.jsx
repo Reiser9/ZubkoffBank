@@ -18,7 +18,6 @@ const NotFound = React.lazy(() => import('./pages/NotFound'));
 const Settings = React.lazy(() => import('./pages/Settings'));
 const Admin = React.lazy(() => import('./pages/Admin'));
 const Api = React.lazy(() => import('./pages/Api'));
-const Ban = React.lazy(() => import('./pages/Ban'));
 
 const App = () => {
     return (
@@ -38,7 +37,6 @@ const App = () => {
                     <Route path="sign" element={withSuspense(Sign)} />
                     <Route path="recovery" element={withSuspense(Recovery)} />
                     <Route path="404" element={withSuspense(NotFound)} />
-                    <Route path="ban" element={withSuspense(Ban)} />
                 </Route>
             </Routes>
 

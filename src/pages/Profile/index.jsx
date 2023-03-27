@@ -8,13 +8,13 @@ import ErrorBlock from '../../components/ErrorBlock';
 import SidebarItem from '../../components/SidebarItem';
 import CheckItem from '../../components/CheckItem';
 import Preloader from '../../components/Preloader';
-import {Plus, SettingsIcon} from '../../components/Icons';
+import { Back, Card, Phone, Plus, SBP, SettingsIcon } from '../../components/Icons';
 import useCurrency from '../../hooks/useCurrency';
 import Modal from '../../components/Modal';
 import CardShortBlock from '../../components/CardShortBlock';
 import SidebarTab from '../../components/SidebarTab';
 
-import {copyToClipboard} from '../../utils/copyToClipboard';
+import { copyToClipboard } from '../../utils/copyToClipboard';
 import NotContentBlock from '../../components/NotContentBlock';
 
 const Profile = () => {
@@ -24,14 +24,14 @@ const Profile = () => {
 
     const [modal, setModal] = React.useState(false);
 
-    const {isLoadCurrency, errorCurrency, currency} = useCurrency();
+    const { isLoadCurrency, errorCurrency, currency } = useCurrency();
 
     React.useEffect(() => {
         document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Профиль`;
         window.scrollTo(0, 0);
     }, []);
 
-    return(
+    return (
         <section className="profile">
             <div className="container">
                 <div className="profile__inner">
@@ -85,15 +85,19 @@ const Profile = () => {
                         </SidebarItem>
                     </div>
 
-                    <div className="profile__content">
-                        {/* <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
+                    {/* <div className="profile__content">
+                        <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
                             <Button className="unavailable__button" isLink to="/settings">Пройти</Button>
                         </NotContentBlock>
+                    </div> */}
 
+                    {/* <div className="profile__content">
                         <NotContentBlock text="Для проведения операций нужно открыть счет" icon="open-card">
                             <Button className="unavailable__button" onClick={() => setModal(true)}>Открыть</Button>
-                        </NotContentBlock> */}
-                        
+                        </NotContentBlock>
+                    </div> */}
+
+                    {/* <div className="profile__content">
                         <div className="profile__content--card--inner">
                             <img src="/assets/img/card-black-empty.svg" alt="card" className="profile__content--card--img" />
 
@@ -155,6 +159,104 @@ const Profile = () => {
                                 <Input value={cardDate} setValue={setCardDate} readOnly="readonly" />
 
                                 <Input value={cardCvv} setValue={setCardCvv} readOnly="readonly" />
+                            </div>
+                        </div>
+                    </div> */}
+
+                    <div className="profile__content transfer__content">
+                        <Button className="transfer__back-btn">
+                            <Back className="transfer__back-icon" />
+                            Назад
+                        </Button>
+
+                        <div className="transfer__steps">
+                            <div className="transfer__step">
+                                <h5 className="transfer__title">Выберите способ оплаты</h5>
+
+                                <div className="transfer__payment-methods">
+                                    <div className="payment-method active">
+                                        <div className="payment-method__icon--inner">
+                                            <Card className="payment-method__icon" />
+                                        </div>
+
+                                        <p className="payment-method__text">По номеру карты</p>
+                                    </div>
+
+                                    <div className="payment-method">
+                                        <div className="payment-method__icon--inner">
+                                            <Phone className="payment-method__icon" />
+                                        </div>
+
+                                        <p className="payment-method__text">По номеру телефона</p>
+                                    </div>
+
+                                    <div className="payment-method">
+                                        <div className="payment-method__icon--inner">
+                                            <SBP className="payment-method__icon payment-method__icon_sbp" />
+                                        </div>
+
+                                        <p className="payment-method__text">По системе быстрых платежей</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="transfer__step">
+                                <h5 className="transfer__title">Выберите счет оплаты</h5>
+
+                                <div className="transfer__bil-payments">
+                                    <div className="bil-payment__wrapper active">
+                                        <div className="bil-payment bil-payment_black">
+                                            <p className="bil-payment__type">Zubkoff Black</p>
+
+                                            <p className="bil-payment__balance">13 453,15 ₽</p>
+
+                                            <p className="bil-payment__number">**** 9328</p>
+                                        </div>
+                                    </div>
+                                    <div className="bil-payment__wrapper">
+                                        <div className="bil-payment bil-payment_junior">
+                                            <p className="bil-payment__type">Zubkoff Black</p>
+
+                                            <p className="bil-payment__balance">13 453,15 ₽</p>
+
+                                            <p className="bil-payment__number">**** 9328</p>
+                                        </div>
+                                    </div>
+                                    <div className="bil-payment__wrapper">
+                                        <div className="bil-payment bil-payment_platinum">
+                                            <p className="bil-payment__type">Zubkoff Black</p>
+
+                                            <p className="bil-payment__balance">13 453,15 ₽</p>
+
+                                            <p className="bil-payment__number">**** 9328</p>
+                                        </div>
+                                    </div>
+                                    <div className="bil-payment__wrapper">
+                                        <div className="bil-payment bil-payment_drive">
+                                            <p className="bil-payment__type">Zubkoff Black</p>
+
+                                            <p className="bil-payment__balance">13 453,15 ₽</p>
+
+                                            <p className="bil-payment__number">**** 9328</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="transfer__step">
+                                <h5 className="transfer__title">Введите данные</h5>
+
+                                <Input className="transfer__input" placeholder="Номер карты" />
+
+                                <Input className="transfer__input" placeholder="Сумма" />
+
+                                <Input className="transfer__input" placeholder="Комментарий к переводу" />
+
+                                <Button className="transfer__btn">Перевести 500 ₽</Button>
+
+                                <p className="transfer__text">Комиссия не взимается банком</p>
+
+                                <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
                             </div>
                         </div>
                     </div>
