@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
 import { setAuthIsLoading, setLogin } from '../redux/slices/auth';
-import { setUser, setUserIsLoading } from '../redux/slices/user';
+import { setUser } from '../redux/slices/user';
 import useNotify from './useNotify';
+import useUser from './useUser';
 
 import {unmaskPhone} from '../utils/maskPhone';
 
@@ -13,6 +14,7 @@ const useAuth = () => {
     const dispatch = useDispatch();
     const {request} = useRequest();
     const {alertNotify} = useNotify();
+    const {getUserShortInfo} = useUser();
     const navigate = useNavigate();
 
     const clearData = () => {
@@ -22,17 +24,6 @@ const useAuth = () => {
 
         dispatch(setUser({}));
         dispatch(setAuthIsLoading(false));
-    }
-
-    const getUserShortInfo = async () => {
-        dispatch(setUserIsLoading(true));
-
-        const data = await request(REQUEST_TYPE.USER, "/short_info", HTTP_METHODS.GET, true);
-
-        dispatch(setUser(data));
-        dispatch(setUserIsLoading(false));
-
-        return data;
     }
 
     const checkAuth = async () => {

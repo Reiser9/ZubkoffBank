@@ -1,0 +1,17 @@
+import React from 'react';
+
+import './index.css';
+
+const VerifyStage = ({icon, text}) => {
+    return (
+        <div className="setting__block setting__block_verif">
+            <div className="setting__verif-icon--inner">
+                <img src={`assets/img/${icon}.svg`} alt="icon" className="setting__verif-icon"/>
+            </div>
+
+            <h4 className="setting__label setting__label_verif">{text}</h4>
+        </div>
+    )
+}
+
+export default VerifyStage;

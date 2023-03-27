@@ -38,3 +38,10 @@
 .header__profile:hover svg path{
 	stroke: var(--mainC);
 }
+
+.header__profile--name{
+	max-width: 110px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

@@ -12,12 +12,12 @@
 	--weatherLightC: #87919C;
 	--cashBackItemC : #333;
 	--cashBackItemLightC : #EAECEE;
-	--notifyWarning: #FABD48;
+	--errorHover: #d42b2b;
 
 	/* Цвета уведомления */
+	--notifyWarning: #FABD48;
 	--notifyOk: #10B97B;
 	--notifyError: #EF3B3B;
-	--errorHover: #d42b2b;
 	--notifyInfo: var(--mainC);
 
 	/* Цвета карт */

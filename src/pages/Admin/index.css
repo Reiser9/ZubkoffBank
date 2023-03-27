@@ -1,7 +1,5 @@
-.admin__content {
-    display: flex;
+.profile__content.admin__content {
     justify-content: flex-start;
-    align-items: flex-start;
     gap: 16px;
 }
 
@@ -90,11 +88,7 @@
     }
 }
 
-.number__btn:hover {
-    opacity: 0.7;
-}
-
-.number__btn.active {
+.number__btn.active, .number__btn:hover{
     background-color: var(--mainC);
     color: #fff;
 }
@@ -125,13 +119,7 @@
 .item-admin__title {
     display: flex;
     align-items: center;
-    gap: 20px;
-}
-
-@media (max-width:480px) {
-    .item-admin__title {
-        gap: 12px;
-    }
+    gap: 12px;
 }
 
 .item-admin__number {
@@ -242,11 +230,22 @@
     font-size: 1.4rem;
 }
 
-.section-admin__icon {
+.section-admin__title svg {
     width: 20px;
     height: 20px;
-    stroke: #000;
     flex-shrink: 0;
+}
+
+.verify__not path{
+    stroke: var(--notifyError);
+}
+
+.verify__proccess path{
+    stroke: var(--notifyWarning);
+}
+
+.verify__success path{
+    stroke: var(--notifyOk);
 }
 
 .section-admin__arrow {
@@ -332,28 +331,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.default__button.admin__btn {
-    padding: 0.8rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 8px;
-    font-size: 14px;
-}
-
-@media (max-width:480px) {
-    .admin__btn {
-        width: 100%;
-    }
-}
-
-.admin__icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
 }
 
 .section-admin__text {
@@ -467,20 +444,5 @@
 
 .pagination {
     margin: 0 auto;
-}
-
-.default__button.admin__back-btn {
-    display: none;
-}
-
-@media (max-width:768px) {
-    .default__button.admin__back-btn {
-        display: flex;
-    }
-}
-
-@media (max-width:480px) {
-    .default__button.admin__back-btn {
-        width: auto;
-    }
+    margin-top: auto;
 }

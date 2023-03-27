@@ -24,7 +24,7 @@ const Cards = () => {
                             {isLoad
                             ? [...Array(3)].map((_, id) => <CardSkeleton key={id} />)
                             : !error
-                            ? cardTypes.content ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
+                            ? cardTypes.content?.length > 0 ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
                             : <div>Карт нет</div>
                             : <div>Ошибка</div>}
                         </div>

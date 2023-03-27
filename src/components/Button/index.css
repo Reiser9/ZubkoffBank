@@ -19,9 +19,32 @@
     background: var(--mainFocusC);
 }
 
+.default__button.admin__btn {
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.default__button.admin__back-btn {
+    display: none;
+}
+
+.admin__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 @media(max-width: 768px){
     .default__button{
         padding: 1.2rem 4rem;
+    }
+
+    .default__button.admin__back-btn {
+        display: flex;
     }
 }
 
@@ -29,5 +52,9 @@
     .default__button{
         padding: 1.2rem 2rem;
         font-size: 1.4rem;
+    }
+
+    .default__button.admin__back-btn {
+        width: auto;
     }
 }

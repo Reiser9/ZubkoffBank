@@ -9,7 +9,7 @@ import ServerNotAvailable from '../../pages/ServerNotAvailable';
 
 const InitialWrapper = ({children}) => {
     const {authIsLoading, isAuth} = useSelector(state => state.auth);
-    const {user, userIsLoading} = useSelector(state => state.user);
+    const {user} = useSelector(state => state.user);
     const {isServerAvailable} = useSelector(state => state.server);
     const {checkAuth} = useAuth();
 
@@ -17,7 +17,7 @@ const InitialWrapper = ({children}) => {
         checkAuth();
     }, []);
 
-    if(authIsLoading || userIsLoading){
+    if(authIsLoading){ //Ввести переменную appInit, вместо authIsLoading
         return <Preloader />
     }
 
@@ -25,8 +25,10 @@ const InitialWrapper = ({children}) => {
         return <ServerNotAvailable />
     }
 
-    if(isAuth && user.roles.includes("blocked")){
-        return <Ban />
+    if(isAuth && user.roles){
+        if(user.roles.includes("blocked")){
+            return <Ban />
+        }
     }
 
     return children;

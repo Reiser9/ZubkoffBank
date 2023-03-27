@@ -64,7 +64,6 @@ const useRequest = () => {
         try{
             await emptyRequest.get("/health");
         }catch(error){
-            alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
             dispatch(setIsServerAvailable(false));
 
             return "Site not available";
@@ -80,7 +79,6 @@ const useRequest = () => {
         headers = {}
     ) => {
         if(!server.isServerAvailable){
-            alertNotify("Ошибка", "Сервер недоступен, повторите попытку позже", "error");
             return "Site not available";
         }
 

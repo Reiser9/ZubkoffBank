@@ -23,7 +23,9 @@ const Header = () => {
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 
-                        {firstName}
+                        <p className="header__profile--name">
+                            {firstName}
+                        </p>
                     </Link>
                     : <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />

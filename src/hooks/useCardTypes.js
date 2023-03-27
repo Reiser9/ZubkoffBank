@@ -14,7 +14,7 @@ const useCardTypes = () => {
     const dispatch = useDispatch();
     const {request, error: requestError} = useRequest();
 
-    const getCardTypes = React.useCallback(async () => {
+    const getCardTypes = async () => {
         setIsLoad(true);
 
         if(Object.keys(cardTypesData).length !== 0){
@@ -34,11 +34,11 @@ const useCardTypes = () => {
         }
 
         setIsLoad(false);
-    }, [requestError, cardTypesData, dispatch, request]);
+    };
 
     React.useEffect(() => {
         getCardTypes();
-    }, [getCardTypes]);
+    }, []);
 
     return {isLoad, error, cardTypes}
 }

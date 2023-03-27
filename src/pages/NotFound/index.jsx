@@ -9,7 +9,7 @@ const NotFound = () => {
         <TitleWrapper pageTitle="404">
             <StatusPageInner img="404" title="К сожалению, такой страницы на нашем сайте нет"
             text="Но мы сделаем все, что бы она обязательно появилась!">
-                <Button isLink to="/" className="notfound__link">
+                <Button isLink to="/" className="statuspage__link">
                     На главную
                 </Button>
             </StatusPageInner>
