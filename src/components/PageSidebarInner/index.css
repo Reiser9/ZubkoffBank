@@ -71,6 +71,7 @@
 
 .profile__content.center{
     align-items: center;
+    justify-content: center;
 }
 
 .profile__content--card--inner {
@@ -276,13 +277,13 @@
     transition: .2s linear;
 }
 
-.payment-method__icon {
+.payment-method__icon--inner svg {
     width: 24px;
     height: 24px;
     flex-shrink: 0;
 }
 
-.payment-method__icon path {
+.payment-method__icon--inner svg path {
     stroke: var(--mainC);
 }
 
@@ -302,7 +303,7 @@
     }
 }
 
-.payment-method__icon_sbp path {
+svg.payment-method__icon_sbp path {
     stroke: unset;
 }
 
@@ -412,19 +413,7 @@
     background-color: var(--cardDriveC);
 }
 
-.bil-payment_black::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_junior::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_platinum::before {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.bil-payment_drive::before {
+.bil-payment::before {
     background: rgba(255, 255, 255, 0.1);
 }
 

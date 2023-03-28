@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
-import { setAuthIsLoading, setLogin } from '../redux/slices/auth';
-import { setUser } from '../redux/slices/user';
+import { setAuthIsLoading, setLogin, setIsAuth } from '../redux/slices/auth';
+import { initUser } from '../redux/slices/user';
 import useNotify from './useNotify';
 import useUser from './useUser';
 
@@ -22,8 +22,15 @@ const useAuth = () => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("typeToken");
 
-        dispatch(setUser({}));
+        dispatch(initUser({}));
         dispatch(setAuthIsLoading(false));
+        dispatch(setIsAuth(false));
+    }
+
+    const logout = () => {
+        clearData();
+        navigate("/");
+        return alertNotify("Успешно", "Вы вышли из аккаунта", "success");
     }
 
     const checkAuth = async () => {
@@ -128,7 +135,7 @@ const useAuth = () => {
         alertNotify("Успешно", "Вы зарегистрировались", "success");
     }
 
-    return {checkAuth, login, sendCodeRegister, register}
+    return {checkAuth, login, logout, sendCodeRegister, register}
 }
 
 export default useAuth;

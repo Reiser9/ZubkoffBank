@@ -12,15 +12,19 @@ export const userSlice = createSlice({
         setUserIsLoading: (state, action) => {
             state.userIsLoading = action.payload
         },
-        setUser: (state, action) => {
+        updateUser: (state, action) => {
             state.user = {...state.user, ...action.payload}
-        }
+        },
+        initUser: (state, action) => {
+            state.user = action.payload
+        },
     }
 });
 
 export const {
     setUserIsLoading,
-    setUser
+    initUser,
+    updateUser
 } = userSlice.actions;
 
 export default userSlice.reducer;

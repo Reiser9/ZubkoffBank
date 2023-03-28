@@ -3,7 +3,7 @@ import React from 'react';
 import './index.css';
 
 const CardLimitBlock = () => {
-    const [progress, setProgress] = React.useState(65);
+    const [progress, setProgress] = React.useState(25);
 
     return (
         <div className="profile__content--limit--inner">

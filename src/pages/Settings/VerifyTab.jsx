@@ -2,6 +2,8 @@ import React from 'react';
 
 import './index.css';
 
+import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
+
 import useUser from '../../hooks/useUser';
 
 import Input from '../../components/Input';
@@ -10,13 +12,9 @@ import VerifyStage from './VerifyStage';
 import Preloader from '../../components/Preloader';
 
 const VerifyTab = () => {
-    const {user, userIsLoading, getUserFullInfo} = useUser();
+    const {user, userIsLoading} = useUser();
 
     const {verified} = user;
-
-    React.useEffect(() => {
-        getUserFullInfo();
-    }, []);
 
     if(userIsLoading){
         return <Preloader />
@@ -29,14 +27,16 @@ const VerifyTab = () => {
                     <h4 className="setting__title">Информация</h4>
 
                     <div className="setting__items">
-                        <div className="setting__item"><Input className="setting__input" placeholder="Серия и номер паспорта" /></div>
+                        {/* Сделать Date Picker */}
+                        <div className="setting__item"><Input mask={INPUT_MASK_TYPE.PASSPORT_DATA} className="setting__input" placeholder="Серия и номер паспорта" /></div>
                         <div className="setting__item"><Input className="setting__input" placeholder="Кем выдан" /></div>
-                        <div className="setting__item"><Input className="setting__input" placeholder="Дата выдачи" /></div>
-                        <div className="setting__item"><Input className="setting__input" placeholder="Дата рождения" /></div>
+                        <div className="setting__item"><Input mask={INPUT_MASK_TYPE.DATE} className="setting__input" placeholder="Дата выдачи" /></div>
+                        <div className="setting__item"><Input mask={INPUT_MASK_TYPE.DATE} className="setting__input" placeholder="Дата рождения" /></div>
                     </div>
                 </div>
 
                 <div className="setting__block">
+                    {/* Сделать рабочим компонентом */}
                     <h4 className="setting__title">Пол</h4>
 
                     <div className="setting__item">
