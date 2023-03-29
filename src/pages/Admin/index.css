@@ -364,6 +364,10 @@
     .section-admin__item_card {
         width: calc(100% / 2 - 12px / 2);
     }
+
+    .item-admin__header, .section-admin__header{
+        cursor: default;
+    }
 }
 
 @media (max-width:576px) {

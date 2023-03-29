@@ -11,6 +11,8 @@ import SidebarTab from '../../components/SidebarTab';
 import SidebarButton from '../../components/SidebarTab/SidebarButton';
 
 import useAuth from '../../hooks/useAuth';
+import useUser from '../../hooks/useUser';
+
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import NotContentBlock from '../../components/NotContentBlock';
 import PageSidebarInner from '../../components/PageSidebarInner';
@@ -26,6 +28,7 @@ const Profile = () => {
     const [modal, setModal] = React.useState(false);
 
     const {logout} = useAuth();
+    const {user} = useUser();
 
     return(
         <PageSidebarInner pageTitle="Профиль">
@@ -54,7 +57,7 @@ const Profile = () => {
                     <div className="sidebar__tabs">
                         <SidebarTab text="Настройки" icon={<SettingsIcon />} isLink to="/settings" />
                         <SidebarButton text="Выйти" icon={<Leave />} onClick={logout} />
-                        <SidebarTab text="Админка" icon={<User />} isLink to="/admin" />
+                        {user?.roles?.includes("admin") && <SidebarTab text="Админка" icon={<User />} isLink to="/admin" />}
                     </div>
                 </SidebarItem>
             </div>

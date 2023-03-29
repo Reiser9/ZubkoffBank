@@ -15,7 +15,7 @@ const DataTab = () => {
     const {user, userIsLoading, getUserFullInfo} = useUser();
     const {firstName, secondName, middleName, phoneNum, birthdate, sex, granted, grantedDate, passportNum, passportSer, verified} = user;
 
-    React.useState(() => {
+    React.useEffect(() => {
         getUserFullInfo();
     }, []);
 

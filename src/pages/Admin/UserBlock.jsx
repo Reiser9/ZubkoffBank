@@ -28,12 +28,12 @@ const getVerifyIcon = (verifyStatus) => {
     }
 }
 
-const UserBlock = ({data}) => {
+const UserBlock = ({data, id}) => {
     const {dataUsers, verify, phoneNum, cards, accountNum} = data;
-    const {id, firstName, secondName, middleName, birthdate, sex, granted, grantedDate, passportNum, passportSer} = dataUsers;
+    const {firstName, secondName, middleName, birthdate, sex, granted, grantedDate, passportNum, passportSer} = dataUsers;
 
     return (
-        <AdminItem id={id} title={`${secondName} ${firstName} ${middleName}`}>
+        <AdminItem id={id + 1} title={`${secondName} ${firstName} ${middleName}`}>
             <DataItem title="Данные" icon={<Data />}>
                 <div className="section-admin__items">
                     <DataField title="Номер телефона" value={maskPhone(phoneNum)} />

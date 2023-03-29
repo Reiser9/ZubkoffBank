@@ -9,6 +9,7 @@ import BackButton from '../../components/Button/BackButton';
 import PageSidebarInner from '../../components/PageSidebarInner';
 import AdminCardsTab from './AdminCardsTab';
 import AdminUsersTab from './AdminUsersTab';
+import AdminWrapper from '../../components/Wrappers/AdminWrapper';
 
 const settingsTabs = [
     {
@@ -28,22 +29,24 @@ const Admin = () => {
     const [active, setActive] = React.useState(false);
 
     return (
-        <PageSidebarInner pageTitle="Админка">
-            <div className={`profile__sidebar${active ? " active" : ""}`}>
-                <SidebarItem title="Админка">
-                    <div className="sidebar__tabs">
-                        {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
-                    </div>
-                </SidebarItem>
-            </div>
+        <AdminWrapper>
+            <PageSidebarInner pageTitle="Админка">
+                <div className={`profile__sidebar${active ? " active" : ""}`}>
+                    <SidebarItem title="Админка">
+                        <div className="sidebar__tabs">
+                            {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
+                        </div>
+                    </SidebarItem>
+                </div>
 
-            <div className={`profile__content admin__content${active ? " active" : ""}`}>
-                <BackButton onClick={() => setActive(false)} />
+                <div className={`profile__content admin__content${active ? " active" : ""}`}>
+                    <BackButton onClick={() => setActive(false)} />
 
-                {tab === "users" &&<AdminUsersTab />}
-                {tab === "cards" && <AdminCardsTab />}
-            </div>
-        </PageSidebarInner>
+                    {tab === "users" &&<AdminUsersTab />}
+                    {tab === "cards" && <AdminCardsTab />}
+                </div>
+            </PageSidebarInner>
+        </AdminWrapper>
     )
 }
 

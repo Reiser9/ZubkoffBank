@@ -12,7 +12,7 @@ const useCardTypes = () => {
 
     const {cardTypes: cardTypesData} = useSelector(state => state.cardTypes);
     const dispatch = useDispatch();
-    const {request, error: requestError} = useRequest();
+    const {request} = useRequest();
 
     const getCardTypes = async () => {
         setIsLoad(true);
@@ -24,7 +24,6 @@ const useCardTypes = () => {
             const data = await request(REQUEST_TYPE.CARD, "/types", HTTP_METHODS.GET);
 
             if(!data){
-                console.log(requestError);
                 setError(true);
             }
             else{

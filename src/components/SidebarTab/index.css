@@ -26,6 +26,12 @@
     background: var(--creditCardBg);
 }
 
+@media (max-width: 768px) {
+    .sidebar-tab.active, .sidebar-tab:hover{
+        background: var(--backgroundC);
+    }
+}
+
 .sidebar-tab svg {
     width: 24px;
 }

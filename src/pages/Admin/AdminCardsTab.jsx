@@ -13,8 +13,6 @@ const AdminCardsTab = () => {
 
     const {content, totalPages, totalElements} = cardTypes;
 
-    console.log(cardTypes.content?.length);
-
     if(isLoad){
         return <Preloader />
     }
@@ -27,13 +25,13 @@ const AdminCardsTab = () => {
                 <Button className="admin__btn">
                     <Add className="admin__icon" />
 
-                    Добавить тип
+                    Добавить
                 </Button>
             </div>
 
             <div className="admin__items">
                 {!error
-                ? cardTypes.content?.length > 0 ? cardTypes.content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
+                ? content?.length > 0 ? content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
                 : <div>Карт нет</div>
                 : <div>Ошибка</div>}
             </div>

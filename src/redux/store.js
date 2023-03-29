@@ -6,6 +6,7 @@ import notifySlice from './slices/notify';
 import userSlice from './slices/user';
 import cardTypesSlice from './slices/cardTypes';
 import serverSlice from './slices/server';
+import adminSlice from './slices/admin';
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         notify: notifySlice,
         user: userSlice,
         cardTypes: cardTypesSlice,
-        server: serverSlice
+        server: serverSlice,
+        admin: adminSlice
     }
 });
