@@ -1,10 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
-
-import useUser from '../../hooks/useUser';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -12,9 +11,7 @@ import VerifyStage from './VerifyStage';
 import Preloader from '../../components/Preloader';
 
 const VerifyTab = () => {
-    const {user, userIsLoading} = useUser();
-
-    const {verified} = user;
+    const {user, userIsLoading} = useSelector(state => state.user);
 
     if(userIsLoading){
         return <Preloader />
@@ -22,7 +19,7 @@ const VerifyTab = () => {
 
     return (
         <>
-            {verified === "NOT VERIFIED" && <>
+            {user.verified === "NOT VERIFIED" && <>
                 <div className="setting__block">
                     <h4 className="setting__title">Информация</h4>
 
@@ -48,8 +45,8 @@ const VerifyTab = () => {
                 <Button className="setting__verify-btn">Верифицировать</Button>
             </>}
 
-            {verified === "PROCESS" && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
-            {verified === "VERIFIED" && <VerifyStage icon="check" text="Верификация успешно пройдена" />}
+            {user.verified === "PROCESS" && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
+            {user.verified === "VERIFIED" && <VerifyStage icon="check" text="Верификация успешно пройдена" />}
         </>
     )
 }

@@ -4,7 +4,7 @@ import './index.css';
 
 import Button from '../Button';
 
-const Confirm = ({active, setActive, text, action}) => {
+const Confirm = ({active, setActive, text, action = () => {}}) => {
     const closeModal = () => {
         setActive(false);
     }

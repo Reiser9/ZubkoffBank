@@ -2,14 +2,16 @@ import React from 'react';
 
 import './index.css';
 
-import { Add,  } from '../../components/Icons';
+import { Add } from '../../components/Icons';
 import Button from '../../components/Button';
 import CardBlock from './CardBlock';
 import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
+import { useSelector } from 'react-redux';
 
 const AdminCardsTab = () => {
-    const {isLoad, error, cardTypes} = useCardTypes();
+    const {isLoad, error} = useCardTypes();
+    const {cardTypes} = useSelector(state => state.cardTypes);
 
     const {content, totalPages, totalElements} = cardTypes;
 
@@ -25,7 +27,7 @@ const AdminCardsTab = () => {
                 <Button className="admin__btn">
                     <Add className="admin__icon" />
 
-                    Добавить
+                    <span>Добавить</span>
                 </Button>
             </div>
 

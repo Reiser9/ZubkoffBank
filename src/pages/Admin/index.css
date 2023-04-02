@@ -20,9 +20,8 @@
 }
 
 @media (max-width:480px) {
-    .admin__header_cards {
-        align-items: flex-start;
-        flex-direction: column;
+    .admin__btn span{
+        display: none;
     }
 }
 
@@ -240,7 +239,7 @@
     stroke: var(--notifyError);
 }
 
-.verify__proccess path{
+.verify__process path{
     stroke: var(--notifyWarning);
 }
 

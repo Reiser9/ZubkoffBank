@@ -7,9 +7,11 @@ import useCardTypes from '../../hooks/useCardTypes';
 import Modal from '../Modal';
 import Preloader from '../Preloader';
 import CardShortBlock from '../CardShortBlock';
+import { useSelector } from 'react-redux';
 
 const NewCardModal = ({active, setActive}) => {
-    const {error, isLoad, cardTypes} = useCardTypes();
+    const {error, isLoad} = useCardTypes();
+    const {cardTypes} = useSelector(state => state.cardTypes);
 
     return (
         <Modal active={active} setActive={setActive}>

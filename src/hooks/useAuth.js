@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
 import { setAuthIsLoading, setLogin, setIsAuth } from '../redux/slices/auth';
+import { setAppIsLoading } from '../redux/slices/app';
 import { initUser } from '../redux/slices/user';
 import useNotify from './useNotify';
 import useUser from './useUser';
@@ -17,23 +18,29 @@ const useAuth = () => {
     const {getUserShortInfo} = useUser();
     const navigate = useNavigate();
 
+    // Очищение данных локально
     const clearData = () => {
+        // Удаление всех токенов
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("typeToken");
 
-        dispatch(initUser({}));
-        dispatch(setAuthIsLoading(false));
-        dispatch(setIsAuth(false));
+        dispatch(initUser({})); //Очищение данных о пользователе
+        dispatch(setAuthIsLoading(false)); //Загрузка авторизации
+        dispatch(setIsAuth(false)); //Флаг авторизации пользователя
+        dispatch(setAppIsLoading(false)); //Загрузка приложения
     }
 
+    // Выход
     const logout = () => {
         clearData();
         navigate("/");
         return alertNotify("Успешно", "Вы вышли из аккаунта", "success");
     }
 
+    // Проверка авторизации
     const checkAuth = async () => {
+        dispatch(setAppIsLoading(true));
         dispatch(setAuthIsLoading(true));
 
         const accessToken = localStorage.getItem("accessToken");
@@ -65,8 +72,10 @@ const useAuth = () => {
         }
 
         dispatch(setAuthIsLoading(false));
+        dispatch(setAppIsLoading(false));
     }
 
+    // Вход
     const login = async (phone, password, withoutNotify = false) => {
         if(phone.length < 17){
             return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
@@ -107,24 +116,33 @@ const useAuth = () => {
         navigate("/");
     }
 
+    // Отправить код при регистрации
     const sendCodeRegister = async (phone) => {
+        dispatch(setAuthIsLoading(true));
+
         const data = await request(REQUEST_TYPE.AUTH, "/send_code_register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone)});
+
+        dispatch(setAuthIsLoading(false));
 
         if(!data){
             alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
-
             return "Error";
         }
 
         alertNotify("Успешно", "Код отправлен", "success");
     }
     
+    // Регистрация
     const register = async (phone, password, fullName, code) => {
         if(code.length < 6){
             return alertNotify("Ошибка", "Код не может быть меньше 6 символов", "warn");
         }
 
+        dispatch(setAuthIsLoading(true));
+
         const data = await request(REQUEST_TYPE.AUTH, "/register", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), fullName, password, code});
+
+        dispatch(setAuthIsLoading(false));
 
         if(!data){
             return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
@@ -135,7 +153,22 @@ const useAuth = () => {
         alertNotify("Успешно", "Вы зарегистрировались", "success");
     }
 
-    return {checkAuth, login, logout, sendCodeRegister, register}
+    // Смена пароля
+    const changePassword = async (password, newPassword) => {
+        dispatch(setAuthIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/change_pass", HTTP_METHODS.POST, true, {password, newPassword});
+
+        dispatch(setAuthIsLoading(false));
+
+        if(!data){
+            return alertNotify("Ошибка", "Старый пароль введен неверно", "warn");
+        }
+
+        alertNotify("Успешно", "Пароль изменен", "success");
+    }
+
+    return {checkAuth, login, logout, sendCodeRegister, register, changePassword}
 }
 
 export default useAuth;

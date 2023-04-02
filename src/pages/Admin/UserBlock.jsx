@@ -19,7 +19,7 @@ const getVerifyIcon = (verifyStatus) => {
     switch (verifyStatus) {
         case VERIFY_STATUS.VERIFIED:
             return <NotifyOkIcon className="verify__success" />
-        case VERIFY_STATUS.PROCESSING:
+        case VERIFY_STATUS.PROCESS:
             return <NotifyWarningIcon className="verify__process" />
         case VERIFY_STATUS.NOT_VERIFIED:
             return <CircleCross className="verify__not" />
@@ -44,13 +44,13 @@ const UserBlock = ({data, id}) => {
             </DataItem>
 
             <DataItem title="Верификация" icon={getVerifyIcon(verify)}>
-                {(verify === VERIFY_STATUS.VERIFIED || verify === VERIFY_STATUS.PROCESSING) && <div className="section-admin__items">
+                {(verify === VERIFY_STATUS.VERIFIED || verify === VERIFY_STATUS.PROCESS) && <div className="section-admin__items">
                     <DataField title="Серия и номер паспорта" value={`${passportSer} ${passportNum}`} />
                     <DataField title="Дата выдачи" value={getNormalDate(grantedDate)} />
                     <DataField title="Кем выдан" value={granted} big />
                 </div>}
 
-                {verify === VERIFY_STATUS.PROCESSING && <Button className="admin__btn">Верифицировать</Button>}
+                {verify === VERIFY_STATUS.PROCESS && <Button className="admin__btn">Верифицировать</Button>}
                 {verify === VERIFY_STATUS.NOT_VERIFIED && <p className="section-admin__text">Пользователь не верифицирован</p>}
             </DataItem>
 

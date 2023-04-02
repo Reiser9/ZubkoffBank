@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -11,7 +12,6 @@ import SidebarTab from '../../components/SidebarTab';
 import SidebarButton from '../../components/SidebarTab/SidebarButton';
 
 import useAuth from '../../hooks/useAuth';
-import useUser from '../../hooks/useUser';
 
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import NotContentBlock from '../../components/NotContentBlock';
@@ -23,12 +23,14 @@ import CardRequisitesBlock from './CardRequisitesBlock';
 import CurrencyBlock from './CurrencyBlock';
 import PayMethod from './PayMethod';
 import SelectCard from './SelectCard';
+import Confirm from '../../components/Confirm';
 
 const Profile = () => {
-    const [modal, setModal] = React.useState(false);
+    const [newCardModal, setNewCardModal] = React.useState(false);
+    const [confirmExitModal, setConfirmExitModal] = React.useState(false);
 
     const {logout} = useAuth();
-    const {user} = useUser();
+    const {user} = useSelector(state => state.user);
 
     return(
         <PageSidebarInner pageTitle="Профиль">
@@ -38,7 +40,7 @@ const Profile = () => {
                     <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
                     <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
 
-                    <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setModal(true)}>
+                    <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setNewCardModal(true)}>
                         <div className="profile__sidebar--check--icon--inner">
                             <Plus />
                         </div>
@@ -56,8 +58,8 @@ const Profile = () => {
                 <SidebarItem title="Меню">
                     <div className="sidebar__tabs">
                         <SidebarTab text="Настройки" icon={<SettingsIcon />} isLink to="/settings" />
-                        <SidebarButton text="Выйти" icon={<Leave />} onClick={logout} />
                         {user?.roles?.includes("admin") && <SidebarTab text="Админка" icon={<User />} isLink to="/admin" />}
+                        <SidebarButton text="Выйти" icon={<Leave />} onClick={() => setConfirmExitModal(true)} />
                     </div>
                 </SidebarItem>
             </div>
@@ -119,7 +121,8 @@ const Profile = () => {
                 </div>
             </div>
 
-            {modal && <NewCardModal active={modal} setActive={setModal} />}
+            {newCardModal && <NewCardModal active={newCardModal} setActive={setNewCardModal} />}
+            <Confirm active={confirmExitModal} setActive={setConfirmExitModal} text="Вы действительно хотите выйти?" action={logout} />
         </PageSidebarInner>
     )
 }

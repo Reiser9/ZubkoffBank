@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import Preloader from '../Preloader';
 import ErrorBlock from '../ErrorBlock';
@@ -6,11 +7,12 @@ import ErrorBlock from '../ErrorBlock';
 import useCurrency from '../../hooks/useCurrency';
 
 const CurrencyItem = () => {
-    const {isLoadCurrency, errorCurrency, currency} = useCurrency();
+    const {isLoad, error} = useCurrency();
+    const {currency} = useSelector(state => state.api);
 
     return(
         <div className="course-weather">
-            {isLoadCurrency ? <Preloader fill /> : errorCurrency ? <ErrorBlock text="Сервис временно недоступен" /> : <>
+            {isLoad ? <Preloader fill /> : error ? <ErrorBlock text="Сервис валют временно недоступен" /> : <>
                 <p className="course-weather__label">
                     Курс рубля от ЦБ РФ
                 </p>

@@ -6,10 +6,12 @@ import useAdmin from '../../hooks/useAdmin';
 
 import UserBlock from './UserBlock';
 import Preloader from '../../components/Preloader';
+import { useSelector } from 'react-redux';
 
 const AdminUsersTab = () => {
-    const {isLoad, error, users, getUsers} = useAdmin();
+    const {isLoad, error, getUsers} = useAdmin();
 
+    const {users} = useSelector(state => state.admin);
     const {content, totalPages, totalElements} = users;
 
     React.useEffect(() => {

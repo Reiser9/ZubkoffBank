@@ -8,7 +8,8 @@ import Ban from '../../pages/Ban';
 import ServerNotAvailable from '../../pages/ServerNotAvailable';
 
 const InitialWrapper = ({children}) => {
-    const {authIsLoading, isAuth} = useSelector(state => state.auth);
+    const {appIsLoading} = useSelector(state => state.app);
+    const {isAuth} = useSelector(state => state.auth);
     const {user} = useSelector(state => state.user);
     const {isServerAvailable} = useSelector(state => state.server);
     const {checkAuth} = useAuth();
@@ -17,7 +18,7 @@ const InitialWrapper = ({children}) => {
         checkAuth();
     }, []);
 
-    if(authIsLoading){ //Ввести переменную appInit, вместо authIsLoading
+    if(appIsLoading){
         return <Preloader />
     }
 

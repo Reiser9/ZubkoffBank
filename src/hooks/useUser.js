@@ -8,7 +8,7 @@ import { updateUser, setUserIsLoading } from '../redux/slices/user';
 const useUser = () => {
     const dispatch = useDispatch();
     const {request} = useRequest();
-    const {user, userIsLoading} = useSelector(state => state.user);
+    const {user} = useSelector(state => state.user);
 
     const getUserShortInfo = async () => {
         dispatch(setUserIsLoading(true));
@@ -33,7 +33,7 @@ const useUser = () => {
         dispatch(setUserIsLoading(false));
     };
 
-    return {user, userIsLoading, getUserShortInfo, getUserFullInfo}
+    return {getUserShortInfo, getUserFullInfo}
 }
 
 export default useUser;

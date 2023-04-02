@@ -62,7 +62,9 @@ const useRequest = () => {
 
     const getHealthServer = async () => {
         try{
-            await emptyRequest.get("/health");
+            await emptyRequest.get("/health", {
+                timeout: 5000
+            });
         }catch(error){
             dispatch(setIsServerAvailable(false));
 
@@ -104,6 +106,7 @@ const useRequest = () => {
 
         try{
             const response = await axiosInstance.request({
+                timeout: 5000,
                 method,
                 url,
                 headers: reqHeaders,

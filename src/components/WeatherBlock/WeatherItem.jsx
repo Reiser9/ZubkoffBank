@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
@@ -11,11 +12,12 @@ import ErrorBlock from '../ErrorBlock';
 import useWeather from '../../hooks/useWeather';
 
 const WeatherItem = () => {
-    const {isLoadWeather, errorWeather, weather} = useWeather();
+    const {isLoad, error} = useWeather();
+    const {weather} = useSelector(state => state.api);
 
     return(
         <div className="weather__inner">
-            {isLoadWeather ? <Preloader fill /> : errorWeather ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
+            {isLoad ? <Preloader fill /> : error ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
                 <div className="weather__info">
                     <div className="weather__location">
                         <Location className="weather__location--icon" />

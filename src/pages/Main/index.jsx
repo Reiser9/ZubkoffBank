@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import './index.css';
 
 import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
+import { DatePicker, Slider, Empty } from "antd";
 
 import TitleWrapper from '../../components/Wrappers/TitleWrapper';
 
@@ -27,6 +28,12 @@ const Main = () => {
                             <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
                             </Button>
+
+                            <DatePicker format="DD.MM.YYYY" style={{width: "100%"}} />
+
+                            <Slider style={{width: "100%"}} min={50000} max={1000000} step={10000} />
+
+                            <Empty description="Нет нихера" />
                         </div>
 
                         <WeatherBlock />
