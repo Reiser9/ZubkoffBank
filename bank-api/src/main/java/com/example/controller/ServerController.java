@@ -4,7 +4,6 @@ import com.example.model.Type;
 import com.example.payload.DefaultResponse;
 import com.example.payload.TypeResponse;
 import com.example.service.TypeService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

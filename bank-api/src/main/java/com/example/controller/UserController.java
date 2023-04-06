@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 
 
-	@GetMapping("/card")
+	@GetMapping("/cards")
 	public ResponseEntity<?> findCardByUser(Principal user) {
 		try {
 			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()));
@@ -80,18 +82,23 @@ public class UserController {
 				dataUser.getMiddleName(),
 				dataUser.getPassportNum(),
 				dataUser.getPassportSer(),
-				dataUser.getGranted(),
 				dataUser.getBirthdate(),
+				dataUser.getGranted(),
+				dataUser.getGrantedDate(),
 				dataUser.getSex()));
 	}
 
 	@PostMapping("/card/block")
-	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardNum) {
+	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardId) {
 		try {
-			Card card = cardService.findCardByCardNum(cardNum.get("cardNum"));
-			card.setLock(true);
-			cardService.save(card);
-			return ResponseEntity.ok(card);
+			Card card = cardService.findCardByCardNum(cardId.get("id"));
+			List<Card> cards = userService.findUserByPhoneNum(user.getName()).getCards();
+			if (cards.contains(card)) {
+				card.setLock(true);
+				cardService.save(card);
+				return ResponseEntity.ok(card);
+			}
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
@@ -108,7 +115,7 @@ public class UserController {
 			Card newCard = cardService.createCard(dataCard, bankId);
 			userInfo.getCards().add(newCard);
 			userInfo.setCards(userInfo.getCards());
-			userService.saveUser(userInfo);
+			userService.save(userInfo);
 			return ResponseEntity.ok(new CardResponse(newCard));
 		}
 		catch (NullPointerException exception) {
@@ -116,9 +123,9 @@ public class UserController {
 		}
 	}
 
-	@PostMapping("/logout")
-	public ResponseEntity<?> logoutUser(@RequestBody Map<String, Long> userid) {
-		refreshTokenService.deleteByUserId(userid.get("id"));
+	@GetMapping("/logout")
+	public ResponseEntity<?> logoutUser(Principal user) {
+		refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
 		return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
 	}
 
@@ -126,8 +133,7 @@ public class UserController {
 	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
-			DataUser dataUser = userService.setDataUser(userInfo, data);
-			return ResponseEntity.ok(dataUser);
+			return ResponseEntity.ok(new FullInfoUserResponse(userService.setDataUser(userInfo, data)));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
@@ -140,11 +146,11 @@ public class UserController {
 	@PostMapping("/change_pass")
 	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
 		try {
-			if (pass.get("newPassword").length() < 8 && pass.get("newPassword").length() > 20) {
+			if (pass.get("newPassword").length() >= 8 && pass.get("newPassword").length() <= 35) {
 				User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
 				if (passwordEncoder.matches(pass.get("password"), userByPhoneNum.getPassword())) {
 					userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("newPassword")));
-					userService.saveUser(userByPhoneNum);
+					userService.save(userByPhoneNum);
 					refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
 					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 				} else {
@@ -155,6 +161,28 @@ public class UserController {
 				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 			}
 		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+	}
+
+	@DeleteMapping("/")
+	public ResponseEntity<?> deleteAccount(Principal user, @RequestBody Map<String, String> pass) {
+		try {
+				User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
+				if (passwordEncoder.matches(pass.get("password"), userByPhoneNum.getPassword())) {
+					userByPhoneNum.setRoles(new ArrayList<>());
+					userByPhoneNum.setCodes(new ArrayList<>());
+					userByPhoneNum.setDataUsers(new ArrayList<>());
+					userByPhoneNum.setCards(new ArrayList<>());
+					refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
+					userService.save(userByPhoneNum);
+					userService.deleteByPhoneNum(user.getName());
+					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+				} else {
+					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+				}
+			}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		}

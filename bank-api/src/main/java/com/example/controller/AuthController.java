@@ -4,9 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.enums.CardType;
-import com.example.service.TelegramService;
 import com.example.model.RefreshToken;
 import com.example.model.User;
+import com.example.service.TelegramService;
 import com.example.payload.DefaultResponse;
 import com.example.payload.RefreshResponse;
 import com.example.security.JwtRequestFilter;
@@ -94,11 +94,7 @@ public class AuthController {
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
 		}
-
-
 	}
-	
-
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refreshtoken(@RequestBody Map<String, String> refreshToken) {

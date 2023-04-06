@@ -1,5 +1,6 @@
 package com.example.security;
 
+import com.example.handler.UserBlockedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsServiceImpl userDetailsService;
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+	@Autowired
+	private UserBlockedHandler userBlockedHandler;
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -38,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
-		configuration.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS", "DELETE"));
+		configuration.setAllowedMethods(Arrays.asList("POST", "GET", "OPTIONS", "DELETE", "PATCH"));
 		configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "Content-Length", "X-Requested-With"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
@@ -66,18 +69,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf().disable()
 			.authorizeRequests()
 			.antMatchers("/websocket/**",
-					"/static/**", "/templates/**", "/auth/**",
-					"/h2-console/**", "/health/**", "/types/**").permitAll()
-			.antMatchers("/user/**").hasAnyAuthority("user")
-			.antMatchers("/admin/**").hasAuthority("admin")
-			.antMatchers("/admin/user/**").hasAuthority("admin")
-			.anyRequest().authenticated()
-			.and().sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-			http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-			http.headers().frameOptions().disable();
-			http.cors().and().csrf().disable();
+					"/static/**", "/templates/**", "/auth/**", "/api/**","/transfer/**",
+					"/h2-console/**", "/health/**", "/card/types/**", "/test-kafka/**").permitAll()
+			.antMatchers("/user/**").access("hasAnyAuthority('user') and !hasAnyAuthority('blocked')")
+			.antMatchers("/admin/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
+			.antMatchers("/admin/user/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
+			.antMatchers("/admin/users/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
+			.anyRequest().access("authenticated and !hasAuthority('blocked')")
+			.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and().exceptionHandling().accessDeniedHandler(userBlockedHandler);
+
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		http.headers().frameOptions().disable();
+		http.cors().and().csrf().disable();
 	}
 
 }

@@ -1,27 +1,29 @@
 package com.example.controller;
 
+import com.example.service.TransferService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @RestController
+@RequestMapping("/transfer")
 public class UserTransferController {
-//    private final RestTemplate restTemplate = new RestTemplate();
-//
-//    @GetMapping("/my-data")
-//    public MyData getMyData() {
-//        ResponseEntity<MyData> response = restTemplate.getForEntity(
-//                "http://<IP адрес сервера с первым приложением>:<порт>/my-data",
-//                MyData.class);
-//        MyData myData = response.getBody();
-//        myData.setAge(myData.getAge() + 5); // модификация данных
-//
-//        // Отправляем данные на другой сервер
-//        HttpHeaders hea
-//        ders = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        HttpEntity<MyData> request = new HttpEntity<>(myData, headers);
-//        restTemplate.postForObject("http://<IP адрес сервера со вторым приложением>:<порт>/my-data", request, Void.class);
-//
-//        return myData;
+    @Autowired
+    private TransferService transferService;
+//    @PostMapping("/phone/send")
+//    public void phoneBankTransfer(@RequestBody Map<String, String> transfer) {
+//        transferService.sendByPhone(transfer);
 //    }
+
+    @PostMapping("/transfer_info")
+    public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> transfer) {
+        return transferService.getInfoByPhone(transfer)
+                .map(response -> ResponseEntity.ok(response).getBody());
+    }
 }

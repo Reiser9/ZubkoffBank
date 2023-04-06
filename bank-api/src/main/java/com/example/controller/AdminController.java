@@ -5,17 +5,15 @@ import com.example.model.Card;
 import com.example.model.Role;
 import com.example.model.Type;
 import com.example.model.User;
+import com.example.payload.CardResponse;
 import com.example.payload.DefaultResponse;
 import com.example.payload.TypeResponse;
 import com.example.payload.UserResponse;
 import com.example.repository.RoleRepository;
-import com.example.security.JwtRequestFilter;
 import com.example.service.CardService;
 import com.example.service.TypeService;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -105,11 +103,12 @@ public class AdminController {
 	}
 
 	@PostMapping("/user/balance")
-	public ResponseEntity<?> setBalance(@RequestBody Map<String, Long> card_data) {
+	public ResponseEntity<?> setBalance(@RequestBody Map<String, String> card_data) {
 		try {
-			Card card = cardService.findCardById(card_data.get("id"));
-			card.setBalance(card_data.get("balance"));
-			return ResponseEntity.ok(card);
+			Card card = cardService.findCardById(Long.valueOf(card_data.get("id")));
+			card.setBalance(card.getBalance() + Double.parseDouble(card_data.get("balance")));
+			cardService.save(card);
+			return ResponseEntity.ok(new CardResponse(card));
 		}
 		catch (Exception e) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
@@ -155,7 +154,7 @@ public class AdminController {
 		byte[] bytes = file.getBytes();
 		Path path = Paths.get("/static/img/" + fileName);
 		if (Files.exists(path)) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "File already exist"));
+			return ResponseEntity.status(403).body(new DefaultResponse("Not Successful", "File already exist"));
 		}
 		Files.write(path, bytes);
 		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
@@ -169,23 +168,51 @@ public class AdminController {
 			User user = userService.findById(Long.parseLong(data.get("id")));
 			List<Role> roles = user.getRoles();
 			Role addRole = roleRepository.findById(Integer.valueOf(data.get("roleId")));
+			if (addRole == null)
+				return ResponseEntity
+						.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
 			roles.add(addRole);
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			return ResponseEntity.ok(new UserResponse(user));
+		}
+		catch (IllegalStateException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
 		}
 		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
-	@GetMapping("/user/role")
+	@PatchMapping("/user/role")
+	public ResponseEntity<?> removeRole(@RequestBody Map<String, String> data) {
+		try {
+			User user = userService.findById(Long.parseLong(data.get("id")));
+			List<Role> roles = user.getRoles();
+			Role delRole = roleRepository.findById(Integer.valueOf(data.get("roleId")));
+			if (delRole == null)
+				return ResponseEntity
+						.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
+			roles.remove(delRole);
+			user.setRoles(roles);
+			userService.save(user);
+			return ResponseEntity.ok(new UserResponse(user));
+		}
+		catch (IllegalStateException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
+		}
+		catch (Exception e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+	}
+
+	@GetMapping("/user/roles")
 	public ResponseEntity<?> getRoles() {
 		try {
 			return ResponseEntity.ok(roleRepository.findAll());
 		}
 		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found roles"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found roles"));
 		}
 	}
 
