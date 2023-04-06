@@ -1,5 +1,6 @@
 package com.example.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,5 +35,5 @@ public class Transfer {
     private String organization;
 
     @Column(name = "fk_id_card")
-    private int cardId;
+    private long cardId;
 }
