@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/transfer")
+@RequestMapping("/user")
 public class UserTransferController {
     @Autowired
     private TransferService transferService;
@@ -43,7 +43,7 @@ public class UserTransferController {
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
 
-    @PostMapping("/in_bank_send")
+    @PostMapping("/in_bank_transfer")
     public ResponseEntity<?> sendMoneyInBank(Principal user, @RequestBody Map<String, String> transfer) {
         try {
             List<Card> cards = userService.findUserByPhoneNum(transfer.get("destPhoneNum")).getCards();
