@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest, { HTTP_METHODS, REQUEST_TYPE } from './useRequest';
 import { initUsers } from '../redux/slices/admin';
 
@@ -18,7 +19,7 @@ const useAdmin = () => {
         if(Object.keys(users).length === 0){
             const data = await request(REQUEST_TYPE.ADMIN, "/users", HTTP_METHODS.GET, true);
 
-            if(!data){
+            if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
                 return setError(true);
             }
             else{

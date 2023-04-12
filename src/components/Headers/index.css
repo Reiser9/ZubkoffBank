@@ -45,3 +45,8 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+.header__name--skeleton{
+	width: 95px;
+	height: 24px;
+}

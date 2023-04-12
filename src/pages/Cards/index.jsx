@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -7,7 +8,7 @@ import useCardTypes from '../../hooks/useCardTypes';
 import CardBlock from './CardBlock';
 import CardSkeleton from './CardSkeleton';
 import TitleWrapper from '../../components/Wrappers/TitleWrapper';
-import { useSelector } from 'react-redux';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const Cards = () => {
     const {error, isLoad} = useCardTypes();
@@ -27,8 +28,8 @@ const Cards = () => {
                             ? [...Array(3)].map((_, id) => <CardSkeleton key={id} />)
                             : !error
                             ? cardTypes?.content?.length > 0 ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
-                            : <div>Карт нет</div>
-                            : <div>Ошибка</div>}
+                            : <EmptyBlock title="Карт нет" fill />
+                            : <EmptyBlock title="Возникла ошибка" fill />}
                         </div>
                     </div>
                 </div>

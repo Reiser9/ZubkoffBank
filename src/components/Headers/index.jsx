@@ -1,15 +1,17 @@
 import React from 'react';
-import {User} from '../../components/Icons';
 import {Link} from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
 
 import './index.css';
 
-const Header = () => {
-    const auth = useSelector(state => state.auth);
-    const user = useSelector(state => state.user);
+import {User} from '../../components/Icons';
 
-    const {firstName} = user.user;
+const Header = () => {
+    const {isAuth, authIsLoading} = useSelector(state => state.auth);
+    const {user} = useSelector(state => state.user);
+
+    const {firstName} = user;
 
     return(
         <header className="header">
@@ -19,7 +21,7 @@ const Header = () => {
                         <img src="/assets/img/logo1.svg" alt="logo" className="header__logo" />
                     </Link>
                     
-                    {auth.isAuth
+                    {authIsLoading ? <Skeleton containerClassName="header__name--skeleton" className="skeleton__content" /> : isAuth
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 

@@ -27,8 +27,8 @@ const VerifyTab = () => {
                         {/* Сделать Date Picker */}
                         <div className="setting__item"><Input mask={INPUT_MASK_TYPE.PASSPORT_DATA} className="setting__input" placeholder="Серия и номер паспорта" /></div>
                         <div className="setting__item"><Input className="setting__input" placeholder="Кем выдан" /></div>
-                        <div className="setting__item"><Input mask={INPUT_MASK_TYPE.DATE} className="setting__input" placeholder="Дата выдачи" /></div>
-                        <div className="setting__item"><Input mask={INPUT_MASK_TYPE.DATE} className="setting__input" placeholder="Дата рождения" /></div>
+                        <div className="setting__item"><Input className="setting__input" placeholder="Дата выдачи" /></div>
+                        <div className="setting__item"><Input className="setting__input" placeholder="Дата рождения" /></div>
                     </div>
                 </div>
 

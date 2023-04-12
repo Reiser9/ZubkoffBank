@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import './index.css';
 
 import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
-import { DatePicker, Slider, Empty } from "antd";
 
 import TitleWrapper from '../../components/Wrappers/TitleWrapper';
 
@@ -13,6 +12,7 @@ import WeatherBlock from '../../components/WeatherBlock';
 import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
+import { QRCode } from 'antd';
 
 const Main = () => {
     return (
@@ -28,12 +28,6 @@ const Main = () => {
                             <Button className="main-block__button" isLink to="/cards">
                                 Попробовать
                             </Button>
-
-                            <DatePicker format="DD.MM.YYYY" style={{width: "100%"}} />
-
-                            <Slider style={{width: "100%"}} min={50000} max={1000000} step={10000} />
-
-                            <Empty description="Нет нихера" />
                         </div>
 
                         <WeatherBlock />
@@ -104,7 +98,7 @@ const Main = () => {
 
                         <div className="banner__icons">
                             <div className="banner__icon--inner banner__icon--inner_qr">
-                                <img src="assets/img/qr.svg" alt="qr" className="banner__icon" />
+                                <QRCode size="115" value="https://n1s2.hsmedia.ru/43/8e/85/438e85e1dcf8bc45fdb4738ad67e0523/728x485_1_676f156728d52a40cefbf4e88311021a@5000x3333_0xac120003_744610521626771276.jpg" />
                             </div>
 
                             <div className="banner__icon--inner banner__icon--inner_logo">

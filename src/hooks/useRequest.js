@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY, BASE_API_URL_CARD} from '../consts/API_URLS';
+import {REQUEST_STATUSES} from '../consts/REQUEST_STATUSES';
 
-import useNotify from './useNotify';
 import {setIsServerAvailable} from '../redux/slices/server';
 import {isBot} from '../utils/isBot';
 
@@ -29,8 +29,7 @@ const useRequest = () => {
     const [error, setError] = React.useState(false);
 
     const dispatch = useDispatch();
-    const server = useSelector(state => state.server);
-    const {alertNotify} = useNotify();
+    const {isServerAvailable} = useSelector(state => state.server);
 
     const userRequest = axios.create({
         baseURL: BASE_API_URL_USER
@@ -68,7 +67,7 @@ const useRequest = () => {
         }catch(error){
             dispatch(setIsServerAvailable(false));
 
-            return "Site not available";
+            return REQUEST_STATUSES.SITE_NOT_AVAILABLE;
         }
     }
 
@@ -80,8 +79,12 @@ const useRequest = () => {
         data = {},
         headers = {}
     ) => {
-        if(!server.isServerAvailable){
-            return "Site not available";
+        if(isBot()){
+            return;
+        }
+
+        if(!isServerAvailable){
+            return REQUEST_STATUSES.SITE_NOT_AVAILABLE;
         }
 
         setError(false);
@@ -106,7 +109,6 @@ const useRequest = () => {
 
         try{
             const response = await axiosInstance.request({
-                timeout: 5000,
                 method,
                 url,
                 headers: reqHeaders,
@@ -115,18 +117,25 @@ const useRequest = () => {
 
             setIsLoading(false);
 
+            console.log(response.data); // <--
             return response.data;
         }
         catch(err){
             const serverHealth = await getHealthServer();
+
             setError(true);
             setIsLoading(false);
 
-            return serverHealth;
+            if(serverHealth === REQUEST_STATUSES.SITE_NOT_AVAILABLE){
+                return serverHealth;
+            }
+            
+            console.log(err.response.data); // <--
+            return err.response.data;
         }
-    }, [server]);
+    }, [isServerAvailable]);
 
-    return {isLoading, error, request};
+    return {isLoading, error, request, getHealthServer};
 }
 
 export default useRequest;

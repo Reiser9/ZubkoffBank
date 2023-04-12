@@ -33,8 +33,8 @@ const Register = () => {
             return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
         }
 
-        if(!nameRegister){
-            return alertNotify("Предупреждение", "Введите ФИО", "warn");
+        if(!nameRegister || (nameRegister.split(" ").length < 3 || nameRegister.split(" ").length > 3)){
+            return alertNotify("Предупреждение", "Введите корретные данные ФИО", "warn");
         }
 
         if(passwordRegister.length < 8){
@@ -76,8 +76,8 @@ const Register = () => {
         }
     }
 
-    const registerFunc = async () => {
-        await register(phoneRegister, passwordRegister, nameRegister, registerCode);
+    const registerHandler = () => {
+        register(phoneRegister, passwordRegister, nameRegister, registerCode);
     }
 
     return (
@@ -145,7 +145,7 @@ const Register = () => {
                     </div>}
 
                     <div className="sign__button--inner">
-                        <Button className="register__button" onClick={registerFunc} disabled={!agree}>
+                        <Button className="register__button" onClick={registerHandler} disabled={!agree}>
                             Регистрация
                         </Button>
                     </div>

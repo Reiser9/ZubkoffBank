@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
+import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import { setAuthIsLoading, setLogin, setIsAuth } from '../redux/slices/auth';
 import { setAppIsLoading } from '../redux/slices/app';
 import { initUser } from '../redux/slices/user';
+import { setIsServerAvailable } from '../redux/slices/server';
 import useNotify from './useNotify';
 import useUser from './useUser';
 
@@ -13,7 +15,7 @@ import {unmaskPhone} from '../utils/maskPhone';
 
 const useAuth = () => {
     const dispatch = useDispatch();
-    const {request} = useRequest();
+    const {request, getHealthServer} = useRequest();
     const {alertNotify} = useNotify();
     const {getUserShortInfo} = useUser();
     const navigate = useNavigate();
@@ -38,6 +40,20 @@ const useAuth = () => {
         return alertNotify("Успешно", "Вы вышли из аккаунта", "success");
     }
 
+    // Перезагрузить, вдруг сервер заработал
+    const reload = async () => {
+        dispatch(setAppIsLoading(true));
+        dispatch(setIsServerAvailable(true));
+
+        const data = await getHealthServer();
+
+        if(!data){
+            checkAuth();
+        }
+
+        dispatch(setAppIsLoading(false));
+    }
+
     // Проверка авторизации
     const checkAuth = async () => {
         dispatch(setAppIsLoading(true));
@@ -53,7 +69,7 @@ const useAuth = () => {
 
         const data = await getUserShortInfo();
 
-        if(!data){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
             
             if(!newTokens){
@@ -67,9 +83,7 @@ const useAuth = () => {
             checkAuth();
         }
         
-        if(data !== "Site not available"){
-            dispatch(setLogin({accessToken, refreshToken, typeToken, isAuth: true}));
-        }
+        dispatch(setLogin({accessToken, refreshToken, typeToken, isAuth: true}));
 
         dispatch(setAuthIsLoading(false));
         dispatch(setAppIsLoading(false));
@@ -90,12 +104,8 @@ const useAuth = () => {
         const data = await request(REQUEST_TYPE.AUTH, "/login", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), password});
 
         dispatch(setAuthIsLoading(false));
-
-        if(data === "Site not available"){
-            return;
-        }
         
-        if(!data){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
 
@@ -124,9 +134,9 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(!data){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
-            return "Error";
+            return data.status;
         }
 
         alertNotify("Успешно", "Код отправлен", "success");
@@ -144,7 +154,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(!data){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
         }
 
@@ -161,14 +171,14 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(!data){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             return alertNotify("Ошибка", "Старый пароль введен неверно", "warn");
         }
 
         alertNotify("Успешно", "Пароль изменен", "success");
     }
 
-    return {checkAuth, login, logout, sendCodeRegister, register, changePassword}
+    return {checkAuth, login, logout, sendCodeRegister, register, changePassword, reload}
 }
 
 export default useAuth;

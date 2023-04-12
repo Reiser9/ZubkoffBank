@@ -11,6 +11,7 @@ import {getNormalDate} from '../../utils/getNormalDate';
 
 import Preloader from '../../components/Preloader';
 import Input from '../../components/Input';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const DataTab = () => {
     const {getUserFullInfo} = useUser();
@@ -50,6 +51,8 @@ const DataTab = () => {
                     <div className="setting__item"><Input value={getNormalDate(grantedDate)} title="Дата выдачи" readOnly className="setting__input" placeholder="Дата выдачи" /></div>
                 </div>
             </div>}
+
+            {verified === VERIFY_STATUS.NOT_VERIFIED && <EmptyBlock title="Что бы все данные отобразились - нужно пройти верификацию" />}
         </>
     )
 }

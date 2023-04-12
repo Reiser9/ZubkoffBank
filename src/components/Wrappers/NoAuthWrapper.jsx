@@ -5,9 +5,10 @@ import { Navigate } from 'react-router-dom';
 import Preloader from '../Preloader';
 
 const NoAuthWrapper = ({children}) => {
-    const {authIsLoading, isAuth} = useSelector(state => state.auth);
+    const {appIsLoading} = useSelector(state => state.app);
+    const {isAuth} = useSelector(state => state.auth);
 
-    if(authIsLoading){
+    if(appIsLoading){
         return <Preloader fill />
     }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -7,7 +8,7 @@ import useCardTypes from '../../hooks/useCardTypes';
 import Modal from '../Modal';
 import Preloader from '../Preloader';
 import CardShortBlock from '../CardShortBlock';
-import { useSelector } from 'react-redux';
+import EmptyBlock from '../EmptyBlock';
 
 const NewCardModal = ({active, setActive}) => {
     const {error, isLoad} = useCardTypes();
@@ -20,8 +21,8 @@ const NewCardModal = ({active, setActive}) => {
                     ? <Preloader />
                     : !error
                     ? cardTypes.content?.length > 0 ? cardTypes.content.map((data, id) => <CardShortBlock key={id} img={data.img} />)
-                    : <div>Карт нет</div>
-                    : <div>Ошибка</div>}
+                    : <EmptyBlock title="Карт нет" />
+                    : <EmptyBlock title="Возникла ошибка" />}
             </div>
         </Modal>
     )

@@ -16,11 +16,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <Provider store={store}>
         <BrowserRouter>
-            <SkeletonTheme baseColor="#eaeaea" highlightColor="#d8d8d8">
-                <InitialWrapper>
+            <InitialWrapper>
+                <SkeletonTheme baseColor="#eaeaea" highlightColor="#d8d8d8">
                     <App />
-                </InitialWrapper>
-            </SkeletonTheme>
+                </SkeletonTheme>
+            </InitialWrapper>
         </BrowserRouter>
     </Provider>
 );

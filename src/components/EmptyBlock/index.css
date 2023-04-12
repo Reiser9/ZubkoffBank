@@ -1,0 +1,12 @@
+.empty__content{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 12px;
+}
+
+.empty__content.fill{
+	background: var(--backgroundC);
+	border-radius: 4px;
+}
