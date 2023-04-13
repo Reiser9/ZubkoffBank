@@ -8,6 +8,7 @@ import com.example.repository.CodeRepository;
 import com.example.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -99,7 +100,7 @@ public class TelegramService extends TelegramLongPollingBot {
     }
 
     public boolean sendCode(String phoneNum, String typeCode) throws TelegramApiException {
-        if (isExist(phoneNum)) {
+        if (isExist(phoneNum, false)) {
             int code = generateCode();
             String message = String.format("Ваш 6-значный код: %06d", code);
 
@@ -121,20 +122,22 @@ public class TelegramService extends TelegramLongPollingBot {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
         Timestamp date = new Timestamp(cal.getTime().getTime());
-        if (code.getCode() == checkCode && date.before(code.getExpDate())) {
+        if (code.getCode() == checkCode && date.after(code.getExpDate())) {
             return true;
         }
         return false;
     }
 
-    private boolean isExist(String phoneNum) throws TelegramApiException {
+    private boolean isExist(String phoneNum, boolean isMessageOutput) throws TelegramApiException {
         User regUser = userRepository.findByPhoneNum(phoneNum);
         if (regUser != null)
         {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(getChatIdByPhoneNumber(phoneNum));
-            sendMessage.setText("Данный телеграм аккаунт уже привязан");
-            execute(sendMessage);
+            if (isMessageOutput) {
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(getChatIdByPhoneNumber(phoneNum));
+                sendMessage.setText("Данный телеграм аккаунт уже привязан");
+                execute(sendMessage);
+            }
             return true;
         }
         return false;
@@ -145,15 +148,15 @@ public class TelegramService extends TelegramLongPollingBot {
             if (!phoneNum.startsWith("+")) {
                 phoneNum = "+" + phoneNum;
             }
-            if (!isExist(phoneNum))
+            if (!isExist(phoneNum, true))
             {
                 User user = new User();
                 user.setPhoneNum(phoneNum);
-                user.setGroupId(groupId);
+                user.setGroupId(Long.valueOf(groupId));
                 userRepository.save(user);
                 String message = "Вы успешно привязали номер телефона";
                 SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(groupId);
+                sendMessage.setChatId(String.valueOf(groupId));
                 sendMessage.setText(message);
                 executeMessage(sendMessage);
             }
