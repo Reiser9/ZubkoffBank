@@ -1,15 +1,18 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
 import useAdmin from '../../hooks/useAdmin';
+import useCardTypes from '../../hooks/useCardTypes';
 
 import UserBlock from './UserBlock';
 import Preloader from '../../components/Preloader';
-import { useSelector } from 'react-redux';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const AdminUsersTab = () => {
     const {isLoad, error, getUsers} = useAdmin();
+    const {isLoad: isLoadCardTypes, error: errorCardTypes} = useCardTypes();
 
     const {users} = useSelector(state => state.admin);
     const {content, totalPages, totalElements} = users;
@@ -18,14 +21,14 @@ const AdminUsersTab = () => {
         getUsers();
     }, []);
 
-    if(isLoad){
+    if(isLoad || isLoadCardTypes){
         return <Preloader />
     }
 
     return (
         <>
             <div className="admin__header admin__header_users">
-                <h2 className="admin__title">Пользователи (<span>{totalElements}</span>)</h2>
+                <h2 className="admin__title">Пользователи {totalElements && `(${totalElements})`}</h2>
 
                 <div className="limit">
                     <p className="limit__label">Показывать по:</p>
@@ -41,10 +44,10 @@ const AdminUsersTab = () => {
             </div>
 
             <div className="admin__items">
-                {!error
-                ? content?.length > 0 ? content.map((data, id) => <UserBlock key={id} id={id} data={data} />)
-                : <div>Пользователей нет</div>
-                : <div>Ошибка</div>}
+                {error || errorCardTypes
+                ? <EmptyBlock title="Возникла какая-то ошибка" center />
+                : (content?.length ? content.map((data, id) => <UserBlock key={id} id={id} data={data} />)
+                : <EmptyBlock title="Пользователей нет" center />)}
             </div>
 
             {totalPages > 1 && <div className="number__btns pagination">

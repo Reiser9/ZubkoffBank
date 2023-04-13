@@ -2,7 +2,7 @@ import React from 'react';
 
 import './index.css';
 
-import { Data, Actions } from '../../components/Icons';
+import { Data } from '../../components/Icons';
 
 import AdminItem from './AdminItem';
 import DataField from './DataField';
@@ -21,10 +21,6 @@ const CardBlock = ({data, id}) => {
                     </DataField>
                     <DataField title="Описание" value={description} big />
                 </div>
-            </DataItem>
-
-            <DataItem title="Действия" icon={<Actions />}>
-                <p className="section-admin__text-btn">Удалить</p>
             </DataItem>
         </AdminItem>
     )

@@ -40,7 +40,7 @@ const CardBlock = ({data}) => {
             </div>
 
             <div className="card__item--buttons">
-                <Button isLink to="/" className="card__item--button--event">
+                <Button isLink to="/profile" className="card__item--button--event">
                     Оформить карту
                 </Button>
             </div>

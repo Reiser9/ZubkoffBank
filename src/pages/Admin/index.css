@@ -99,6 +99,7 @@
     flex-direction: column;
     gap: 12px;
     width: 100%;
+    flex: 1;
 }
 
 .item-admin {
@@ -264,13 +265,7 @@
     align-items: center;
     flex-direction: column;
     gap: 24px;
-    padding: 8px 8px 20px;
-}
-
-@media (max-width:998px) {
-    .section-admin__content {
-        padding: 8px 8px 16px;
-    }
+    padding: 8px 8px 16px;
 }
 
 @media (max-width:768px) {
@@ -281,7 +276,6 @@
 
 @media (max-width:480px) {
     .section-admin__content {
-        padding: 8px 8px 12px;
         gap: 12px;
     }
 }

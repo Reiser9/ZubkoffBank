@@ -36,8 +36,7 @@ const useAuth = () => {
     // Выход
     const logout = () => {
         clearData();
-        navigate("/");
-        return alertNotify("Успешно", "Вы вышли из аккаунта", "success");
+        alertNotify("Успешно", "Вы вышли из аккаунта", "success");
     }
 
     // Перезагрузить, вдруг сервер заработал
@@ -69,7 +68,7 @@ const useAuth = () => {
 
         const data = await getUserShortInfo();
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 403){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
             
             if(!newTokens){
@@ -80,7 +79,7 @@ const useAuth = () => {
             localStorage.setItem("refreshToken", newTokens.refreshToken);
             localStorage.setItem("typeToken", newTokens.typeToken);
 
-            checkAuth();
+            return checkAuth();
         }
         
         dispatch(setLogin({accessToken, refreshToken, typeToken, isAuth: true}));
@@ -164,7 +163,7 @@ const useAuth = () => {
     }
 
     // Смена пароля
-    const changePassword = async (password, newPassword) => {
+    const changePassword = async (password, newPassword, clearForm = () => {}) => {
         dispatch(setAuthIsLoading(true));
 
         const data = await request(REQUEST_TYPE.USER, "/change_pass", HTTP_METHODS.POST, true, {password, newPassword});
@@ -172,13 +171,42 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
 
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            return alertNotify("Ошибка", "Старый пароль введен неверно", "warn");
+            switch (data.error) {
+                case "Password is too short/long":
+                    return alertNotify("Ошибка", "Новый пароль меньше 8 или больше 35 символов", "warn");
+                default:
+                    return alertNotify("Ошибка", "Старый пароль введен неверно", "warn");
+            }
         }
 
+        clearForm();
         alertNotify("Успешно", "Пароль изменен", "success");
     }
 
-    return {checkAuth, login, logout, sendCodeRegister, register, changePassword, reload}
+    // Удаление аккаунт
+    const deleteAccount = async (password) => {
+        if(!password){
+            return alertNotify("Ошибка", "Введите пароль", "warn");
+        }
+
+        dispatch(setAuthIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/", HTTP_METHODS.DELETE, true, {password});
+
+        dispatch(setAuthIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+            switch(data.error){
+                default:
+                    return alertNotify("Ошибка", "Неверный пароль", "error");
+            }
+        }
+
+        clearData();
+        alertNotify("Успешно", "Аккаунт удален", "success");
+    }
+
+    return {checkAuth, login, logout, sendCodeRegister, register, changePassword, reload, deleteAccount}
 }
 
 export default useAuth;

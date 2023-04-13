@@ -10,3 +10,7 @@
 	background: var(--backgroundC);
 	border-radius: 4px;
 }
+
+.empty__content.content__center{
+    flex: 1;
+}

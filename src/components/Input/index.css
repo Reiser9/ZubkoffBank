@@ -19,18 +19,23 @@
     font-size: 1.4rem;
     color: #000;
     background: #fff;
+    box-shadow: none;
 }
 
-.password__input{
-    padding: 1.2rem 5.6rem 1.2rem 2rem;
+.default__input input{
+    line-height: unset!important;
+}
+
+.default__input:hover, .default__input:read-only:focus{
+    border: 1px solid var(--inputC);
 }
 
 .default__input:focus{
     border: 1px solid var(--mainC);
 }
 
-.default__input:read-only:focus{
-    border: 1px solid var(--inputC);
+.password__input{
+    padding: 1.2rem 5.6rem 1.2rem 2rem;
 }
 
 .input__icon{
@@ -52,11 +57,15 @@
 
 @media(max-width: 480px){
     .default__input{
-        padding: 1rem 2rem;
+        padding: 1rem 1.6rem;
         font-size: 1.4rem;
     }
 
     .password__input{
-        padding: 1rem 5.6rem 1rem 2rem;
+        padding: 1rem 4.8rem 1rem 1.6rem;
+    }
+
+    .input__icon{
+        right: 12px;
     }
 }

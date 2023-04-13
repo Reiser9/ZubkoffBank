@@ -2,7 +2,8 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     userIsLoading: false,
-    user: {}
+    user: {},
+    cards: []
 };
 
 export const userSlice = createSlice({
@@ -18,13 +19,17 @@ export const userSlice = createSlice({
         initUser: (state, action) => {
             state.user = action.payload
         },
+        initCards: (state, action) => {
+            state.cards = action.payload
+        }
     }
 });
 
 export const {
     setUserIsLoading,
     initUser,
-    updateUser
+    updateUser,
+    initCards
 } = userSlice.actions;
 
 export default userSlice.reducer;

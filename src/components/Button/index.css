@@ -12,6 +12,10 @@
     opacity: 0.5;
 }
 
+.default__button.opacity{
+    opacity: 0.5;
+}
+
 .default__button:hover{
     background: var(--mainHoverC);
 }
@@ -31,6 +35,7 @@
 
 .default__button.admin__back-btn {
     display: none;
+    margin-right: auto;
 }
 
 .admin__icon {

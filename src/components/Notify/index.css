@@ -64,6 +64,7 @@
 
 .notifies__item svg {
     width: 24px;
+    flex-shrink: 0;
 }
 
 .notify-warning svg path {

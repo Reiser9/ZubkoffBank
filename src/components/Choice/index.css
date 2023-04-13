@@ -1,0 +1,5 @@
+.choice__button--inner{
+    width: 100%;
+    display: flex;
+    gap: 12px;
+}

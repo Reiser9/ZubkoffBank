@@ -12,33 +12,46 @@ import SidebarTab from '../../components/SidebarTab';
 import SidebarButton from '../../components/SidebarTab/SidebarButton';
 
 import useAuth from '../../hooks/useAuth';
+import useUser from '../../hooks/useUser';
+import useCardTypes from '../../hooks/useCardTypes';
 
-import { copyToClipboard } from '../../utils/copyToClipboard';
-import NotContentBlock from '../../components/NotContentBlock';
 import PageSidebarInner from '../../components/PageSidebarInner';
 import BackButton from '../../components/Button/BackButton';
-import CardLimitBlock from './CardLimitBlock';
 import NewCardModal from '../../components/NewCardModal';
-import CardRequisitesBlock from './CardRequisitesBlock';
 import CurrencyBlock from './CurrencyBlock';
 import PayMethod from './PayMethod';
 import SelectCard from './SelectCard';
 import Confirm from '../../components/Confirm';
+import Preloader from '../../components/Preloader';
+import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
+import CardViewBlock from './CardViewBlock';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const Profile = () => {
     const [newCardModal, setNewCardModal] = React.useState(false);
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
+    const [active, setActive] = React.useState(false);
+
+    const [activeCard, setActiveCard] = React.useState("");
 
     const {logout} = useAuth();
-    const {user} = useSelector(state => state.user);
+    const {getCards} = useUser();
+    const {isLoad} = useCardTypes();
+    const {user, cards} = useSelector(state => state.user);
+
+    React.useEffect(() => {
+        getCards();
+    }, []);
+
+    if(isLoad){
+        return <Preloader page />
+    }
 
     return(
         <PageSidebarInner pageTitle="Профиль">
-            <div className="profile__sidebar">
+            <div className={`profile__sidebar${active ? " active" : ""}`}>
                 <SidebarItem title="Счета и карты">
-                    <CheckItem cardName="Zubkoff Black" cardBalance="15 453,32" icon="buy" active />
-                    <CheckItem cardName="Zubkoff Platinum" cardBalance="153,32" icon="limit" />
-                    <CheckItem cardName="Zubkoff Drive" cardBalance="531 453,32" icon="drive" />
+                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
 
                     <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setNewCardModal(true)}>
                         <div className="profile__sidebar--check--icon--inner">
@@ -64,46 +77,19 @@ const Profile = () => {
                 </SidebarItem>
             </div>
 
-            {/* <div className="profile__content center">
-                <NotContentBlock text="Для проведения операций требуется верификация" icon="not-verified">
-                    <Button className="unavailable__button" isLink to="/settings">Пройти</Button>
-                </NotContentBlock>
+            <div className={`profile__content${active ? " active" : ""}`}>
+                <BackButton onClick={() => setActive(false)} />
 
-                <NotContentBlock text="Для проведения операций нужно открыть счет" icon="open-card">
-                    <Button className="unavailable__button" onClick={() => setModal(true)}>Открыть</Button>
-                </NotContentBlock>
+                {user.verified !== VERIFY_STATUS.VERIFIED && <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />}
+
+                {!cards.length && <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
                                 
-                <div className="profile__content--card--inner">
-                    <img src="/assets/img/card-black-empty.svg" alt="card" className="profile__content--card--img" />
+                {activeCard ? <CardViewBlock cardId={activeCard} /> : <EmptyBlock center title="Выберите карту" />}
 
-                    <p className="profile__content--card--number" onClick={() => copyToClipboard("4377 7462 7348 2748")}>
-                        **** **** **** 2748
-                    </p>
-                </div>
-
-                <div className="profile__content--card--buttons">
-                    <Button className="profile__content--card--button">
-                        Перевести
-                    </Button>
-
-                    <Button className="profile__content--card--button">
-                        Заблокировать
-                    </Button>
-                </div>
-
-                <CardLimitBlock />
-
-                <CardRequisitesBlock />
-            </div> */}
-
-            <div className="profile__content">
-                <BackButton desktop />
-
-                <PayMethod />
+                {/* <PayMethod />
 
                 <SelectCard />
 
-                {/* При реализации переводов сделать компонентом блок перевода */}
                 <div className="transfer__step">
                     <h5 className="transfer__title">Введите данные</h5>
 
@@ -118,7 +104,7 @@ const Profile = () => {
                     <p className="transfer__text">Комиссия не взимается банком</p>
 
                     <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
-                </div>
+                </div> */}
             </div>
 
             {newCardModal && <NewCardModal active={newCardModal} setActive={setNewCardModal} />}

@@ -130,8 +130,8 @@ const useRequest = () => {
                 return serverHealth;
             }
             
-            console.log(err.response.data); // <--
-            return err.response.data;
+            console.log(err.response.data || err); // <--
+            return err.response.data || err;
         }
     }, [isServerAvailable]);
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -7,7 +8,7 @@ import Button from '../../components/Button';
 import CardBlock from './CardBlock';
 import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
-import { useSelector } from 'react-redux';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const AdminCardsTab = () => {
     const {isLoad, error} = useCardTypes();
@@ -22,7 +23,7 @@ const AdminCardsTab = () => {
     return (
         <>
             <div className="admin__header admin__header_cards">
-                <h2 className="admin__title">Типы карт (<span>{totalElements}</span>)</h2>
+                <h2 className="admin__title">Типы карт {totalElements && `(${totalElements})`}</h2>
 
                 <Button className="admin__btn">
                     <Add className="admin__icon" />
@@ -33,9 +34,9 @@ const AdminCardsTab = () => {
 
             <div className="admin__items">
                 {!error
-                ? content?.length > 0 ? content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
-                : <div>Карт нет</div>
-                : <div>Ошибка</div>}
+                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
+                : <EmptyBlock title="Карт нет" center />
+                : <EmptyBlock title="Возникла какая-то ошибка" center />}
             </div>
 
             {totalPages > 1 &&<div className="number__btns pagination">

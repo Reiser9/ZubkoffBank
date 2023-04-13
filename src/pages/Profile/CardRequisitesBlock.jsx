@@ -17,7 +17,7 @@ const CardRequisites = () => {
                 </p>
             </div>
 
-            <Input value="**** **** **** 2748" readOnly="readonly" />
+            <Input value="**** **** **** 2832" readOnly="readonly" />
 
             <div className="profile__content--card--input--wrapper">
                 <Input value="** / **" readOnly="readonly" />

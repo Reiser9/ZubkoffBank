@@ -1,24 +1,47 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import useNotify from '../../hooks/useNotify';
+import useAdmin from '../../hooks/useAdmin';
+import { getFormatCardNumber } from '../../utils/cardNumber';
+import { copyToClipboard } from '../../utils/copyToClipboard';
+import { getNormalDate } from '../../utils/getNormalDate';
+
 import { Copy } from '../../components/Icons';
 
-const CardItem = ({data}) => {
-    const {cardNum, cvc, expDate, balance} = data;
+const CardItem = ({data, userId}) => {
+    const {id, cardNum, cvc, expDate, balance, lock, typeId} = data;
+
+    const [img, setImg] = React.useState("");
+
+    const {alertNotify} = useNotify();
+    const {blockCard, unblockCard} = useAdmin();
+    const {cardTypes} = useSelector(state => state.cardTypes);
+
+    const copy = (text) => {
+        copyToClipboard(text);
+        alertNotify("Успешно", "Текст скопирован", "success");
+    }
+
+    React.useEffect(() => {
+        const indexCard = cardTypes?.content?.findIndex(item => item.id === typeId);
+        setImg(cardTypes?.content[indexCard].img);
+    }, []);
 
     return (
         <div className="section-admin__item section-admin__item_card">
-            <img src="assets/img/card-black.svg" alt="card" className="section-admin__card-img" />
+            <img src={img} alt="card" className="section-admin__card-img" />
 
             <div className="section-admin__card-items">
                 <div className="section-admin__card-item section-admin__card-item_full">
                     <p className="section-admin__label">Номер карты</p>
 
                     <p className="section-admin__value">
-                        5467 3746 3847 2463
+                        {getFormatCardNumber(cardNum)}
 
-                        <Copy className="section-admin__copy-icon" />
+                        <Copy className="section-admin__copy-icon" onClick={() => copy(cardNum)} />
                     </p>
                 </div>
 
@@ -26,9 +49,7 @@ const CardItem = ({data}) => {
                     <p className="section-admin__label">Дата</p>
 
                     <p className="section-admin__value">
-                        03/29
-
-                        <Copy className="section-admin__copy-icon" />
+                        {getNormalDate(expDate, "MM/YY")}
                     </p>
                 </div>
 
@@ -36,16 +57,24 @@ const CardItem = ({data}) => {
                     <p className="section-admin__label">Cvv</p>
 
                     <p className="section-admin__value">
-                        667
+                        {cvc}
+                    </p>
+                </div>
 
-                        <Copy className="section-admin__copy-icon" />
+                <div className="section-admin__card-item">
+                    <p className="section-admin__label">Баланс</p>
+
+                    <p className="section-admin__value">
+                        {balance} ₽
                     </p>
                 </div>
             </div>
 
             <p className="section-admin__text-btn section-admin__text-btn_blue">Изменить баланс</p>
 
-            <p className="section-admin__text-btn">Заблокировать</p>
+            {lock
+            ? <p className="section-admin__text-btn" onClick={() => unblockCard(id, userId)}>Разблокировать</p>
+            : <p className="section-admin__text-btn" onClick={() => blockCard(id, userId)}>Заблокировать</p>}
         </div>
     )
 }

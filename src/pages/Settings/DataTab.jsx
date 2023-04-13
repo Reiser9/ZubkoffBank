@@ -12,6 +12,7 @@ import {getNormalDate} from '../../utils/getNormalDate';
 import Preloader from '../../components/Preloader';
 import Input from '../../components/Input';
 import EmptyBlock from '../../components/EmptyBlock';
+import VerifyStage from './VerifyStage';
 
 const DataTab = () => {
     const {getUserFullInfo} = useUser();
@@ -41,9 +42,11 @@ const DataTab = () => {
             </div>
 
             {verified !== VERIFY_STATUS.NOT_VERIFIED && <div className="setting__block">
+                {verified === VERIFY_STATUS.PROCESS && <VerifyStage absolute icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
+
                 <h4 className="setting__title">Полные данные</h4>
 
-                <div className="setting__items">
+                <div className={`setting__items${verified === VERIFY_STATUS.PROCESS ? " process" : ""}`}>
                     <div className="setting__item"><Input value={sex ? "Мужской" : "Женский"} title="Пол" readOnly className="setting__input" placeholder="Пол" /></div>
                     <div className="setting__item"><Input value={getNormalDate(birthdate)} title="Дата рождения" readOnly className="setting__input" placeholder="Дата рождения" /></div>
                     <div className="setting__item"><Input value={`${passportSer} ${passportNum}`} title="Серия и номер паспорта" readOnly className="setting__input" placeholder="Серия и номер паспорта" /></div>

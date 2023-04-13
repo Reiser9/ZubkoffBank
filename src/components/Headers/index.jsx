@@ -1,14 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Skeleton from 'react-loading-skeleton';
 
 import './index.css';
 
 import {User} from '../../components/Icons';
 
 const Header = () => {
-    const {isAuth, authIsLoading} = useSelector(state => state.auth);
+    const {isAuth} = useSelector(state => state.auth);
     const {user} = useSelector(state => state.user);
 
     const {firstName} = user;
@@ -21,7 +20,7 @@ const Header = () => {
                         <img src="/assets/img/logo1.svg" alt="logo" className="header__logo" />
                     </Link>
                     
-                    {authIsLoading ? <Skeleton containerClassName="header__name--skeleton" className="skeleton__content" /> : isAuth
+                    {isAuth
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 
