@@ -59,7 +59,7 @@ public class AdminController {
 			return ResponseEntity.ok(user);
 		}
 		catch (NullPointerException e) {
-			return ResponseEntity.ok(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
@@ -81,8 +81,8 @@ public class AdminController {
 			cardService.save(card);
 			return ResponseEntity.ok(card);
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -95,10 +95,10 @@ public class AdminController {
 				roles.add(roleRepository.findByRole("blocked"));
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(user);
+			return ResponseEntity.ok(new UserResponse(user));
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
@@ -110,8 +110,8 @@ public class AdminController {
 			cardService.save(card);
 			return ResponseEntity.ok(new CardResponse(card));
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -123,8 +123,8 @@ public class AdminController {
 			cardService.save(card);
 			return ResponseEntity.ok(card);
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -138,10 +138,10 @@ public class AdminController {
 				roles.remove(roleRepository.findByRole("blocked"));
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(user);
+			return ResponseEntity.ok(new UserResponse(user));
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
@@ -152,14 +152,13 @@ public class AdminController {
 											   @RequestParam("limit") String limit) throws IOException {
 		String fileName = file.getOriginalFilename();
 		byte[] bytes = file.getBytes();
-		Path path = Paths.get("/static/img/" + fileName);
+		Path path = Paths.get("/users/app/static/img/" + fileName);
 		if (Files.exists(path)) {
-			return ResponseEntity.status(403).body(new DefaultResponse("Not Successful", "File already exist"));
+			return ResponseEntity.status(409).body(new DefaultResponse("Not Successful", "File already exist"));
 		}
 		Files.write(path, bytes);
 		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
-		TypeResponse responseType = new TypeResponse(type, link);
-		return ResponseEntity.ok(responseType);
+		return ResponseEntity.ok(new TypeResponse(type, link));
 	}
 
 	@PostMapping("/user/role")
@@ -179,7 +178,7 @@ public class AdminController {
 		catch (IllegalStateException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
 		}
-		catch (Exception e) {
+		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
@@ -201,7 +200,7 @@ public class AdminController {
 		catch (IllegalStateException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
 		}
-		catch (Exception e) {
+		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
@@ -211,7 +210,7 @@ public class AdminController {
 		try {
 			return ResponseEntity.ok(roleRepository.findAll());
 		}
-		catch (Exception e) {
+		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found roles"));
 		}
 	}

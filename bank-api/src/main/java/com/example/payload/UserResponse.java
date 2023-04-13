@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -18,17 +19,17 @@ public class UserResponse {
     private String phoneNum;
     private String accountNum;
     private String verify;
-    private List<Role> roles;
+    private List<String> roles;
     private List<Card> cards;
-    private DataUser dataUsers;
+    private FullInfoUserResponse dataUsers;
 
     public UserResponse(User user) {
         this.id = user.getId();
         this.phoneNum = user.getPhoneNum();
         this.accountNum = user.getAccountNum();
         this.verify = user.getVerify();
-        this.roles = user.getRoles();
+        this.roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toList());
         this.cards = user.getCards();
-        this.dataUsers = user.getDataUsers().get(user.getDataUsers().size()-1);
+        this.dataUsers = new FullInfoUserResponse(user);
     }
 }

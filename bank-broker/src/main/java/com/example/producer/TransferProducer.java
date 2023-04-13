@@ -12,9 +12,9 @@ public class TransferProducer {
     private static final String TOPIC = "transfer-topic";
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<Object, Map<String, String>> kafkaTemplate;
 
     public void sendMessage(Map<String, String> message) {
-        kafkaTemplate.send(TOPIC, String.valueOf(message));
+        kafkaTemplate.send(TOPIC, message);
     }
 }

@@ -46,8 +46,8 @@ public class UserController {
 		try {
 			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()));
 		}
-		catch (Exception e) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user card"));
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user card"));
 		}
 	}
 
@@ -64,7 +64,7 @@ public class UserController {
 					dataUser.getFirstName()));
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.ok(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 
 	}
@@ -98,10 +98,10 @@ public class UserController {
 				cardService.save(card);
 				return ResponseEntity.ok(card);
 			}
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+			return ResponseEntity.status(403).body(new DefaultResponse("Not Successful", "Forbidden"));
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found card"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -119,7 +119,7 @@ public class UserController {
 			return ResponseEntity.ok(new CardResponse(newCard));
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
@@ -136,7 +136,7 @@ public class UserController {
 			return ResponseEntity.ok(new FullInfoUserResponse(userService.setDataUser(userInfo, data)));
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 		catch (ParseException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Incorrect date format"));
@@ -154,7 +154,7 @@ public class UserController {
 					refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
 					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 				} else {
-					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+					return ResponseEntity.status(401).body(new DefaultResponse("Not Successful", "Wrong password"));
 				}
 			}
 			else {
@@ -162,7 +162,7 @@ public class UserController {
 			}
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 
@@ -180,11 +180,11 @@ public class UserController {
 					userService.deleteByPhoneNum(user.getName());
 					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 				} else {
-					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Wrong password"));
+					return ResponseEntity.status(401).body(new DefaultResponse("Not Successful", "Wrong password"));
 				}
 			}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 }

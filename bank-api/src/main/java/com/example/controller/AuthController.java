@@ -71,25 +71,25 @@ public class AuthController {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
 		}
 		catch (NullPointerException exception) {
-			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) {
 		try {
+			if (userService.isRegisteredUser(user.get("phoneNum")))
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The user is already registered"));
 			if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")))) {
 				if (user.get("password").length() < 8 && user.get("password").length() > 20) {
 					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 				}
-
 				User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
-
 				userService.saveUser(newUser);
 				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
 			else
-				return ResponseEntity.ok().body(new DefaultResponse("Not Successful", "Invalid code"));
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Invalid code"));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
@@ -111,7 +111,7 @@ public class AuthController {
 
 			return ResponseEntity.ok(new RefreshResponse("Bearer", jwt, newRefreshToken.getRefreshToken()));
 		}
-		return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Refresh token expired!"));
+		return ResponseEntity.status(401).body(new DefaultResponse("Not Successful", "Refresh token expired!"));
 	}
 	
 }
