@@ -56,7 +56,7 @@ public class AdminController {
 			User user = userService.findById(data.get("id"));
 			user.setVerify(UserVerify.THIRD_STATUS.toString());
 			userService.save(user);
-			return ResponseEntity.ok(user);
+			return ResponseEntity.ok(new UserResponse(user));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));

@@ -62,6 +62,8 @@ public class AuthController {
 	@PostMapping("/send_code_register")
 	public ResponseEntity<?> sendCode(@RequestBody Map<String, String> phoneNumber) {
 		try {
+			if (userService.isRegisteredUser(phoneNumber.get("phoneNum")))
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The user is already registered"));
 			boolean status = telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CardType.REGISTER));
 			if (!status)
 				throw new TelegramApiException();
