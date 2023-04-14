@@ -1,10 +1,12 @@
 package com.example.payload;
 
 import com.example.model.Card;
+import com.example.model.Transfer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -17,8 +19,9 @@ public class CardResponse {
     private double balance;
     private String firstName;
     private String secondName;
-    private int type;
+    private int typeId;
     private boolean isLock;
+    private List<Transfer> transfer;
 
     public CardResponse(Card card) {
         this.id = card.getId();
@@ -28,7 +31,8 @@ public class CardResponse {
         this.balance = card.getBalance();
         this.firstName = card.getFirstName();
         this.secondName = card.getSecondName();
-        this.type = card.getTypeId();
+        this.typeId = card.getTypeId();
         this.isLock = card.isLock();
+        this.transfer = card.getTransfers();
     }
 }

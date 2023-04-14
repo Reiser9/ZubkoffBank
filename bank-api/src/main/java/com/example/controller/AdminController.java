@@ -79,7 +79,7 @@ public class AdminController {
 			Card card = cardService.findCardById(data.get("id"));
 			card.setLock(true);
 			cardService.save(card);
-			return ResponseEntity.ok(card);
+			return ResponseEntity.ok(new CardResponse(card));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
@@ -121,7 +121,7 @@ public class AdminController {
 			Card card = cardService.findCardById(data.get("id"));
 			card.setLock(false);
 			cardService.save(card);
-			return ResponseEntity.ok(card);
+			return ResponseEntity.ok(new CardResponse(card));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
