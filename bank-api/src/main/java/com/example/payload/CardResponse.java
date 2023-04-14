@@ -5,6 +5,8 @@ import com.example.model.Transfer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class CardResponse {
     private String secondName;
     private int typeId;
     private boolean isLock;
-    private List<Transfer> transfer;
+    private List<Transfer> transfers;
 
     public CardResponse(Card card) {
         this.id = card.getId();
@@ -33,6 +35,6 @@ public class CardResponse {
         this.secondName = card.getSecondName();
         this.typeId = card.getTypeId();
         this.isLock = card.isLock();
-        this.transfer = card.getTransfers();
+        this.transfers = card.getTransfers() == null ? new ArrayList<>() : card.getTransfers();
     }
 }
