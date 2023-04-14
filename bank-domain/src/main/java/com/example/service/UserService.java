@@ -80,14 +80,6 @@ public class UserService {
 		return user;
 	}
 
-	
-	public User saveAdmin(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		Role adminRole = roleRepository.findByRole("admin");
-		user.setRoles(Arrays.asList(adminRole));
-        return user = userRepository.save(user);
-	}
-
 	public User createUser(User user, Map<String, String> regDataUser) {
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
 		user.setVerify(UserVerify.FIRST_STATUS.toString());
@@ -116,6 +108,13 @@ public class UserService {
 		}
 		return tmpAccountNum;
 
+	}
+
+	public boolean isRegisteredUser(String phoneNum) {
+		User user = userRepository.findByPhoneNum(phoneNum);
+		if (user == null || user.getAccountNum() == null)
+			return false;
+		return true;
 	}
 
 	@Transactional
