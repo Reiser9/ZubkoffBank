@@ -4,7 +4,7 @@ import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 import useNotify from './useNotify';
 
-import { updateUser, setUserIsLoading, initCards } from '../redux/slices/user';
+import { updateUser, setUserIsLoading, initCards, addCards } from '../redux/slices/user';
 
 const useUser = () => {
     const dispatch = useDispatch();
@@ -77,15 +77,21 @@ const useUser = () => {
     }
 
     const createCard = async (typeId, firstName, secondName) => {
+        dispatch(setUserIsLoading(true));
+
         const data = await request(REQUEST_TYPE.USER, "/card", HTTP_METHODS.POST, true, {
             typeId,
             firstName,
             secondName
         });
 
+        dispatch(setUserIsLoading(false));
+
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             return alertNotify("Ошибка", "Произошла ошибка, попробуйте позже", "warn");
         }
+
+        dispatch(addCards(data));
 
         alertNotify("Успешно", "Карта успешно выпущена", "success");
     }

@@ -5,8 +5,10 @@ export const maskCardNumber = (cardNumber) => {
 }
 
 export const getFormatCardNumber = (cardNumber) => {
-    const regex = /(\d{4})/g;
-    const formattedNumber = cardNumber.replace(regex, '$1 ');
+    if(cardNumber){
+        const regex = /(\d{4})/g;
+        const formattedNumber = cardNumber.replace(regex, '$1 ');
 
-    return formattedNumber.trim();
+        return formattedNumber.trim();
+    }
 }

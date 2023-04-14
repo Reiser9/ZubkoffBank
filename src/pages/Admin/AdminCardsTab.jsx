@@ -10,7 +10,7 @@ import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
 import EmptyBlock from '../../components/EmptyBlock';
 
-const AdminCardsTab = () => {
+const AdminCardsTab = ({setActive}) => {
     const {isLoad, error} = useCardTypes();
     const {cardTypes} = useSelector(state => state.cardTypes);
 
@@ -25,7 +25,7 @@ const AdminCardsTab = () => {
             <div className="admin__header admin__header_cards">
                 <h2 className="admin__title">Типы карт {totalElements && `(${totalElements})`}</h2>
 
-                <Button className="admin__btn">
+                <Button className="admin__btn" onClick={() => setActive("createType")}>
                     <Add className="admin__icon" />
 
                     <span>Добавить</span>

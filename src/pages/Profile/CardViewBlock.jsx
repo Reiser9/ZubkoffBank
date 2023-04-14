@@ -10,6 +10,7 @@ import useNotify from '../../hooks/useNotify';
 import Button from '../../components/Button';
 import CardLimitBlock from './CardLimitBlock';
 import CardRequisitesBlock from './CardRequisitesBlock';
+import { findElementById } from '../../utils/findElement';
 
 const CardViewBlock = ({cardId}) => {
     const {cards} = useSelector(state => state.user);
@@ -17,7 +18,7 @@ const CardViewBlock = ({cardId}) => {
     const {alertNotify} = useNotify();
 
     const [card, setCard] = React.useState("");
-    const [img, setImg] = React.useState("");
+    const [currentCardType, setCurrentCardType] = React.useState("");
 
     const copy = (text) => {
         copyToClipboard(text);
@@ -25,17 +26,17 @@ const CardViewBlock = ({cardId}) => {
     }
 
     React.useEffect(() => {
-        const indexCard = cards?.findIndex(item => item.id === cardId);
-        setCard(cards[indexCard]);
+        const currentCard = findElementById(cards, cardId);
+        setCard(currentCard);
 
-        const indexCardImg = cardTypes?.content?.findIndex(item => item.id === cards[indexCard].typeId);
-        setImg(cardTypes?.content[indexCardImg].img);
+        const cardTypeData = findElementById(cardTypes.content, currentCard.typeId);
+        setCurrentCardType(cardTypeData);
     }, [cardId]);
 
     return (
         <>
             <div className="profile__content--card--inner">
-                <img src={img} alt="card" className="profile__content--card--img" />
+                <img src={currentCardType.img} alt="card" className="profile__content--card--img" />
 
                 <p className="profile__content--card--number" onClick={() => copy(card.cardNum)}>
                     {maskCardNumber(card.cardNum)}
@@ -52,9 +53,9 @@ const CardViewBlock = ({cardId}) => {
                 </Button>
             </div>
 
-            <CardLimitBlock />
+            <CardLimitBlock card={card} cardType={currentCardType} />
 
-            <CardRequisitesBlock />
+            <CardRequisitesBlock card={card} />
         </>
     )
 }

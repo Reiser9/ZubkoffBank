@@ -11,7 +11,7 @@ const SignImgBlock = ({title, img, points = []}) => {
                 {title}
             </p>
 
-            {points.length && <div className="sign__info--points">
+            {points.length > 0 && <div className="sign__info--points">
                 {points.map((data, id) => <p key={id} className="sign__info--point">
                     {data.text}
                 </p>)}

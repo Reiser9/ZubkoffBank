@@ -6,6 +6,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import App from "./App";
+import Notifies from './components/Notify';
 
 import { store } from './redux/store';
 
@@ -21,6 +22,8 @@ root.render(
                     <App />
                 </SkeletonTheme>
             </InitialWrapper>
+
+            <Notifies />
         </BrowserRouter>
     </Provider>
 );

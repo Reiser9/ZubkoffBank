@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     isAuth: false,
-    authIsLoading: true,
+    authIsLoading: false,
     accessToken: "",
     refreshToken: "",
     typeToken: ""
@@ -32,7 +32,8 @@ export const authSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.typeToken = action.payload.typeToken;
-        }
+        },
+        setDataAuth: () => initialState
     }
 });
 
@@ -42,7 +43,8 @@ export const {
     setAccessToken,
     setRefreshToken,
     setTypeToken,
-    setLogin
+    setLogin,
+    setDataAuth
 } = authSlice.actions;
 
 export default authSlice.reducer;

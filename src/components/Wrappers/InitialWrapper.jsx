@@ -8,9 +8,7 @@ import Ban from '../../pages/Ban';
 import ServerNotAvailable from '../../pages/ServerNotAvailable';
 
 const InitialWrapper = ({children}) => {
-    const {appIsLoading} = useSelector(state => state.app);
-    const {isAuth} = useSelector(state => state.auth);
-    const {user} = useSelector(state => state.user);
+    const {appIsLoading, blocked} = useSelector(state => state.app);
     const {isServerAvailable} = useSelector(state => state.server);
     const {checkAuth} = useAuth();
 
@@ -26,10 +24,8 @@ const InitialWrapper = ({children}) => {
         return <ServerNotAvailable />
     }
 
-    if(isAuth && user.roles){
-        if(user.roles.includes("blocked")){
-            return <Ban />
-        }
+    if(blocked){
+        return <Ban />
     }
 
     return children;

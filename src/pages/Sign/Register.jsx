@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -26,6 +27,7 @@ const Register = () => {
     const [agree, setAgree] = React.useState(false);
 
     const {alertNotify} = useNotify();
+    const {authIsLoading} = useSelector(state => state.auth);
     const {sendCodeRegister, register} = useAuth();
 
     const goToSmsCode = () => {
@@ -137,7 +139,7 @@ const Register = () => {
                     <Input mask={INPUT_MASK_TYPE.CONFIRM_CODE} placeholder="Код подтверждения" value={registerCode} setValue={setRegisterCode} />
                 </div>}
 
-                {isCodeAgain && <div className="sign__link sign__send" onClick={sendSmsCode}>Выслать код</div>}
+                {isCodeAgain && <div className={`sign__link sign__send${authIsLoading ? " disabled" : ""}`} onClick={sendSmsCode}>Выслать код</div>}
 
                 {stage >= 3 && <>
                     {!isCodeAgain && <div className="sign__again">
@@ -145,7 +147,7 @@ const Register = () => {
                     </div>}
 
                     <div className="sign__button--inner">
-                        <Button className="register__button" onClick={registerHandler} disabled={!agree}>
+                        <Button className="register__button" onClick={registerHandler} disabled={authIsLoading}>
                             Регистрация
                         </Button>
                     </div>

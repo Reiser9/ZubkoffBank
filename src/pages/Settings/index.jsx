@@ -16,17 +16,17 @@ const settingsTabs = [
     {
         text: "Верификация",
         icon: <NotifyOkIcon />,
-        name: "verify"
+        names: ["verify"]
     },
     {
         text: "Данные",
         icon: <SettingsIcon />,
-        name: "data"
+        names: ["data"]
     },
     {
         text: "Безопасность",
         icon: <Lock />,
-        name: "save"
+        names: ["save"]
     }
 ]
 
@@ -39,7 +39,7 @@ const Settings = () => {
             <div className={`profile__sidebar${active ? " active" : ""}`}>
                 <SidebarItem title="Настройки">
                     <div className="sidebar__tabs">
-                        {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
+                        {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} names={data.names} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
                     </div>
                 </SidebarItem>
             </div>

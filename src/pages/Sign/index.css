@@ -270,6 +270,11 @@
     cursor: pointer;
 }
 
+.sign__send.disabled{
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .sign__again {
     margin-top: 2.4rem;
 }

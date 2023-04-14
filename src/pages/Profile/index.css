@@ -15,6 +15,10 @@
     font-weight: 500;
 }
 
+.profile__content--limit--value{
+    font-size: 1.4rem;
+}
+
 .profile__content--limit--value span {
     font-weight: 600;
 }

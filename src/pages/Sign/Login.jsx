@@ -15,7 +15,7 @@ const Login = () => {
     const [phoneEnter, setPhoneEnter] = React.useState("");
     const [passwordEnter, setPasswordEnter] = React.useState("");
 
-    const auth = useSelector(state => state.auth);
+    const {authIsLoading} = useSelector(state => state.auth);
     const {login} = useAuth();
 
     return (
@@ -34,7 +34,7 @@ const Login = () => {
                 Забыли пароль?
             </Link>
 
-            <Button className="sign__button" onClick={() => login(phoneEnter, passwordEnter)} disabled={auth.authIsLoading}>
+            <Button className="sign__button" onClick={() => login(phoneEnter, passwordEnter)} disabled={authIsLoading}>
                 Вход
             </Button>
         </div>

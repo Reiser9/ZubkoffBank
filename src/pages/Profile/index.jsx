@@ -6,35 +6,30 @@ import './index.css';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import SidebarItem from '../../components/SidebarItem';
-import CheckItem from '../../components/CheckItem';
-import { Leave, Plus, SettingsIcon, User } from '../../components/Icons';
+import { Leave, SettingsIcon, User } from '../../components/Icons';
 import SidebarTab from '../../components/SidebarTab';
 import SidebarButton from '../../components/SidebarTab/SidebarButton';
 
-import useAuth from '../../hooks/useAuth';
 import useUser from '../../hooks/useUser';
 import useCardTypes from '../../hooks/useCardTypes';
 
 import PageSidebarInner from '../../components/PageSidebarInner';
 import BackButton from '../../components/Button/BackButton';
-import NewCardModal from '../../components/NewCardModal';
 import CurrencyBlock from './CurrencyBlock';
 import PayMethod from './PayMethod';
 import SelectCard from './SelectCard';
-import Confirm from '../../components/Confirm';
 import Preloader from '../../components/Preloader';
 import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
 import CardViewBlock from './CardViewBlock';
 import EmptyBlock from '../../components/EmptyBlock';
+import CurrentCardsBlock from './CurrentCardsBlock';
 
 const Profile = () => {
-    const [newCardModal, setNewCardModal] = React.useState(false);
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
     const [active, setActive] = React.useState(false);
 
     const [activeCard, setActiveCard] = React.useState("");
-
-    const {logout} = useAuth();
+    
     const {getCards} = useUser();
     const {isLoad} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
@@ -51,17 +46,13 @@ const Profile = () => {
         <PageSidebarInner pageTitle="Профиль">
             <div className={`profile__sidebar${active ? " active" : ""}`}>
                 <SidebarItem title="Счета и карты">
-                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
-
-                    <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setNewCardModal(true)}>
-                        <div className="profile__sidebar--check--icon--inner">
-                            <Plus />
-                        </div>
-
-                        <p className="profile__sidebar--check--add--text">
-                            Открыть новый счет
-                        </p>
-                    </div>
+                    <CurrentCardsBlock
+                        exitModal={confirmExitModal}
+                        setExitModal={setConfirmExitModal}
+                        setActive={setActive}
+                        activeCard={activeCard}
+                        setActiveCard={setActiveCard}
+                    />
                 </SidebarItem>
 
                 <SidebarItem title="Курсы валют">
@@ -80,11 +71,13 @@ const Profile = () => {
             <div className={`profile__content${active ? " active" : ""}`}>
                 <BackButton onClick={() => setActive(false)} />
 
-                {user.verified !== VERIFY_STATUS.VERIFIED && <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />}
-
-                {!cards.length && <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
-                                
-                {activeCard ? <CardViewBlock cardId={activeCard} /> : <EmptyBlock center title="Выберите карту" />}
+                {user.verified !== VERIFY_STATUS.VERIFIED
+                    ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
+                    : cards.length
+                        ? activeCard
+                            ? <CardViewBlock cardId={activeCard} />
+                            : <EmptyBlock center title="Выберите карту" />
+                        : <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
 
                 {/* <PayMethod />
 
@@ -106,9 +99,6 @@ const Profile = () => {
                     <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
                 </div> */}
             </div>
-
-            {newCardModal && <NewCardModal active={newCardModal} setActive={setNewCardModal} />}
-            <Confirm active={confirmExitModal} setActive={setConfirmExitModal} text="Вы действительно хотите выйти?" action={logout} />
         </PageSidebarInner>
     )
 }

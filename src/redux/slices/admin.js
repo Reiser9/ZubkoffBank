@@ -29,14 +29,16 @@ export const adminSlice = createSlice({
             if(indexToUpdate !== -1) {
                 userData.splice(indexToUpdate, 1, action.payload.data);
             }
-        }
+        },
+        setDataAdmin: () => initialState
     }
 });
 
 export const {
     initUsers,
     updateCard,
-    updateUser
+    updateUser,
+    setDataAdmin
 } = adminSlice.actions;
 
 export default adminSlice.reducer;

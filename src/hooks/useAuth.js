@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
-import { setAuthIsLoading, setLogin, setIsAuth } from '../redux/slices/auth';
-import { setAppIsLoading } from '../redux/slices/app';
-import { initUser } from '../redux/slices/user';
+import { setAuthIsLoading, setLogin, setIsAuth, setDataAuth } from '../redux/slices/auth';
+import { setAppIsLoading, setDataApp } from '../redux/slices/app';
+import { setDataAdmin } from '../redux/slices/admin';
+import { setDataUser } from '../redux/slices/user';
 import { setIsServerAvailable } from '../redux/slices/server';
 import useNotify from './useNotify';
 import useUser from './useUser';
@@ -18,7 +18,6 @@ const useAuth = () => {
     const {request, getHealthServer} = useRequest();
     const {alertNotify} = useNotify();
     const {getUserShortInfo} = useUser();
-    const navigate = useNavigate();
 
     // Очищение данных локально
     const clearData = () => {
@@ -27,10 +26,13 @@ const useAuth = () => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("typeToken");
 
-        dispatch(initUser({})); //Очищение данных о пользователе
+        dispatch(setDataUser()); //Очищение данных о пользователе
+        dispatch(setDataAdmin()); //Очистить админские данные
+        dispatch(setDataAuth()); //Очистить токены авторизации
+        dispatch(setDataApp()); //Очистить данные приложения (флаг блокировки и загрузка приложения)
+        // Добавлять очищение данных по мере создания
         dispatch(setAuthIsLoading(false)); //Загрузка авторизации
         dispatch(setIsAuth(false)); //Флаг авторизации пользователя
-        dispatch(setAppIsLoading(false)); //Загрузка приложения
     }
 
     // Выход
@@ -68,10 +70,17 @@ const useAuth = () => {
 
         const data = await getUserShortInfo();
 
+        if(data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
+            dispatch(setAuthIsLoading(false));
+            dispatch(setAppIsLoading(false));
+            console.log("Вы забанены");
+            return;
+        }
+
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 403){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
             
-            if(!newTokens){
+            if(newTokens.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
                 return clearData();
             }
 
@@ -101,9 +110,9 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(true));
         
         const data = await request(REQUEST_TYPE.AUTH, "/login", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phone), password});
-
-        dispatch(setAuthIsLoading(false));
         
+        dispatch(setAuthIsLoading(false));
+
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
@@ -120,9 +129,11 @@ const useAuth = () => {
         localStorage.setItem("refreshToken", refreshToken);
         localStorage.setItem("typeToken", typeToken);
 
+        dispatch(setAppIsLoading(true));
+
         await getUserShortInfo();
 
-        navigate("/");
+        dispatch(setAppIsLoading(false));
     }
 
     // Отправить код при регистрации
@@ -134,7 +145,15 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
 
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
+            switch(data.error){
+                case REQUEST_STATUSES.ALREADY_REGISTERED:
+                    alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+                    break;
+                default:
+                    alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
+                    break;
+            }
+
             return data.status;
         }
 
@@ -154,7 +173,12 @@ const useAuth = () => {
         dispatch(setAuthIsLoading(false));
 
         if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
+            switch(data.error){
+                case REQUEST_STATUSES.ALREADY_REGISTERED:
+                    return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+                default:
+                    return alertNotify("Ошибка", "Неверный или недействительный код", "warn");
+            }
         }
 
         await login(phone, password, true);

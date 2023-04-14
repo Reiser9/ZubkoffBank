@@ -8,6 +8,7 @@ import useAdmin from '../../hooks/useAdmin';
 import { getFormatCardNumber } from '../../utils/cardNumber';
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import { getNormalDate } from '../../utils/getNormalDate';
+import { findElementById } from '../../utils/findElement';
 
 import { Copy } from '../../components/Icons';
 
@@ -26,9 +27,9 @@ const CardItem = ({data, userId}) => {
     }
 
     React.useEffect(() => {
-        const indexCard = cardTypes?.content?.findIndex(item => item.id === typeId);
-        setImg(cardTypes?.content[indexCard].img);
-    }, []);
+        const currentCard = findElementById(cardTypes.content, typeId);
+        setImg(currentCard?.img);
+    }, [typeId]);
 
     return (
         <div className="section-admin__item section-admin__item_card">

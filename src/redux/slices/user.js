@@ -16,20 +16,22 @@ export const userSlice = createSlice({
         updateUser: (state, action) => {
             state.user = {...state.user, ...action.payload}
         },
-        initUser: (state, action) => {
-            state.user = action.payload
-        },
         initCards: (state, action) => {
             state.cards = action.payload
-        }
+        },
+        addCards: (state, action) => {
+            state.cards = state.cards.concat(action.payload)
+        },
+        setDataUser: () => initialState
     }
 });
 
 export const {
     setUserIsLoading,
-    initUser,
     updateUser,
-    initCards
+    initCards,
+    addCards,
+    setDataUser
 } = userSlice.actions;
 
 export default userSlice.reducer;

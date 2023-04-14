@@ -6,6 +6,7 @@ import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_E
 import {REQUEST_STATUSES} from '../consts/REQUEST_STATUSES';
 
 import {setIsServerAvailable} from '../redux/slices/server';
+import {setBlocked} from '../redux/slices/app';
 import {isBot} from '../utils/isBot';
 
 export const HTTP_METHODS = {
@@ -130,8 +131,13 @@ const useRequest = () => {
                 return serverHealth;
             }
             
-            console.log(err.response.data || err); // <--
-            return err.response.data || err;
+            console.log(err.response.data.error);
+            if(err.response.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
+                dispatch(setBlocked(true));
+            }
+
+            console.log(err.response.data); // <--
+            return err.response.data;
         }
     }, [isServerAvailable]);
 

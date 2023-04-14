@@ -3,9 +3,9 @@ import {Link} from 'react-router-dom';
 
 import './index.css';
 
-const SidebarTab = ({text, icon, name, tab, setTab, setActive, isLink = false, ...props}) => {
+const SidebarTab = ({text, icon, names, tab, setTab, setActive, isLink = false, ...props}) => {
     const tabClick = () => {
-        setTab(name);
+        setTab(names[0]);
         setActive(true);
     }
 
@@ -16,7 +16,7 @@ const SidebarTab = ({text, icon, name, tab, setTab, setActive, isLink = false, .
 
                 <p className="sidebar-tab__text">{text}</p>
             </Link>
-            : <div className={`sidebar-tab${tab === name ? " active" : ""}`} onClick={tabClick} {...props}>
+            : <div className={`sidebar-tab${names.includes(tab) ? " active" : ""}`} onClick={tabClick} {...props}>
                 {icon}
     
                 <p className="sidebar-tab__text">{text}</p>

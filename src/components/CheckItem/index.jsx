@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import './index.css';
 
 import {Dollar} from '../Icons';
+import { findElementById } from '../../utils/findElement';
+import { getFormatedNumber } from '../../utils/getFormatedNumber';
 
 const CheckItem = ({data, active, setActive, setTab}) => {
     const {balance, typeId, id} = data;
@@ -13,8 +15,8 @@ const CheckItem = ({data, active, setActive, setTab}) => {
     const {cardTypes} = useSelector(state => state.cardTypes);
 
     React.useEffect(() => {
-        const indexCard = cardTypes?.content?.findIndex(item => item.id === typeId);
-        setName(cardTypes?.content[indexCard].name);
+        const currentCard = findElementById(cardTypes.content, typeId);
+        setName(currentCard?.name);
     }, []);
 
     const clickHandler = () => {
@@ -34,7 +36,7 @@ const CheckItem = ({data, active, setActive, setTab}) => {
                 </p>
 
                 <p className="profile__sidebar--check--card--balance">
-                    {balance} ₽
+                    {getFormatedNumber(balance)} ₽
                 </p>
             </div>
         </div>

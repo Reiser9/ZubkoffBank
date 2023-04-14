@@ -10,17 +10,18 @@ import PageSidebarInner from '../../components/PageSidebarInner';
 import AdminCardsTab from './AdminCardsTab';
 import AdminUsersTab from './AdminUsersTab';
 import AdminWrapper from '../../components/Wrappers/AdminWrapper';
+import AdminCreateType from './AdminCreateType';
 
 const settingsTabs = [
     {
         text: "Пользователи",
         icon: <User />,
-        name: "users"
+        names: ["users"]
     },
     {
         text: "Карты",
         icon: <Card />,
-        name: "cards"
+        names: ["cards", "createType"]
     },
 ]
 
@@ -34,7 +35,7 @@ const Admin = () => {
                 <div className={`profile__sidebar${active ? " active" : ""}`}>
                     <SidebarItem title="Админка">
                         <div className="sidebar__tabs">
-                            {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} name={data.name} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
+                            {settingsTabs.map((data, id) => <SidebarTab key={id} setActive={setActive} names={data.names} text={data.text} icon={data.icon} tab={tab} setTab={setTab} />)}
                         </div>
                     </SidebarItem>
                 </div>
@@ -43,7 +44,8 @@ const Admin = () => {
                     <BackButton onClick={() => setActive(false)} />
 
                     {tab === "users" &&<AdminUsersTab />}
-                    {tab === "cards" && <AdminCardsTab />}
+                    {tab === "cards" && <AdminCardsTab setActive={setTab} />}
+                    {tab === "createType" && <AdminCreateType />}
                 </div>
             </PageSidebarInner>
         </AdminWrapper>
