@@ -21,7 +21,7 @@ public class UserResponse {
     private String verify;
     private List<String> roles;
     private List<Card> cards;
-    private FullInfoUserResponse dataUsers;
+    private DataUserResponse dataUsers;
 
     public UserResponse(User user) {
         this.id = user.getId();
@@ -30,6 +30,6 @@ public class UserResponse {
         this.verify = user.getVerify();
         this.roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toList());
         this.cards = user.getCards();
-        this.dataUsers = new FullInfoUserResponse(user);
+        this.dataUsers = new DataUserResponse(user.getDataUsers().get(user.getDataUsers().size()-1));
     }
 }
