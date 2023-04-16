@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.enums.UserVerify;
 import com.example.model.Card;
 import com.example.model.DataUser;
 import com.example.model.User;
@@ -140,6 +141,19 @@ public class UserController {
 		}
 		catch (ParseException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Incorrect date format"));
+		}
+	}
+
+	@PostMapping("/cancel_data")
+	public ResponseEntity<?> updateDataUser(Principal user) {
+		try {
+			User userInfo = userService.findUserByPhoneNum(user.getName());
+			userInfo.setVerify(UserVerify.NOT_VERIFIED_STATUS.toString());
+			userService.save(userInfo);
+			return ResponseEntity.ok(new FullInfoUserResponse(userInfo));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
 

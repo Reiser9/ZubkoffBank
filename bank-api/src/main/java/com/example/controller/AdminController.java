@@ -54,7 +54,20 @@ public class AdminController {
 	public ResponseEntity<?> verified(@RequestBody Map<String, Long> data) {
 		try {
 			User user = userService.findById(data.get("id"));
-			user.setVerify(UserVerify.THIRD_STATUS.toString());
+			user.setVerify(UserVerify.VERIFIED_STATUS.toString());
+			userService.save(user);
+			return ResponseEntity.ok(new UserResponse(user));
+		}
+		catch (NullPointerException e) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+	}
+
+	@PostMapping("/user/not_verify")
+	public ResponseEntity<?> cancelVerified(@RequestBody Map<String, Long> data) {
+		try {
+			User user = userService.findById(data.get("id"));
+			user.setVerify(UserVerify.REFUSED_STATUS.toString());
 			userService.save(user);
 			return ResponseEntity.ok(new UserResponse(user));
 		}
