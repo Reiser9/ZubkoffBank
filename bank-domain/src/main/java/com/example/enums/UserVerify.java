@@ -1,9 +1,10 @@
 package com.example.enums;
 
 public enum UserVerify {
-    FIRST_STATUS("NOT VERIFIED"),
-    SECOND_STATUS("PROCESS"),
-    THIRD_STATUS("VERIFIED");
+    NOT_VERIFIED_STATUS("NOT VERIFIED"),
+    PROCESS_STATUS("PROCESS"),
+    VERIFIED_STATUS("VERIFIED"),
+    REFUSED_STATUS("REFUSED");
 
     private final String text;
 
