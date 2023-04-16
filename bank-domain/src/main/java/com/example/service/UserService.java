@@ -35,8 +35,7 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
-	@Autowired
-	private CodeRepository codeRepository;
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -74,7 +73,7 @@ public class UserService {
 		dataUser.setGrantedDate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.get("grantedDate")));
 		dataUser.setSex(Boolean.valueOf(data.get("sex")));
 		dataUsers.set(user.getDataUsers().size() - 1, dataUser);
-		user.setVerify(UserVerify.SECOND_STATUS.toString());
+		user.setVerify(UserVerify.PROCESS_STATUS.toString());
 		user.setDataUsers(dataUsers);
 		userRepository.save(user);
 		return user;
@@ -82,7 +81,7 @@ public class UserService {
 
 	public User createUser(User user, Map<String, String> regDataUser) {
 		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
-		user.setVerify(UserVerify.FIRST_STATUS.toString());
+		user.setVerify(UserVerify.NOT_VERIFIED_STATUS.toString());
 		//Data users
 		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullName"))));
 		// Gen accountNum

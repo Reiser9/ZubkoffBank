@@ -27,6 +27,9 @@ public class Code {
     @Column(name = "exp_date")
     private Timestamp expDate;
 
+    @Column(name = "used")
+    private Boolean used;
+
     @Column(name = "fk_id_user")
     private Long userId;
 }

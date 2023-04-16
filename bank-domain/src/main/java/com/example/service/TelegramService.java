@@ -115,14 +115,14 @@ public class TelegramService extends TelegramLongPollingBot {
         return false;
     }
 
-    public Boolean compareCode(String phoneNumber, int checkCode) {
+    public Boolean compareCode(String phoneNumber, int checkCode, String type) {
         Long id = userRepository.findByPhoneNum(phoneNumber).getId();
         List<Code> codes = codeRepository.findByUserId(id);
-        Code code = codes.get(codes.size()-1);
+        Code code = codes.stream().filter(e -> e.getType().equals(type)).findFirst().orElse(new Code());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
         Timestamp date = new Timestamp(cal.getTime().getTime());
-        if (code.getCode() == checkCode && date.after(code.getExpDate())) {
+        if (code.getCode() == checkCode && date.before(code.getExpDate()) && !code.getUsed()) {
             return true;
         }
         return false;
@@ -175,7 +175,7 @@ public class TelegramService extends TelegramLongPollingBot {
     private void saveCode(String phoneNumber, int checkCode, String typeCode) {
         User user = userRepository.findByPhoneNum(phoneNumber);
         List<Code> codes = user.getCodes();
-        Code code = new Code();
+        Code code = codes.stream().filter(e -> e.getType().equals(typeCode)).findFirst().orElse(new Code());
         code.setCode(checkCode);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
@@ -183,6 +183,7 @@ public class TelegramService extends TelegramLongPollingBot {
         Timestamp date = new Timestamp(cal.getTime().getTime());
         code.setExpDate(date);
         code.setType(typeCode);
+        code.setUsed(false);
         codes.add(code);
         user.setCodes(codes);
         userRepository.save(user);

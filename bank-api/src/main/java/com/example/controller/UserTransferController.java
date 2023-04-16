@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/transfer")
 public class UserTransferController {
     @Autowired
     private TransferService transferService;
@@ -37,17 +37,17 @@ public class UserTransferController {
     @Autowired
     private String organization;
 
-    @PostMapping("/transfer_info")
+    @PostMapping("/info")
     public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> transfer) {
         return transferService.getInfoByPhone(transfer)
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
 
-    @PostMapping("/in_bank_transfer")
+    @PostMapping("/in_bank")
     public ResponseEntity<?> sendMoneyInBank(Principal user, @RequestBody Map<String, String> transfer) {
         try {
-            List<Card> cards = userService.findUserByPhoneNum(transfer.get("destPhoneNum")).getCards();
-            Card sourceCard = cardService.findCardByCardNum(transfer.get("sourceCardNum"));
+            List<Card> cards = userService.findUserByPhoneNum(transfer.get("phoneNum")).getCards();
+            Card sourceCard = cardService.findCardByCardNum(transfer.get("cardNum"));
             Double money = Double.parseDouble(transfer.get("money"));
             if (userService.findUserByPhoneNum(user.getName()).getCards().contains(sourceCard))
                 throw new NullPointerException();
@@ -82,7 +82,11 @@ public class UserTransferController {
                 destTransfer.setCardId(destCard.getId());
 
                 sourceTransfers.add(sourceTransfer);
+                sourceCard.setTransfers(sourceTransfers);
                 destTransfers.add(destTransfer);
+                destCard.setTransfers(destTransfers);
+                cardService.save(sourceCard);
+                cardService.save(destCard);
                 return ResponseEntity.ok().body(sourceTransfer);
             }
             else {
@@ -98,5 +102,32 @@ public class UserTransferController {
         catch (UnknownRecipientException exception) {
             return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown recipient"));
         }
+    }
+
+    @PostMapping("/out_bank")
+    public ResponseEntity<?> sendMoneyOutBank(Principal user, @RequestBody Map<String, String> transfer) {
+        try {
+            Double money = Double.parseDouble(transfer.get("money"));
+            Card sourceCard = cardService.findCardByCardNum(transfer.get("cardNum"));
+            if (userService.findUserByPhoneNum(user.getName()).getCards().contains(sourceCard))
+                throw new NullPointerException();
+            if (sourceCard.getBalance() < money) {
+                throw new InsufficientFundsException();
+            }
+            sourceCard.setBalance(sourceCard.getBalance() - money);
+            cardService.save(sourceCard);
+            transferService.sendMoney(transfer);
+            return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
+        }
+        catch (NullPointerException exception) {
+            return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Not found card"));
+        }
+        catch (InsufficientFundsException exception) {
+            return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
+        }
+        catch (Exception exception) {
+            return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown error"));
+        }
+
     }
 }

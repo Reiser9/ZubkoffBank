@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.example.enums.CardType;
 import com.example.model.RefreshToken;
 import com.example.model.User;
+import com.example.service.CodeService;
 import com.example.service.TelegramService;
 import com.example.payload.DefaultResponse;
 import com.example.payload.RefreshResponse;
@@ -22,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -41,6 +43,10 @@ public class AuthController {
 	private TelegramService telegramService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private CodeService codeService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	
 	@PostMapping(value = "/login", produces = APPLICATION_JSON_VALUE)
@@ -76,18 +82,63 @@ public class AuthController {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
 	}
+
+	@PostMapping("/send_code_recovery")
+	public ResponseEntity<?> recoveryCode(@RequestBody Map<String, String> phoneNumber) {
+		try {
+			if (!userService.isRegisteredUser(phoneNumber.get("phoneNum")))
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "This phone number was not found"));
+			boolean status = telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CardType.RECOVERY));
+			if (!status)
+				throw new TelegramApiException();
+			return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
+		}
+		catch (TelegramApiException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "User did not link the account"));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+	}
+
+	@PostMapping("/recovery_password")
+	public ResponseEntity<?> recoveryPassword(@RequestBody Map<String, String> user) {
+		if (!userService.isRegisteredUser(user.get("phoneNum")))
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY))) {
+			if (user.get("confirmPassword").equals(user.get("password"))) {
+				if (user.get("password").length() >= 8 && user.get("password").length() <= 35) {
+					User userByPhoneNum = userService.findUserByPhoneNum(user.get("phoneNum"));
+					userByPhoneNum.setPassword(passwordEncoder.encode(user.get("password")));
+					userService.save(userByPhoneNum);
+					refreshTokenService.deleteByUserId(userByPhoneNum.getId());
+					codeService.changeStatusCode(userByPhoneNum.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY));
+					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+				}
+				else {
+					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
+				}
+			}
+			else {
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Passwords don't match"));
+			}
+		}
+		else
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Invalid code"));
+	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) {
 		try {
 			if (userService.isRegisteredUser(user.get("phoneNum")))
 				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The user is already registered"));
-			if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")))) {
+			if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CardType.REGISTER))) {
 				if (user.get("password").length() < 8 && user.get("password").length() > 20) {
 					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 				}
 				User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
 				userService.saveUser(newUser);
+				codeService.changeStatusCode(newUser.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CardType.REGISTER));
 				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
 			else
@@ -99,13 +150,12 @@ public class AuthController {
 	}
 	
 	@PostMapping("/refresh")
-	public ResponseEntity<?> refreshtoken(@RequestBody Map<String, String> refreshToken) {
+	public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> refreshToken) {
 		RefreshToken token = refreshTokenService.findByRefreshToken(refreshToken.get("refreshToken"));
 		if(token != null && refreshTokenService.verifyExpiration(token) != null) {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
 			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
-
 			String jwt = jwtUtils.createToken(claims, user.getPhoneNum());
 			Long id = refreshTokenService.findUserByRefreshToken(refreshToken.get("refreshToken"));
 			refreshTokenService.deleteByRefreshToken(refreshToken.get("refreshToken"));
