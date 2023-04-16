@@ -23,13 +23,13 @@ const CurrencyItem = () => {
                     <div className="course-weather__currency">
                         <p className="course-weather__currency-name">USD</p>
 
-                        <div className="course-weather__value">₽ {currency.usd}</div>
+                        <div className="course-weather__value">₽ {currency.usd || 0}</div>
                     </div>
 
                     <div className="course-weather__currency">
                         <p className="course-weather__currency-name">EUR</p>
 
-                        <div className="course-weather__value">₽ {currency.eur}</div>
+                        <div className="course-weather__value">₽ {currency.eur || 0}</div>
                     </div>
                 </div>
             </>}
