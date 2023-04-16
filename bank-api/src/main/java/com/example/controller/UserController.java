@@ -117,7 +117,7 @@ public class UserController {
 			userInfo.getCards().add(newCard);
 			userInfo.setCards(userInfo.getCards());
 			userService.save(userInfo);
-			return ResponseEntity.ok(new CardResponse(newCard));
+			return ResponseEntity.ok(new CardResponse(cardService.findCardByCardNum(newCard.getCardNum())));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
