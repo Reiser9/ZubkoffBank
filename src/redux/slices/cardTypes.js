@@ -10,6 +10,9 @@ export const cardTypesSlice = createSlice({
     reducers: {
         initCardTypes: (state, action) => {
             state.cardTypes = action.payload
+        },
+        addCardTypes: (state, action) => {
+            state.cardTypes.content = state.cardTypes.content.concat(action.payload);
         }
     }
 });

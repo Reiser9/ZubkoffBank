@@ -17,7 +17,9 @@ const CardBlock = ({data, id}) => {
                 <div className="section-admin__items">
                     <DataField title="Лимит" value={`${limit.toLocaleString()} ₽`} />
                     <DataField title="Изображение карты">
-                        <img src={img} alt="card" className="section-admin__card-img" />
+                        <div className="section-admin__card-img-inner">
+                            <img src={img} alt="card" className="section-admin__card-img" />
+                        </div>
                     </DataField>
                     <DataField title="Описание" value={description} big />
                 </div>

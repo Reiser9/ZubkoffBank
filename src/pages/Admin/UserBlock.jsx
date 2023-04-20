@@ -1,5 +1,10 @@
 import React from 'react';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper";
 
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/pagination";
 import './index.css';
 
 import {VERIFY_STATUS} from '../../consts/VERIFY_STATUS';
@@ -64,9 +69,42 @@ const UserBlock = ({data, id}) => {
             </DataItem>
 
             <DataItem title="Карты" icon={<Card />}>
-                <div className="section-admin__items">
-                    {cards.length ? cards.map((data, id) => <CardItem key={id} userId={userId} data={data} />) : <EmptyBlock title="Карт нет" />}
-                </div>
+                <Swiper
+                    className="swiper__inner"
+                    spaceBetween={10}
+                    freeMode={true}
+                    modules={[FreeMode]}
+                    breakpoints={{
+                        0: {
+                            slidesPerView: 1.1
+                        },
+                        360: {
+                            slidesPerView: 1.3
+                        },
+                        530: {
+                            slidesPerView: 2.1
+                        },
+                        660: {
+                            slidesPerView: 2.5
+                        },
+                        769: {
+                            slidesPerView: 1.5
+                        },
+                        900: {
+                            slidesPerView: 2.2
+                        },
+                        1150: {
+                            slidesPerView: 2.75
+                        },
+                    }}
+                >
+                
+                    {cards.length
+                    ? cards.map((data, id) => <SwiperSlide>
+                        <CardItem key={id} userId={userId} data={data} />
+                    </SwiperSlide>)
+                    : <EmptyBlock title="Карт нет" />}
+                </Swiper>
             </DataItem>
 
             <DataItem title="Действия" icon={<Actions />}>

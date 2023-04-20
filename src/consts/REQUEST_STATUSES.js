@@ -3,5 +3,6 @@ export const REQUEST_STATUSES = {
     NOT_SUCCESSFUL: "Not Successful",
     SITE_NOT_AVAILABLE: "Site not available",
     YOU_ARE_BLOCKED: "You are blocked",
-    ALREADY_REGISTERED: "The user is already registered"
+    ALREADY_REGISTERED: "The user is already registered",
+    FILE_EXIST: "File already exist"
 }

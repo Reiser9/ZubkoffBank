@@ -82,8 +82,8 @@
 
 @media (max-width:480px) {
     .number__btn {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
     }
 }
 
@@ -152,11 +152,7 @@
 
 @media (max-width:480px) {
     .item-admin__name {
-        font-size: 12px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        width: 100px;
-        overflow: hidden;
+        font-size: 14px;
     }
 }
 
@@ -285,7 +281,7 @@
     display: flex;
 }
 
-.section-admin__items {
+.section-admin__items{
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -333,42 +329,14 @@
 }
 
 .section-admin__item_card {
-    width: calc(100% / 3 - 2 * 12px / 3);
+    width: 100%;
     padding: 16px 8px;
     gap: unset;
 }
 
-.section-admin__item_card .section-admin__card-img {
-    align-self: center;
-}
-
-@media (max-width:1200px) {
-    .section-admin__item_card {
-        width: calc(100% / 2 - 12px / 2);
-    }
-}
-
-@media (max-width:860px) {
-    .section-admin__item_card {
-        width: 100%;
-    }
-}
-
 @media (max-width:768px) {
-    .section-admin__item_card {
-        width: calc(100% / 2 - 12px / 2);
-    }
-
     .item-admin__header, .section-admin__header{
         cursor: default;
-    }
-}
-
-@media (max-width:576px) {
-    .section-admin__item_card {
-        width: 100%;
-        max-width: 250px;
-        margin: 0 auto;
     }
 }
 
@@ -376,9 +344,18 @@
     align-self: start;
 }
 
+.section-admin__card-img-inner{
+    width: 150px;
+    height: 95px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
 .section-admin__card-img {
     width: 100%;
-    max-width: 150px;
+    height: 100%;
+    object-fit: cover;
 }
 
 .section-admin__card-items {
@@ -390,7 +367,7 @@
 
 @media (max-width:768px) {
     .section-admin__card-items {
-        margin: 1.2rem 0 1.6rem 0   ;
+        margin: 1.2rem 0 1.6rem 0;
     }
 }
 
@@ -441,6 +418,24 @@
 }
 
 .pagination {
+    margin: 0 auto;
+    margin-top: auto;
+}
+
+.admin__create--type--inner, .admin__create--type--content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.admin__create--type--content{
+    gap: 16px;
+    flex: 1;
+}
+
+.admin__create--type--button{
     margin: 0 auto;
     margin-top: auto;
 }

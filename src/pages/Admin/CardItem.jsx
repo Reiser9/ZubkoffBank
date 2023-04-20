@@ -33,7 +33,9 @@ const CardItem = ({data, userId}) => {
 
     return (
         <div className="section-admin__item section-admin__item_card">
-            <img src={img} alt="card" className="section-admin__card-img" />
+            <div className="section-admin__card-img-inner">
+                <img src={img} alt="card" className="section-admin__card-img" />
+            </div>
 
             <div className="section-admin__card-items">
                 <div className="section-admin__card-item section-admin__card-item_full">

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './index.css';
 
-import { Back, Card, User } from '../../components/Icons';
+import { Card, User } from '../../components/Icons';
 import SidebarItem from '../../components/SidebarItem';
 import SidebarTab from '../../components/SidebarTab';
 import BackButton from '../../components/Button/BackButton';
@@ -45,7 +45,7 @@ const Admin = () => {
 
                     {tab === "users" &&<AdminUsersTab />}
                     {tab === "cards" && <AdminCardsTab setActive={setTab} />}
-                    {tab === "createType" && <AdminCreateType />}
+                    {tab === "createType" && <AdminCreateType setActive={setTab} />}
                 </div>
             </PageSidebarInner>
         </AdminWrapper>

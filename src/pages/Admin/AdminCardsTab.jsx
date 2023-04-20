@@ -22,7 +22,7 @@ const AdminCardsTab = ({setActive}) => {
 
     return (
         <>
-            <div className="admin__header admin__header_cards">
+            <div className="admin__header">
                 <h2 className="admin__title">Типы карт {totalElements && `(${totalElements})`}</h2>
 
                 <Button className="admin__btn" onClick={() => setActive("createType")}>

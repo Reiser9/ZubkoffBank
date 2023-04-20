@@ -129,18 +129,25 @@ const useAdmin = () => {
     const createTypeCard = async (formData) => {
         setIsLoad(true);
 
-        const data = await request(REQUEST_TYPE.ADMIN, "/type", HTTP_METHODS.POST, true, formData);
+        const data = await request(REQUEST_TYPE.ADMIN, "/card/type", HTTP_METHODS.POST, true, formData);
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            alertNotify("Ошибка", "Что-то пошло не так", "error");
-            return setError(true);
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                case REQUEST_STATUSES.FILE_EXIST:
+                    alertNotify("Ошибка", "Карта с таким изображением уже существует", "error");
+                    break;
+                default:
+                    alertNotify("Ошибка", "Что-то пошло не так", "error");
+                    break;
+            }
+
+            setError(true);
+            return "Ошибка";
         }
 
-
-
-        alertNotify("Успешно", "Новый тип карты создан", "success");
+        alertNotify("Успешно", "Новый тип карты создан!", "success");
     }
 
     return {isLoad, error, getUsers, verifyUser, blockCard, unblockCard, blockUser, unblockUser, createTypeCard}
