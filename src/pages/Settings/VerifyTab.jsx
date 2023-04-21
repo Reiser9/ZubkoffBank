@@ -18,12 +18,12 @@ import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
 
 const VerifyTab = () => {
     const {user, userIsLoading} = useSelector(state => state.user);
-    const {sendVerifyRequest, getUserFullInfo} = useUser();
+    const {sendVerifyRequest, getUserFullInfo, cancelVerify} = useUser();
 
     const [passportData, setPassportData] = React.useState("");
     const [granted, setGranted] = React.useState("");
-    const [grantedDate, setGrantedDate] = React.useState(user.verified === VERIFY_STATUS.REFUSED ? dayjs() : "");
-    const [birthdate, setBirthdate] = React.useState(user.verified === VERIFY_STATUS.REFUSED ? dayjs() : "");
+    const [grantedDate, setGrantedDate] = React.useState(dayjs());
+    const [birthdate, setBirthdate] = React.useState(dayjs());
     const [sex, setSex] = React.useState(true);
 
     const verify = () => {
@@ -35,7 +35,7 @@ const VerifyTab = () => {
     }, []);
 
     React.useEffect(() => {
-        if(user.verified === VERIFY_STATUS.REFUSED && user.secondName){
+        if(user.secondName){
             setPassportData(`${user.passportSer} ${user.passportNum}`);
             setGranted(user.granted);
             setGrantedDate(dayjs(user.grantedDate));
@@ -43,6 +43,10 @@ const VerifyTab = () => {
             setSex(user.sex);
         }
     }, [user]);
+
+    const cancelVerifyHandler = () => {
+        cancelVerify();
+    }
 
     if(userIsLoading){
         return <Preloader />
@@ -82,7 +86,9 @@ const VerifyTab = () => {
                 <Button className="setting__verify-btn" onClick={verify}>Верифицировать</Button>
             </>}
 
-            {user.verified === VERIFY_STATUS.PROCESS && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
+            {user.verified === VERIFY_STATUS.PROCESS && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте">
+                <Button onClick={cancelVerifyHandler}>Отменить заявку</Button>
+            </VerifyStage>}
             {user.verified === VERIFY_STATUS.VERIFIED && <VerifyStage icon="check" text="Верификация успешно пройдена" />}
         </>
     )

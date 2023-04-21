@@ -9,12 +9,13 @@ import CardBlock from './CardBlock';
 import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
 import EmptyBlock from '../../components/EmptyBlock';
+import Paggination from '../../components/Paggination';
 
 const AdminCardsTab = ({setActive}) => {
     const {isLoad, error} = useCardTypes();
     const {cardTypes} = useSelector(state => state.cardTypes);
 
-    const {content, totalPages, totalElements} = cardTypes;
+    const {content, totalPages, totalElements, number, size} = cardTypes;
 
     if(isLoad){
         return <Preloader />
@@ -34,18 +35,12 @@ const AdminCardsTab = ({setActive}) => {
 
             <div className="admin__items">
                 {!error
-                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
+                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={(number * size) + id} data={data} />)
                 : <EmptyBlock title="Карт нет" center />
                 : <EmptyBlock title="Возникла какая-то ошибка" center />}
             </div>
 
-            {totalPages > 1 &&<div className="number__btns pagination">
-                <div className="number__btn active">1</div>
-
-                <div className="number__btn">2</div>
-                
-                <div className="number__btn">3</div>
-            </div>}
+            <Paggination totalPages={totalPages} page={number} size={size} />
         </>
     )
 }

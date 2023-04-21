@@ -185,8 +185,85 @@ const useAdmin = () => {
             }
         }
 
+        dispatch(updateUser({id, data}));
+
         successCallback();
         alertNotify("Успешно", "Данные верификации отклонены", "success");
+    }
+
+    const addRole = async (id, roleId, successCallback = () => {}) => {
+        setIsLoad(true);
+
+        const data = await request(REQUEST_TYPE.ADMIN, "/user/role", HTTP_METHODS.POST, true, {
+            id,
+            roleId
+        });
+
+        setIsLoad(false);
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            setError(true);
+
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(updateUser({id, data}));
+
+        successCallback();
+        alertNotify("Успешно", "Роль добавлена", "success");
+    }
+
+    const removeRole = async (id, roleId, successCallback = () => {}) => {
+        setIsLoad(true);
+
+        const data = await request(REQUEST_TYPE.ADMIN, "/user/role", HTTP_METHODS.PATCH, true, {
+            id,
+            roleId
+        });
+
+        setIsLoad(false);
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            setError(true);
+
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(updateUser({id, data}));
+
+        successCallback();
+        alertNotify("Успешно", "Роль удалена", "success");
+    }
+
+    const changeBalance = async (id, balance, userId, successCallback = () => {}) => {
+        setIsLoad(true);
+
+        const data = await request(REQUEST_TYPE.ADMIN, "/user/balance", HTTP_METHODS.POST, true, {
+            id,
+            balance
+        });
+
+        setIsLoad(false);
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            setError(true);
+
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(updateCard({id, userId, data}));
+
+        successCallback();
+        alertNotify("Успешно", "Баланс карты изменен", "success");
     }
 
     return {
@@ -199,7 +276,10 @@ const useAdmin = () => {
         blockUser,
         unblockUser,
         createTypeCard,
-        rejectUserVerify
+        rejectUserVerify,
+        addRole,
+        removeRole,
+        changeBalance
     }
 }
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 import useNotify, {NOTIFY_TYPES} from './useNotify';
+import { getNormalDate } from '../utils/getNormalDate';
 
 import { updateUser, setUserIsLoading, initCards, addCards } from '../redux/slices/user';
 
@@ -19,7 +20,7 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status !== REQUEST_STATUSES.NOT_SUCCESSFUL){
+        if(data.status !== REQUEST_STATUSES.NOT_SUCCESSFUL && data !== REQUEST_STATUSES.SITE_NOT_AVAILABLE){
             dispatch(updateUser(data));
         }
 
@@ -44,7 +45,7 @@ const useUser = () => {
         dispatch(updateUser(data));
     };
 
-    const sendVerifyRequest = async (passportData, granted, grantedDate, birthdate, sex) => {
+    const sendVerifyRequest = async (passportData, granted, grantedDate, birthdate, sex, successCallback = () => {}) => {
         if(passportData.length < 11){
             return alertNotify("Ошибка", "Введите корректные данные паспорта", "warn");
         }
@@ -64,8 +65,8 @@ const useUser = () => {
             passportSer: passportDataSplit[0],
             passportNum: passportDataSplit[1],
             granted,
-            grantedDate: grantedDate.format("DD.MM.YYYY"),
-            birthdate: birthdate.format("DD.MM.YYYY"),
+            grantedDate: getNormalDate(grantedDate),
+            birthdate: getNormalDate(birthdate),
             sex
         });
 
@@ -78,10 +79,11 @@ const useUser = () => {
 
         dispatch(updateUser(data));
 
+        successCallback();
         alertNotify("Успешно", "Данные успешно отправлены на рассмотрение", "success");
     }
 
-    const createCard = async (typeId, firstName, secondName) => {
+    const createCard = async (typeId, firstName, secondName, successCallback = () => {}) => {
         dispatch(setUserIsLoading(true));
 
         const data = await request(REQUEST_TYPE.USER, "/card", HTTP_METHODS.POST, true, {
@@ -101,6 +103,7 @@ const useUser = () => {
 
         dispatch(addCards(data));
 
+        successCallback();
         alertNotify("Успешно", "Карта успешно выпущена", "success");
     }
 
@@ -135,6 +138,8 @@ const useUser = () => {
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
         }
+
+        dispatch(updateUser(data));
 
         successCallback();
         alertNotify("Успешно", "Вы отменили отправку верификации", "success");

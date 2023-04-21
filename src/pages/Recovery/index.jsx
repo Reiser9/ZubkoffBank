@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import '../Sign/index.css';
@@ -23,9 +23,10 @@ const Recovery = () => {
     const [password, setPassword] = React.useState("");
     const [passwordAgain, setPasswordAgain] = React.useState("");
 
-    const {recoveryPassword, sendCodeRecovery} = useAuth();
+    const {recoveryPassword, checkCodeRecovery, sendCodeRecovery} = useAuth();
     const {authIsLoading} = useSelector(state => state.auth);
     const {notifyTemplate} = useNotify();
+    const navigate = useNavigate();
 
     const prevStep = () => {
         setStep(step => step - 1);
@@ -36,11 +37,7 @@ const Recovery = () => {
     }
 
     const confirmRecoveryCode = () => {
-        if(code.length !== 6){
-            return notifyTemplate(NOTIFY_TYPES.CODE);
-        }
-
-        setStep(3);
+        checkCodeRecovery(phone, code, () => setStep(3));
     }
 
     const recoveryPasswordHandler = () => {
@@ -48,7 +45,7 @@ const Recovery = () => {
             return notifyTemplate(NOTIFY_TYPES.CONFIRM_PASSWORD);
         }
 
-        recoveryPassword(phone, code, password);
+        recoveryPassword(phone, password, code, () => navigate("/sign"));
     }
 
     return (

@@ -18,7 +18,7 @@ const useCardTypes = () => {
         setIsLoad(true);
 
         if(Object.keys(cardTypes).length === 0){
-            const data = await request(REQUEST_TYPE.CARD, "/types", HTTP_METHODS.GET);
+            const data = await request(REQUEST_TYPE.CARD, "/types?limit=10", HTTP_METHODS.GET);
 
             if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
                 setError(true);

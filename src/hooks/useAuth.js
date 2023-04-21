@@ -1,5 +1,4 @@
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 
@@ -15,7 +14,6 @@ import {unmaskPhone} from '../utils/maskPhone';
 
 const useAuth = () => {
     const dispatch = useDispatch();
-    const {navigate} = useNavigate();
     const {request, getHealthServer} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
     const {getUserShortInfo} = useUser();
@@ -49,7 +47,7 @@ const useAuth = () => {
 
         const data = await getHealthServer();
 
-        if(!data){
+        if(data !== REQUEST_STATUSES.SITE_NOT_AVAILABLE){
             checkAuth();
         }
 
@@ -256,6 +254,33 @@ const useAuth = () => {
         alertNotify("Успешно", "Код отправлен", "success");
     }
 
+    const checkCodeRecovery = async (phoneNum, code, successCallback = () => {}) => {
+        if(phoneNum.length < 17){
+            return notifyTemplate(NOTIFY_TYPES.PHONE);
+        }
+
+        if(code.length !== 6){
+            return notifyTemplate(NOTIFY_TYPES.PHONE);
+        }
+
+        dispatch(setAuthIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.AUTH, "/check_recovery_code", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phoneNum), code});
+
+        dispatch(setAuthIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                case REQUEST_STATUSES.INVALID_CODE:
+                    return notifyTemplate(NOTIFY_TYPES.CODE);
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        successCallback();
+    }
+
     // Восстановление пароля (изменить пароль)
     const recoveryPassword = async (phoneNum, password, code, successCallback = () => {}) => {
         if(phoneNum.length < 17){
@@ -291,7 +316,6 @@ const useAuth = () => {
 
         successCallback();
         alertNotify("Успешно", "Пароль изменен", "success");
-        navigate("/sign");
     }
 
     return {
@@ -304,6 +328,7 @@ const useAuth = () => {
         reload,
         deleteAccount,
         sendCodeRecovery,
+        checkCodeRecovery,
         recoveryPassword
     }
 }

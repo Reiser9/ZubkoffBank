@@ -3,7 +3,7 @@ import {isBot} from './isBot';
 
 export const getCity = async () => {
     try{
-        // throw new Error(); // Убрать при продакшене
+        throw new Error(); // Убрать при продакшене
         if(isBot()){
             throw new Error();
         }
@@ -67,7 +67,7 @@ const getWeather = async (lat, lon) => {
 
 const getOneCurrency = async (from = "USD") => {
     try{
-        // throw new Error();
+        throw new Error();
         const data = await currency.get(`convert?to=RUB&from=${from}&amount=1`, {
             headers: {
                 "apikey": process.env.REACT_APP_CURRENCY_TOKEN

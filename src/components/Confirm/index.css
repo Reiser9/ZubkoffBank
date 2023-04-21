@@ -72,14 +72,6 @@
     width: calc(100% / 2 - 24px / 2);
 }
 
-.default__button.red-btn {
-    background-color: var(--notifyError);
-}
-
-.default__button.red-btn:hover {
-    background-color: var(--errorHover);
-}
-
 @media (max-width:768px) {
     .confirm-popup__btn {
         width: calc(100% / 2 - 8px / 2);

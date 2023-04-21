@@ -37,10 +37,22 @@ const UserBlock = ({data, id}) => {
     const {id: userId, dataUsers, verify, phoneNum, cards, accountNum, roles} = data;
     const {firstName, secondName, middleName, birthdate, sex, granted, grantedDate, passportNum, passportSer} = dataUsers;
 
-    const {verifyUser, blockUser, unblockUser} = useAdmin();
+    const {verifyUser, blockUser, unblockUser, rejectUserVerify, addRole, removeRole} = useAdmin();
 
     const verifyUserHandler = () => {
         verifyUser(userId);
+    }
+
+    const rejectVerifyUserHandler = () => {
+        rejectUserVerify(userId);
+    }
+
+    const getAdmin = () => {
+        addRole(userId, 2);
+    }
+
+    const removeAdmin = () => {
+        removeRole(userId, 2);
     }
 
     return (
@@ -64,7 +76,7 @@ const UserBlock = ({data, id}) => {
 
                 {verify === VERIFY_STATUS.PROCESS && <div className="admin__verify--buttons">
                     <Button onClick={verifyUserHandler} className="admin__btn admin__verify--button">Верифицировать</Button>
-                    <Button onClick={verifyUserHandler} className="admin__btn admin__verify--button red-btn">Отклонить</Button>
+                    <Button onClick={rejectVerifyUserHandler} className="admin__btn admin__verify--button red-btn">Отклонить</Button>
                 </div>}
                 {(verify === VERIFY_STATUS.NOT_VERIFIED || verify === VERIFY_STATUS.REFUSED) && <EmptyBlock title="Пользователь не верифицирован" />}
             </DataItem>
@@ -112,6 +124,10 @@ const UserBlock = ({data, id}) => {
                 {roles.includes("blocked")
                 ? <p className="section-admin__text-btn" onClick={() => unblockUser(userId)}>Разблокировать</p>
                 : <p className="section-admin__text-btn" onClick={() => blockUser(userId)}>Заблокировать</p>}
+
+                {roles.includes("admin")
+                ? <p className="section-admin__text-btn" onClick={removeAdmin}>Забрать администратора</p>
+                : <p className="section-admin__text-btn" onClick={getAdmin}>Выдать администратора</p>}
             </DataItem>
         </AdminItem>
     )

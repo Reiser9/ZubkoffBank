@@ -13,6 +13,7 @@ import Preloader from '../../components/Preloader';
 import Input from '../../components/Input';
 import EmptyBlock from '../../components/EmptyBlock';
 import VerifyStage from './VerifyStage';
+import Button from '../../components/Button';
 
 const DataTab = () => {
     const {getUserFullInfo} = useUser();
@@ -55,7 +56,7 @@ const DataTab = () => {
                 </div>
             </div>}
 
-            {verified === VERIFY_STATUS.NOT_VERIFIED || verified === VERIFY_STATUS.REFUSED && <EmptyBlock title="Что бы все данные отобразились - нужно пройти верификацию" />}
+            {(verified === VERIFY_STATUS.NOT_VERIFIED || verified === VERIFY_STATUS.REFUSED) && <EmptyBlock title="Что бы все данные отобразились - нужно пройти верификацию" />}
         </>
     )
 }

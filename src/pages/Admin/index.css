@@ -60,38 +60,6 @@
     font-size: 14px;
 }
 
-.number__btns {
-    display: flex;
-    gap: 8px;
-}
-
-.number__btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--creditCardBg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-    font-size: 12px;
-    cursor: pointer;
-    transition: .2s linear;
-    flex-shrink: 0;
-}
-
-@media (max-width:480px) {
-    .number__btn {
-        width: 28px;
-        height: 28px;
-    }
-}
-
-.number__btn.active, .number__btn:hover{
-    background-color: var(--mainC);
-    color: #fff;
-}
-
 .admin__items {
     display: flex;
     justify-content: flex-start;
@@ -261,20 +229,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
     padding: 8px 8px 16px;
-}
-
-@media (max-width:768px) {
-    .section-admin__content {
-        gap: 16px;
-    }
-}
-
-@media (max-width:480px) {
-    .section-admin__content {
-        gap: 12px;
-    }
 }
 
 .section-admin.active .section-admin__content {
@@ -331,7 +287,7 @@
 .section-admin__item_card {
     width: 100%;
     padding: 16px 8px;
-    gap: unset;
+    gap: 8px;
 }
 
 @media (max-width:768px) {
@@ -366,19 +322,7 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin: 1.6rem 0 2rem 0;
-}
-
-@media (max-width:768px) {
-    .section-admin__card-items {
-        margin: 1.2rem 0 1.6rem 0;
-    }
-}
-
-@media (max-width:480px) {
-    .section-admin__card-items {
-        margin: 0.8rem 0 1.2rem 0;
-    }
+    margin: 1.2rem 0;
 }
 
 .section-admin__card-item {
@@ -411,10 +355,6 @@
 
 .section-admin__text-btn:hover {
     opacity: 0.7;
-}
-
-.section-admin__text-btn:not(:last-child) {
-    margin-bottom: 8px;
 }
 
 .section-admin__text-btn_blue {

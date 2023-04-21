@@ -18,12 +18,16 @@ const CardItem = ({data, userId}) => {
     const [img, setImg] = React.useState("");
 
     const {alertNotify} = useNotify();
-    const {blockCard, unblockCard} = useAdmin();
+    const {blockCard, unblockCard, changeBalance} = useAdmin();
     const {cardTypes} = useSelector(state => state.cardTypes);
 
     const copy = (text) => {
         copyToClipboard(text);
         alertNotify("Успешно", "Текст скопирован", "success");
+    }
+
+    const changeBalanceHandler = () => {
+        changeBalance(id, 50, userId);
     }
 
     React.useEffect(() => {
@@ -68,12 +72,12 @@ const CardItem = ({data, userId}) => {
                     <p className="section-admin__label">Баланс</p>
 
                     <p className="section-admin__value">
-                        {balance} ₽
+                        {balance.toLocaleString()} ₽
                     </p>
                 </div>
             </div>
 
-            <p className="section-admin__text-btn section-admin__text-btn_blue">Изменить баланс</p>
+            <p className="section-admin__text-btn section-admin__text-btn_blue" onClick={changeBalanceHandler}>Изменить баланс</p>
 
             {lock
             ? <p className="section-admin__text-btn" onClick={() => unblockCard(id, userId)}>Разблокировать</p>
