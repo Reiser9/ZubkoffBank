@@ -163,15 +163,21 @@ public class AdminController {
 											   @RequestParam("description") String description,
 											   @RequestParam("name") String typeName,
 											   @RequestParam("limit") String limit) throws IOException {
-		String fileName = file.getOriginalFilename();
-		byte[] bytes = file.getBytes();
-		Path path = Paths.get("/users/app/static/img/" + fileName);
-		if (Files.exists(path)) {
-			return ResponseEntity.status(409).body(new DefaultResponse("Not Successful", "File already exist"));
+		try {
+			String fileName = file.getOriginalFilename();
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get("/users/app/static/img/" + fileName);
+			Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
+			if (Files.exists(path)) {
+				return ResponseEntity.status(409).body(new DefaultResponse("Not Successful", "File already exist"));
+			}
+			Files.write(path, bytes);
+			return ResponseEntity.ok(new TypeResponse(type, link));
 		}
-		Files.write(path, bytes);
-		Type type = typeService.saveType(fileName, path.toString(), description, typeName, Integer.parseInt(limit));
-		return ResponseEntity.ok(new TypeResponse(type, link));
+		catch (Exception e) {
+			return ResponseEntity.status(409).body(new DefaultResponse("Not Successful", "bank card with this name already exists"));
+		}
+
 	}
 
 	@PostMapping("/user/role")
