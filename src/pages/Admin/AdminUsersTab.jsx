@@ -28,7 +28,7 @@ const AdminUsersTab = () => {
     return (
         <>
             <div className="admin__header admin__header_users">
-                <h2 className="admin__title">Пользователи {totalElements && `(${totalElements})`}</h2>
+                <h2 className="admin__title">Пользователи: {totalElements && totalElements}</h2>
 
                 <div className="limit">
                     <p className="limit__label">Показывать по:</p>
@@ -46,7 +46,7 @@ const AdminUsersTab = () => {
             <div className="admin__items">
                 {error || errorCardTypes
                 ? <EmptyBlock title="Возникла какая-то ошибка" center />
-                : (content?.length ? content.map((data, id) => <UserBlock key={id} id={id} data={data} />)
+                : (content?.length ? content.map((data, id) => <UserBlock key={data.id} id={id} data={data} />)
                 : <EmptyBlock title="Пользователей нет" center />)}
             </div>
 

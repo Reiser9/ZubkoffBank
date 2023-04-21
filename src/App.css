@@ -150,6 +150,22 @@ input::-webkit-inner-spin-button{
 	width: 100%;
 }
 
+.w100{
+	width: 100%;
+}
+
+.red{
+	color: var(--notifyError);
+}
+
+.center{
+	text-align: center;
+}
+
+.medium{
+	font-weight: 500;
+}
+
 @media (max-width:992px) {
 	.title {
 		font-size: 2.4rem;

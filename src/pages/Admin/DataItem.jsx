@@ -4,8 +4,8 @@ import './index.css';
 
 import { Arrow } from '../../components/Icons';
 
-const DataItem = ({title, icon, children}) => {
-    const [active, setActive] = React.useState(false);
+const DataItem = ({title, icon, open = false, children}) => {
+    const [active, setActive] = React.useState(open);
 
     return (
         <div className={`section-admin${active ? " active" : ""}`}>

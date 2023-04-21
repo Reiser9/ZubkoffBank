@@ -26,12 +26,16 @@
     line-height: unset!important;
 }
 
-.default__input:hover, .default__input:read-only:focus{
-    border: 1px solid var(--inputC);
+.default__input:focus, .ant-picker-focused{
+    border: 1px solid var(--mainC)!important;
 }
 
-.default__input:focus{
-    border: 1px solid var(--mainC);
+.default__input:read-only:focus{
+    border: 1px solid var(--inputC)!important;
+}
+
+.default__input:hover{
+    border: 1px solid var(--inputC);
 }
 
 .password__input{

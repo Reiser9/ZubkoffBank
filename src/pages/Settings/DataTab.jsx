@@ -41,7 +41,7 @@ const DataTab = () => {
                 </div>
             </div>
 
-            {verified !== VERIFY_STATUS.NOT_VERIFIED && <div className="setting__block">
+            {(verified === VERIFY_STATUS.PROCESS || verified === VERIFY_STATUS.VERIFIED) && <div className="setting__block">
                 {verified === VERIFY_STATUS.PROCESS && <VerifyStage absolute icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
 
                 <h4 className="setting__title">Полные данные</h4>
@@ -55,7 +55,7 @@ const DataTab = () => {
                 </div>
             </div>}
 
-            {verified === VERIFY_STATUS.NOT_VERIFIED && <EmptyBlock title="Что бы все данные отобразились - нужно пройти верификацию" />}
+            {verified === VERIFY_STATUS.NOT_VERIFIED || verified === VERIFY_STATUS.REFUSED && <EmptyBlock title="Что бы все данные отобразились - нужно пройти верификацию" />}
         </>
     )
 }

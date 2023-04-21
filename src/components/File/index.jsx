@@ -7,6 +7,10 @@ const File = ({title, id, setValue, accept, type}) => {
     const [image, setImage] = React.useState("");
 
     const onInputChange = (e) => {
+        if(!e.target.files[0]){
+            return;
+        }
+        
         setValue(e.target.files[0]);
         const fileReader = new FileReader();
         fileReader.readAsDataURL(e.target.files[0]);

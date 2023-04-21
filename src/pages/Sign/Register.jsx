@@ -31,11 +31,13 @@ const Register = () => {
     const {sendCodeRegister, register} = useAuth();
 
     const goToSmsCode = () => {
+        const fioValid = nameRegister.trim().split(" ").length;
+
         if(phoneRegister.length < 17){
             return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
         }
 
-        if(!nameRegister || (nameRegister.split(" ").length < 3 || nameRegister.split(" ").length > 3)){
+        if(!nameRegister || (fioValid < 3 || fioValid > 3)){
             return alertNotify("Предупреждение", "Введите корретные данные ФИО", "warn");
         }
 
@@ -68,14 +70,11 @@ const Register = () => {
     }, [isCodeAgain, seconds]);
 
     const sendSmsCode = async () => {
-        const data = await sendCodeRegister(phoneRegister);
-
-        if(!data){
+        sendCodeRegister(phoneRegister, () => {
             setIsCodeAgain(false);
             setSeconds(60);
-
             setStage(3);
-        }
+        });
     }
 
     const registerHandler = () => {

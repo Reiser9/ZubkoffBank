@@ -97,8 +97,8 @@ const useRequest = () => {
         const axiosInstance = axiosInstancesMap.get(requestType);
 
         let reqHeaders = {
-            ...headers,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            ...headers
         }
 
         if(isAuth){

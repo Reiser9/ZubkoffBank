@@ -28,10 +28,8 @@ const getVerifyIcon = (verifyStatus) => {
             return <NotifyOkIcon className="verify__success" />
         case VERIFY_STATUS.PROCESS:
             return <NotifyWarningIcon className="verify__process" />
-        case VERIFY_STATUS.NOT_VERIFIED:
-            return <CircleCross className="verify__not" />
         default:
-            break;
+            return <CircleCross className="verify__not" />
     }
 }
 
@@ -64,8 +62,11 @@ const UserBlock = ({data, id}) => {
                     <DataField title="Кем выдан" value={granted} big />
                 </div>}
 
-                {verify === VERIFY_STATUS.PROCESS && <Button onClick={verifyUserHandler} className="admin__btn">Верифицировать</Button>}
-                {verify === VERIFY_STATUS.NOT_VERIFIED && <EmptyBlock title="Пользователь не верифицирован" />}
+                {verify === VERIFY_STATUS.PROCESS && <div className="admin__verify--buttons">
+                    <Button onClick={verifyUserHandler} className="admin__btn admin__verify--button">Верифицировать</Button>
+                    <Button onClick={verifyUserHandler} className="admin__btn admin__verify--button red-btn">Отклонить</Button>
+                </div>}
+                {(verify === VERIFY_STATUS.NOT_VERIFIED || verify === VERIFY_STATUS.REFUSED) && <EmptyBlock title="Пользователь не верифицирован" />}
             </DataItem>
 
             <DataItem title="Карты" icon={<Card />}>
@@ -100,8 +101,8 @@ const UserBlock = ({data, id}) => {
                 >
                 
                     {cards.length
-                    ? cards.map((data, id) => <SwiperSlide>
-                        <CardItem key={id} userId={userId} data={data} />
+                    ? cards.map((data, id) => <SwiperSlide key={id}>
+                        <CardItem userId={userId} data={data} />
                     </SwiperSlide>)
                     : <EmptyBlock title="Карт нет" />}
                 </Swiper>

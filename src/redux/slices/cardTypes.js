@@ -13,12 +13,14 @@ export const cardTypesSlice = createSlice({
         },
         addCardTypes: (state, action) => {
             state.cardTypes.content = state.cardTypes.content.concat(action.payload);
+            state.cardTypes.totalElements += 1;
         }
     }
 });
 
 export const {
-    initCardTypes
+    initCardTypes,
+    addCardTypes
 } = cardTypesSlice.actions;
 
 export default cardTypesSlice.reducer;

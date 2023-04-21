@@ -33,18 +33,14 @@ const AdminCreateType = ({setActive}) => {
             return alertNotify("Ошибка", "Введите лимит карты!", "warn");
         }
 
-        const formData = new FormData();
+        let formData = new FormData();
 
         formData.append("img", image);
         formData.append("name", name);
         formData.append("description", description);
         formData.append("limit", limit);
 
-        const data = await createTypeCard(formData);
-
-        if(!data){
-            setActive("cards");
-        }
+        createTypeCard(formData, () => setActive("cards"));
     }
 
     return (

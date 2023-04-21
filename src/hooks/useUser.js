@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
-import useNotify from './useNotify';
+import useNotify, {NOTIFY_TYPES} from './useNotify';
 
 import { updateUser, setUserIsLoading, initCards, addCards } from '../redux/slices/user';
 
@@ -10,7 +10,7 @@ const useUser = () => {
     const dispatch = useDispatch();
     const {request} = useRequest();
     const {user, cards} = useSelector(state => state.user);
-    const {alertNotify} = useNotify();
+    const {alertNotify, notifyTemplate} = useNotify();
 
     const getUserShortInfo = async () => {
         dispatch(setUserIsLoading(true));
@@ -27,19 +27,21 @@ const useUser = () => {
     }
 
     const getUserFullInfo = async () => {
+        if(user.secondName){
+            return;
+        }
+
         dispatch(setUserIsLoading(true));
 
-        if(!user.secondName){
-            const data = await request(REQUEST_TYPE.USER, "/full_info", HTTP_METHODS.GET, true);
+        const data = await request(REQUEST_TYPE.USER, "/full_info", HTTP_METHODS.GET, true);
 
-            if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-                return;
-            }
-
-            dispatch(updateUser(data));
-        }
-        
         dispatch(setUserIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+            return;
+        }
+
+        dispatch(updateUser(data));
     };
 
     const sendVerifyRequest = async (passportData, granted, grantedDate, birthdate, sex) => {
@@ -67,8 +69,11 @@ const useUser = () => {
             sex
         });
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            return alertNotify("Ошибка", "Произошла ошибка, попробуйте позже", "warn");
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
         }
 
         dispatch(updateUser(data));
@@ -87,8 +92,11 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-            return alertNotify("Ошибка", "Произошла ошибка, попробуйте позже", "warn");
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
         }
 
         dispatch(addCards(data));
@@ -97,22 +105,49 @@ const useUser = () => {
     }
 
     const getCards = async () => {
-        dispatch(setUserIsLoading(true));
-
-        if(!cards.length){
-            const data = await request(REQUEST_TYPE.USER, "/cards", HTTP_METHODS.GET, true);
-
-            if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
-                return;
-            }
-
-            dispatch(initCards(data));
+        if(cards.length){
+            return;
         }
 
+        dispatch(setUserIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/cards", HTTP_METHODS.GET, true);
+
         dispatch(setUserIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+            return;
+        }
+
+        dispatch(initCards(data));
     }
 
-    return {getUserShortInfo, getUserFullInfo, sendVerifyRequest, createCard, getCards}
+    const cancelVerify = async (successCallback = () => {}) => {
+        dispatch(setUserIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/cancel_data", HTTP_METHODS.POST, true);
+
+        dispatch(setUserIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        successCallback();
+        alertNotify("Успешно", "Вы отменили отправку верификации", "success");
+    }
+
+    return {
+        getUserShortInfo,
+        getUserFullInfo,
+        sendVerifyRequest,
+        createCard,
+        getCards,
+        cancelVerify
+    }
 }
 
 export default useUser;
