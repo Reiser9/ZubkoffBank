@@ -101,26 +101,32 @@ public class AuthController {
 		}
 	}
 
-	@PostMapping("/recovery_password")
+	@PostMapping("/check_recovery_code")
 	public ResponseEntity<?> recoveryPassword(@RequestBody Map<String, String> user) {
 		if (!userService.isRegisteredUser(user.get("phoneNum")))
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
 		if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY))) {
-			if (user.get("confirmPassword").equals(user.get("password"))) {
-				if (user.get("password").length() >= 8 && user.get("password").length() <= 35) {
-					User userByPhoneNum = userService.findUserByPhoneNum(user.get("phoneNum"));
-					userByPhoneNum.setPassword(passwordEncoder.encode(user.get("password")));
-					userService.save(userByPhoneNum);
-					refreshTokenService.deleteByUserId(userByPhoneNum.getId());
-					codeService.changeStatusCode(userByPhoneNum.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY));
-					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
-				}
-				else {
-					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
-				}
+			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+		}
+		else
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Invalid code"));
+	}
+
+	@PostMapping("/recovery_password")
+	public ResponseEntity<?> confirmRecovery(@RequestBody Map<String, String> user) {
+		if (!userService.isRegisteredUser(user.get("phoneNum")))
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
+		if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY))) {
+			if (user.get("password").length() >= 8 && user.get("password").length() <= 35) {
+				User userByPhoneNum = userService.findUserByPhoneNum(user.get("phoneNum"));
+				userByPhoneNum.setPassword(passwordEncoder.encode(user.get("password")));
+				userService.save(userByPhoneNum);
+				refreshTokenService.deleteByUserId(userByPhoneNum.getId());
+				codeService.changeStatusCode(userByPhoneNum.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CardType.RECOVERY));
+				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
 			else {
-				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Passwords don't match"));
+				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 			}
 		}
 		else
