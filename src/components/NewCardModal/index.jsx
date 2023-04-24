@@ -12,12 +12,13 @@ import CardShortBlock from '../CardShortBlock';
 import EmptyBlock from '../EmptyBlock';
 
 const NewCardModal = ({active, setActive}) => {
-    const {error, isLoad} = useCardTypes();
+    const {error, isLoad, getCardTypes} = useCardTypes();
     const {getUserFullInfo} = useUser();
     const {cardTypes} = useSelector(state => state.cardTypes);
 
     React.useEffect(() => {
         getUserFullInfo();
+        getCardTypes();
     }, []);
 
     return (

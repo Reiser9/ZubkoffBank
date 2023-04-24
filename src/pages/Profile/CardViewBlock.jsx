@@ -3,19 +3,22 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import { findElementById } from '../../utils/findElement';
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import {maskCardNumber} from '../../utils/cardNumber';
 import useNotify from '../../hooks/useNotify';
+import useUser from '../../hooks/useUser';
 
 import Button from '../../components/Button';
 import CardLimitBlock from './CardLimitBlock';
 import CardRequisitesBlock from './CardRequisitesBlock';
-import { findElementById } from '../../utils/findElement';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const CardViewBlock = ({cardId}) => {
-    const {cards} = useSelector(state => state.user);
+    const {cards, userIsLoading} = useSelector(state => state.user);
     const {cardTypes} = useSelector(state => state.cardTypes);
     const {alertNotify} = useNotify();
+    const {blockCard} = useUser();
 
     const [card, setCard] = React.useState("");
     const [currentCardType, setCurrentCardType] = React.useState("");
@@ -23,6 +26,10 @@ const CardViewBlock = ({cardId}) => {
     const copy = (text) => {
         copyToClipboard(text);
         alertNotify("Успешно", "Текст скопирован", "success");
+    }
+
+    const blockCardHandler = () => {
+        blockCard(cardId);
     }
 
     React.useEffect(() => {
@@ -44,18 +51,21 @@ const CardViewBlock = ({cardId}) => {
             </div>
 
             <div className="profile__content--card--buttons">
-                <Button className="profile__content--card--button">
+                <Button className="profile__content--card--button" disabled={card.lock}>
                     Перевести
                 </Button>
 
-                <Button className="profile__content--card--button">
-                    Заблокировать
+                <Button className="profile__content--card--button" onClick={blockCardHandler} disabled={userIsLoading}>
+                    {card.lock ? "Разблокировать" : "Заблокировать"}
                 </Button>
             </div>
 
-            <CardLimitBlock card={card} cardType={currentCardType} />
-
-            <CardRequisitesBlock card={card} />
+            {card.lock
+            ? <EmptyBlock title="Данная карта заблокирована" />
+            : <>
+                <CardLimitBlock card={card} cardType={currentCardType} />
+                <CardRequisitesBlock card={card} />
+            </>}
         </>
     )
 }

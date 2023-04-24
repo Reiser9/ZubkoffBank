@@ -5,8 +5,8 @@ import './index.css';
 import PagginationItem from './PagginationItem';
 import usePaggination from '../../hooks/usePaggination';
 
-const Paggination = ({totalPages, page, size}) => {
-    const {isLoad, changePagginationUsers} = usePaggination();
+const Paggination = ({totalPages = 1, page, size, data}) => {
+    const {isLoad, paggination} = usePaggination();
 
     if(totalPages < 2){
         return;
@@ -14,7 +14,7 @@ const Paggination = ({totalPages, page, size}) => {
 
     return (
         <div className={`number__btns pagination${isLoad ? " disabled" : ""}`}>
-            {[...Array(totalPages)].map((_, id) => <PagginationItem key={id} number={id + 1} active={id === page} onClick={() => changePagginationUsers(id, size)} />)}
+            {[...Array(totalPages)].map((_, id) => <PagginationItem key={id} number={id + 1} active={id === page} onClick={() => paggination(id, size, data)} />)}
         </div>
     )
 }

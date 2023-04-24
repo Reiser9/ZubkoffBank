@@ -4,29 +4,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest, { HTTP_METHODS, REQUEST_TYPE } from './useRequest';
 import useNotify, {NOTIFY_TYPES} from './useNotify';
-import { initUsers, updateCard, updateUser } from '../redux/slices/admin';
-import {addCardTypes} from '../redux/slices/cardTypes';
+import { initUsers, updateCard, updateUser, initCardTypes } from '../redux/slices/admin';
+import {addCardTypes} from '../redux/slices/admin';
 
 const useAdmin = () => {
     const [isLoad, setIsLoad] = React.useState(false);
     const [error, setError] = React.useState(false);
 
-    const {users} = useSelector(state => state.admin);
+    const {users, cardTypes} = useSelector(state => state.admin);
     const dispatch = useDispatch();
     const {request} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
 
-    const getUsers = async () => {
+    const getUsers = async (page = 0, limit = 10) => {
         setIsLoad(true);
 
-        if(Object.keys(users).length === 0){
-            const data = await request(REQUEST_TYPE.ADMIN, "/users", HTTP_METHODS.GET, true);
+        if(Object.keys(users).length === 0 || users.number !== page || users.size !== limit){
+            const data = await request(REQUEST_TYPE.ADMIN, `/users?offset=${page}&limit=${limit}`, HTTP_METHODS.GET, true);
 
             if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
                 setError(true);
             }
             else{
                 dispatch(initUsers(data));
+            }
+        }
+
+        setIsLoad(false);
+    }
+
+    const getCardTypes = async (page = 0, limit = 10) => {
+        setIsLoad(true);
+
+        if(Object.keys(cardTypes).length === 0 || cardTypes.page !== page || cardTypes.size !== limit){
+            const data = await request(REQUEST_TYPE.CARD, `/types?offset=${page}&limit=${limit}`, HTTP_METHODS.GET);
+
+            if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+                setError(true);
+            }
+            else{
+                dispatch(initCardTypes(data));
             }
         }
 
@@ -157,7 +174,7 @@ const useAdmin = () => {
 
             switch(data.error){
                 case REQUEST_STATUSES.FILE_EXIST:
-                    return alertNotify("Ошибка", "Карта с таким изображением уже существует", "error");
+                    return alertNotify("Ошибка", "Карта с таким именем/изображением уже существует", "error");
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
@@ -270,6 +287,7 @@ const useAdmin = () => {
         isLoad,
         error,
         getUsers,
+        getCardTypes,
         verifyUser,
         blockCard,
         unblockCard,

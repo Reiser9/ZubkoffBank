@@ -13,7 +13,6 @@ import Preloader from '../../components/Preloader';
 import Input from '../../components/Input';
 import EmptyBlock from '../../components/EmptyBlock';
 import VerifyStage from './VerifyStage';
-import Button from '../../components/Button';
 
 const DataTab = () => {
     const {getUserFullInfo} = useUser();

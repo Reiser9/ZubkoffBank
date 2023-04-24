@@ -22,15 +22,15 @@ export const userSlice = createSlice({
         addCards: (state, action) => {
             state.cards = state.cards.concat(action.payload)
         },
-        // updateCard: (state, action) => {
-        //     const cardsData = state.cards;
+        updateCard: (state, action) => {
+            const cardsData = state.cards;
 
-        //     const indexToUpdate = cardsData.findIndex(item => item.id === action.payload.id);
+            const indexToUpdate = cardsData.findIndex(item => item.id === action.payload.id);
             
-        //     if(indexToUpdate !== -1){
-        //         cardsData.splice(indexToUpdate, 1, action.payload.data);
-        //     }
-        // },
+            if(indexToUpdate !== -1){
+                cardsData.splice(indexToUpdate, 1, action.payload.data);
+            }
+        },
         setDataUser: () => initialState
     }
 });
@@ -40,7 +40,7 @@ export const {
     updateUser,
     initCards,
     addCards,
-    // updateCard,
+    updateCard,
     setDataUser
 } = userSlice.actions;
 

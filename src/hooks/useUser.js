@@ -5,7 +5,7 @@ import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
 import useNotify, {NOTIFY_TYPES} from './useNotify';
 import { getNormalDate } from '../utils/getNormalDate';
 
-import { updateUser, setUserIsLoading, initCards, addCards } from '../redux/slices/user';
+import { updateUser, setUserIsLoading, initCards, addCards, updateCard } from '../redux/slices/user';
 
 const useUser = () => {
     const dispatch = useDispatch();
@@ -145,13 +145,34 @@ const useUser = () => {
         alertNotify("Успешно", "Вы отменили отправку верификации", "success");
     }
 
+    const blockCard = async (id, successCallback = () => {}) => {
+        dispatch(setUserIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/card/block", HTTP_METHODS.POST, true, {id});
+
+        dispatch(setUserIsLoading(false));
+
+        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(updateCard(id, data));
+
+        successCallback();
+        alertNotify("Успешно", "Карта заблокирована", "success");
+    }
+
     return {
         getUserShortInfo,
         getUserFullInfo,
         sendVerifyRequest,
         createCard,
         getCards,
-        cancelVerify
+        cancelVerify,
+        blockCard
     }
 }
 

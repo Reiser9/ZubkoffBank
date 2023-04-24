@@ -17,7 +17,7 @@ const AdminCreateType = ({setActive}) => {
     const [limit, setLimit] = React.useState("");
 
     const {alertNotify} = useNotify();
-    const {createTypeCard} = useAdmin();
+    const {isLoad, createTypeCard} = useAdmin();
 
     const createType = async () => {
         if(!image){
@@ -56,7 +56,7 @@ const AdminCreateType = ({setActive}) => {
 
                 <SliderInput title="Лимит" value={limit} setValue={setLimit} />
 
-                <Button className="admin__create--type--button" onClick={createType}>Создать</Button>
+                <Button className="admin__create--type--button" onClick={createType} disabled={isLoad}>Создать</Button>
             </div>
         </div>
     )

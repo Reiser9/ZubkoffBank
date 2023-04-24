@@ -3,19 +3,24 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import { PAGGINATION_DATA } from '../../consts/PAGGINATION_DATA';
 import { Add } from '../../components/Icons';
 import Button from '../../components/Button';
 import CardBlock from './CardBlock';
-import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
 import EmptyBlock from '../../components/EmptyBlock';
 import Paggination from '../../components/Paggination';
+import useAdmin from '../../hooks/useAdmin';
 
 const AdminCardsTab = ({setActive}) => {
-    const {isLoad, error} = useCardTypes();
-    const {cardTypes} = useSelector(state => state.cardTypes);
+    const {isLoad, error, getCardTypes} = useAdmin();
+    const {cardTypes} = useSelector(state => state.admin);
 
-    const {content, totalPages, totalElements, number, size} = cardTypes;
+    const {content, totalPages, totalElements, page, size} = cardTypes;
+
+    React.useEffect(() => {
+        getCardTypes();
+    }, []);
 
     if(isLoad){
         return <Preloader />
@@ -35,12 +40,12 @@ const AdminCardsTab = ({setActive}) => {
 
             <div className="admin__items">
                 {!error
-                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={(number * size) + id} data={data} />)
+                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={(page * size) + id} data={data} />)
                 : <EmptyBlock title="Карт нет" center />
                 : <EmptyBlock title="Возникла какая-то ошибка" center />}
             </div>
 
-            <Paggination totalPages={totalPages} page={number} size={size} />
+            <Paggination totalPages={totalPages} page={page} size={size} data={PAGGINATION_DATA.CARD_TYPES} />
         </>
     )
 }

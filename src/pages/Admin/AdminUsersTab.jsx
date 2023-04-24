@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import { PAGGINATION_DATA } from '../../consts/PAGGINATION_DATA';
 import useAdmin from '../../hooks/useAdmin';
 import useCardTypes from '../../hooks/useCardTypes';
 
@@ -14,13 +15,14 @@ import ShowBy from '../../components/ShowBy';
 
 const AdminUsersTab = () => {
     const {isLoad, error, getUsers} = useAdmin();
-    const {isLoad: isLoadCardTypes, error: errorCardTypes} = useCardTypes();
+    const {isLoad: isLoadCardTypes, error: errorCardTypes, getCardTypes} = useCardTypes();
 
     const {users} = useSelector(state => state.admin);
     const {content, totalPages, totalElements, number, size} = users;
 
     React.useEffect(() => {
         getUsers();
+        getCardTypes();
     }, []);
 
     if(isLoad || isLoadCardTypes){
@@ -32,7 +34,7 @@ const AdminUsersTab = () => {
             <div className="admin__header admin__header_users">
                 <h2 className="admin__title">Пользователи: {totalElements && totalElements}</h2>
 
-                <ShowBy page={number} size={size} />
+                <ShowBy page={number} size={size} data={PAGGINATION_DATA.USERS} />
             </div>
 
             <div className="admin__items">
@@ -42,7 +44,7 @@ const AdminUsersTab = () => {
                 : <EmptyBlock title="Пользователей нет" center />)}
             </div>
 
-            <Paggination totalPages={totalPages} page={number} size={size} />
+            <Paggination totalPages={totalPages} page={number} size={size} data={PAGGINATION_DATA.USERS} />
         </>
     )
 }

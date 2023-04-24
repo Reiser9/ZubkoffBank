@@ -31,11 +31,12 @@ const Profile = () => {
     const [activeCard, setActiveCard] = React.useState("");
     
     const {getCards} = useUser();
-    const {isLoad} = useCardTypes();
+    const {isLoad, getCardTypes} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
 
     React.useEffect(() => {
         getCards();
+        getCardTypes();
     }, []);
 
     if(isLoad){
