@@ -14,9 +14,9 @@ import useAdmin from '../../hooks/useAdmin';
 
 const AdminCardsTab = ({setActive}) => {
     const {isLoad, error, getCardTypes} = useAdmin();
-    const {cardTypes} = useSelector(state => state.admin);
+    const {cardTypesPagin} = useSelector(state => state.admin);
 
-    const {content, totalPages, totalElements, page, size} = cardTypes;
+    const {content, totalPages, totalElements, page, size} = cardTypesPagin;
 
     React.useEffect(() => {
         getCardTypes();
@@ -29,7 +29,7 @@ const AdminCardsTab = ({setActive}) => {
     return (
         <>
             <div className="admin__header">
-                <h2 className="admin__title">Типы карт: {totalElements && totalElements}</h2>
+                {totalElements && <h2 className="admin__title">Типы карт: {totalElements}</h2>}
 
                 <Button className="admin__btn" onClick={() => setActive("createType")}>
                     <Add className="admin__icon" />

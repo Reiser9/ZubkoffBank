@@ -35,7 +35,6 @@ const getVerifyIcon = (verifyStatus) => {
 
 const UserBlock = ({data, id}) => {
     const {id: userId, dataUsers, verify, phoneNum, cards, accountNum, roles} = data;
-    const {firstName, secondName, middleName, birthdate, sex, granted, grantedDate, passportNum, passportSer} = dataUsers;
 
     const {verifyUser, blockUser, unblockUser, rejectUserVerify, addRole, removeRole} = useAdmin();
 
@@ -56,22 +55,22 @@ const UserBlock = ({data, id}) => {
     }
 
     return (
-        <AdminItem id={id + 1} title={`${secondName} ${firstName} ${middleName}`}>
+        <AdminItem id={id + 1} title={`${dataUsers?.secondName || "-"} ${dataUsers?.firstName || "-"} ${dataUsers?.middleName || "-"}`}>
             <DataItem title="Данные" icon={<Data />}>
                 <div className="section-admin__items">
                     <DataField title="Номер телефона" value={maskPhone(phoneNum)} />
-                    <DataField title="Номер счета" value={accountNum} />
-                    <DataField title="Роли пользователя" value={roles.join(", ")} big />
+                    <DataField title="Номер счета" value={accountNum || "-"} />
+                    <DataField title="Роли пользователя" value={roles.join(", ") || "-"} big />
                 </div>
             </DataItem>
 
             <DataItem title="Верификация" icon={getVerifyIcon(verify)}>
                 {(verify === VERIFY_STATUS.VERIFIED || verify === VERIFY_STATUS.PROCESS) && <div className="section-admin__items">
-                    <DataField title="Пол" value={sex ? "Мужской" : "Женский"} />
-                    <DataField title="День рождения" value={getNormalDate(birthdate)} />
-                    <DataField title="Серия и номер паспорта" value={`${passportSer} ${passportNum}`} />
-                    <DataField title="Дата выдачи" value={getNormalDate(grantedDate)} />
-                    <DataField title="Кем выдан" value={granted} big />
+                    <DataField title="Пол" value={dataUsers?.sex ? "Мужской" : "Женский"} />
+                    <DataField title="День рождения" value={getNormalDate(dataUsers?.birthdate)} />
+                    <DataField title="Серия и номер паспорта" value={`${dataUsers?.passportSer || "-"} ${dataUsers?.passportNum || "-"}`} />
+                    <DataField title="Дата выдачи" value={getNormalDate(dataUsers?.grantedDate)} />
+                    <DataField title="Кем выдан" value={dataUsers?.granted || "-"} big />
                 </div>}
 
                 {verify === VERIFY_STATUS.PROCESS && <div className="admin__verify--buttons">

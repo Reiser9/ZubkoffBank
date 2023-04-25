@@ -38,7 +38,7 @@ const CardViewBlock = ({cardId}) => {
 
         const cardTypeData = findElementById(cardTypes.content, currentCard.typeId);
         setCurrentCardType(cardTypeData);
-    }, [cardId]);
+    }, [cardId, cards]);
 
     return (
         <>
@@ -55,9 +55,13 @@ const CardViewBlock = ({cardId}) => {
                     Перевести
                 </Button>
 
-                <Button className="profile__content--card--button" onClick={blockCardHandler} disabled={userIsLoading}>
-                    {card.lock ? "Разблокировать" : "Заблокировать"}
+                {card.lock
+                ? <Button className="profile__content--card--button">
+                    Разблокировать
                 </Button>
+                : <Button className="profile__content--card--button" onClick={blockCardHandler} disabled={userIsLoading}>
+                    Заблокировать
+                </Button>}
             </div>
 
             {card.lock

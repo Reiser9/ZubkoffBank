@@ -10,6 +10,10 @@ import PagginationItem from '../Paggination/PagginationItem';
 const ShowBy = ({page, size, title = "Показывать по:", data}) => {
     const {isLoad, paggination} = usePaggination();
 
+    if(typeof page !== "number" || !size){
+        return;
+    }
+
     return (
         <div className="limit">
             <p className="limit__label">{title}</p>

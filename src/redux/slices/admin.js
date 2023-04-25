@@ -2,7 +2,9 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     users: {},
-    cardTypes: {}
+    usersPagin: {},
+    cardTypes: {},
+    cardTypesPagin: {}
 };
 
 export const adminSlice = createSlice({
@@ -10,18 +12,90 @@ export const adminSlice = createSlice({
     initialState,
     reducers: {
         initUsers: (state, action) => {
-            state.users = action.payload;
+            const {content, totalPages, number, size, totalElements} = action.payload;
+
+            const contentArray = Array.from({length: totalElements}, () => null);
+            contentArray.splice(0, content.length, ...content);
+            
+            state.users = {
+                content: contentArray
+            };
+
+            state.usersPagin = {
+                content: contentArray.slice(0, 10),
+                page: number,
+                size,
+                totalPages,
+                totalElements
+            };
+        },
+        addUsersPaggination: (state, action) => {
+            const {page, limit, data} = action.payload;
+            const {totalPages, totalElements} = data;
+
+            state.users.content.splice(page * limit, data.content.length, ...data.content);
+            state.usersPagin = {
+                ...state.usersPagin,
+                content: [...data.content],
+                page,
+                size: limit,
+                totalPages,
+                totalElements
+            }
+        },
+        getUsersPaggination: (state, action) => {
+            const {page, limit} = action.payload;
+            const currentElements = state.users.content.slice(page * limit, (page + 1) * limit);
+
+            const currentTotalPages = Math.ceil(state.usersPagin.totalElements / limit);
+
+            state.usersPagin = {
+                ...state.usersPagin,
+                content: currentElements,
+                page,
+                size: limit,
+                totalPages: currentTotalPages
+            }
         },
         initCardTypes: (state, action) => {
             const {content, totalPages, number, size, totalElements} = action.payload
-
+            
+            const contentArray = Array.from({length: totalElements}, () => null);
+            contentArray.splice(0, content.length, ...content);
+            
             state.cardTypes = {
-                content,
+                content: contentArray
+            };
+
+            state.cardTypesPagin = {
+                content: contentArray.slice(0, 10),
                 totalPages,
                 page: number,
                 size,
                 totalElements
-            };
+            }
+        },
+        addCardTypesPaggination: (state, action) => {
+            const {page, limit, data} = action.payload;
+
+            state.cardTypes.content.splice(page * limit, data.content.length, ...data.content);
+            state.cardTypesPagin = {
+                ...state.cardTypesPagin,
+                content: [...data.content],
+                page,
+                size: limit
+            }
+        },
+        getCardTypesPaggination: (state, action) => {
+            const {page, limit} = action.payload;
+            const currentElements = state.cardTypes.content.slice(page * limit, (page + 1) * limit);
+
+            state.cardTypesPagin = {
+                ...state.cardTypesPagin,
+                content: currentElements,
+                page,
+                size: limit
+            }
         },
         updateCard: (state, action) => {
             const indexUser = state.users.content.findIndex(item => item.id === action.payload.userId);
@@ -44,7 +118,7 @@ export const adminSlice = createSlice({
         },
         addCardTypes: (state, action) => {
             state.cardTypes.content = state.cardTypes.content.concat(action.payload);
-            state.cardTypes.totalElements += 1;
+            state.cardTypesPagin.totalElements += 1;
         },
         setDataAdmin: () => initialState
     }
@@ -52,7 +126,11 @@ export const adminSlice = createSlice({
 
 export const {
     initUsers,
+    addUsersPaggination,
+    getUsersPaggination,
     initCardTypes,
+    addCardTypesPaggination,
+    getCardTypesPaggination,
     updateCard,
     updateUser,
     addCardTypes,

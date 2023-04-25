@@ -20,7 +20,7 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status !== REQUEST_STATUSES.NOT_SUCCESSFUL && data !== REQUEST_STATUSES.SITE_NOT_AVAILABLE){
+        if(data.status !== REQUEST_STATUSES.NOT_SUCCESSFUL && data !== REQUEST_STATUSES.SITE_NOT_AVAILABLE && data.status !== 403){
             dispatch(updateUser(data));
         }
 
@@ -159,7 +159,7 @@ const useUser = () => {
             }
         }
 
-        dispatch(updateCard(id, data));
+        dispatch(updateCard({id, data}));
 
         successCallback();
         alertNotify("Успешно", "Карта заблокирована", "success");

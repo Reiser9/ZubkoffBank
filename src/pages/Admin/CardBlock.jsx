@@ -9,19 +9,17 @@ import DataField from './DataField';
 import DataItem from './DataItem';
 
 const CardBlock = ({data, id}) => {
-    const {name, limit, img, description} = data;
-
     return (
-        <AdminItem id={id + 1} title={name}>
+        <AdminItem id={id + 1} title={data?.name}>
             <DataItem title="Данные" icon={<Data />} open>
                 <div className="section-admin__items">
-                    <DataField title="Лимит" value={`${limit.toLocaleString()} ₽`} />
+                    <DataField title="Лимит" value={`${data?.limit.toLocaleString()} ₽`} />
                     <DataField title="Изображение карты">
                         <div className="section-admin__card-img-inner left">
-                            <img src={img} alt="card" className="section-admin__card-img" />
+                            <img src={data?.img} alt="card" className="section-admin__card-img" />
                         </div>
                     </DataField>
-                    <DataField title="Описание" value={description} big />
+                    <DataField title="Описание" value={data?.description} big />
                 </div>
             </DataItem>
         </AdminItem>

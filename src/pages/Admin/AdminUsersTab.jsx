@@ -17,8 +17,8 @@ const AdminUsersTab = () => {
     const {isLoad, error, getUsers} = useAdmin();
     const {isLoad: isLoadCardTypes, error: errorCardTypes, getCardTypes} = useCardTypes();
 
-    const {users} = useSelector(state => state.admin);
-    const {content, totalPages, totalElements, number, size} = users;
+    const {usersPagin} = useSelector(state => state.admin);
+    const {content, totalPages, totalElements, page, size} = usersPagin;
 
     React.useEffect(() => {
         getUsers();
@@ -32,19 +32,19 @@ const AdminUsersTab = () => {
     return (
         <>
             <div className="admin__header admin__header_users">
-                <h2 className="admin__title">Пользователи: {totalElements && totalElements}</h2>
+                {totalElements && <h2 className="admin__title">Пользователи: {totalElements}</h2>}
 
-                <ShowBy page={number} size={size} data={PAGGINATION_DATA.USERS} />
+                <ShowBy page={page} size={size} data={PAGGINATION_DATA.USERS} />
             </div>
 
             <div className="admin__items">
                 {error || errorCardTypes
                 ? <EmptyBlock title="Возникла какая-то ошибка" center />
-                : (content?.length ? content.map((data, id) => <UserBlock key={data.id} id={(number * size) + id} data={data} />)
+                : (content?.length ? content.map((data, id) => <UserBlock key={data.id} id={(page * size) + id} data={data} />)
                 : <EmptyBlock title="Пользователей нет" center />)}
             </div>
 
-            <Paggination totalPages={totalPages} page={number} size={size} data={PAGGINATION_DATA.USERS} />
+            <Paggination totalPages={totalPages} page={page} size={size} data={PAGGINATION_DATA.USERS} />
         </>
     )
 }

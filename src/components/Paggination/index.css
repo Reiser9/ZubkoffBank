@@ -24,6 +24,24 @@
     flex-shrink: 0;
 }
 
+.number__btn.disabled{
+    pointer-events: none;
+    background: #d7d7d7;
+}
+
+.number__btn.dots{
+    background: none;
+}
+
+.number__btn svg{
+    max-width: 50%;
+    max-height: 50%;
+}
+
+.number__btn:hover svg path{
+    stroke: #fff;
+}
+
 @media (max-width:480px) {
     .number__btn {
         width: 28px;
