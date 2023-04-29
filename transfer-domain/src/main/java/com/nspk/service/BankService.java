@@ -14,6 +14,10 @@ public class BankService {
         return bankRepository.findByCode(code);
     }
 
+    public Bank findBankByOrganization(String organization) {
+        return bankRepository.findByOrganization(organization);
+    }
+
     public void createBank(int code) {
         Bank bank = new Bank();
         bank.setCode(code);

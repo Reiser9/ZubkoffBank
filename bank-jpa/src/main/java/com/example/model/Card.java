@@ -60,14 +60,15 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return id == card.id && Double.compare(card.balance, balance) == 0 &&
-                lock == card.lock && typeId == card.typeId && cardNum.equals(card.cardNum) &&
-                cvc.equals(card.cvc) && expDate.equals(card.expDate) && firstName.equals(card.firstName) &&
-                secondName.equals(card.secondName) && userId.equals(card.userId);
+        return id == card.id && Double.compare(card.balance, balance) == 0 && lock == card.lock &&
+                typeId == card.typeId && cardNum.equals(card.cardNum) && cvc.equals(card.cvc) &&
+                expDate.equals(card.expDate) && firstName.equals(card.firstName) &&
+                secondName.equals(card.secondName) && userId.equals(card.userId) &&
+                Objects.equals(transfers, card.transfers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock, typeId);
+        return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock, typeId, transfers);
     }
 }

@@ -2,6 +2,7 @@ package com.example.service;
 
 
 import com.example.config.BotConfig;
+import com.example.enums.CardType;
 import com.example.model.Code;
 import com.example.model.User;
 import com.example.repository.CodeRepository;
@@ -102,8 +103,16 @@ public class TelegramService extends TelegramLongPollingBot {
     public boolean sendCode(String phoneNum, String typeCode) throws TelegramApiException {
         if (isExist(phoneNum, false)) {
             int code = generateCode();
-            String message = String.format("Ваш 6-значный код: %06d", code);
-
+            String message = "";
+            if (typeCode.equals(String.valueOf(CardType.RECOVERY))) {
+                message = String.format("Код для восстановления пароля: %06d", code);
+            }
+            else if (typeCode.equals(String.valueOf(CardType.REGISTER))) {
+                message = String.format("Код для регистрации: %06d", code);
+            }
+            else {
+                message = String.format("Код для подтверждения транзакции: %06d", code);
+            }
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(getChatIdByPhoneNumber(phoneNum));
             sendMessage.setText(message);

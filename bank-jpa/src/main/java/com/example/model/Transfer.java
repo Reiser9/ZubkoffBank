@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,6 +34,9 @@ public class Transfer {
 
     @Column(name = "organization")
     private String organization;
+
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "fk_id_card")
     private long cardId;

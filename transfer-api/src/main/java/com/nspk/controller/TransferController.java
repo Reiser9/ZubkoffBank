@@ -72,7 +72,6 @@ public class TransferController {
 
     @PostMapping(value = "/info", produces = APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> data) {
-        logger.error(data.toString() + "312");
         return transferService.getInfoByPhoneAndOrganization(
                         bankService.findBankByCode(Integer.parseInt(data.get("code"))).getIp(),
                         data)

@@ -9,4 +9,6 @@ include 'bank-domain'
 include 'bank-jpa'
 include 'bank-security'
 include 'transfer-security'
+include 'bank-broker'
+include 'transfer-broker'
 

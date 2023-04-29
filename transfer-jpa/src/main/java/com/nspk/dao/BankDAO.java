@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BankDAO<T extends Bank> extends JpaRepository<T, Long> {
     T findByCode(int code);
+    T findByOrganization(String organization);
 }

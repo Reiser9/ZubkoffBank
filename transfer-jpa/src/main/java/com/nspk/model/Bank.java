@@ -23,4 +23,7 @@ public class Bank {
     @Column(name="ip")
     private String ip;
 
+    @Column(name="organization")
+    private String organization;
+
 }

@@ -10,6 +10,7 @@ group 'com.nspk'
 dependencies {
     implementation project(':transfer-api')
     implementation project(':transfer-domain')
+    implementation project(':transfer-broker')
     implementation project(':transfer-jpa')
     implementation project(':transfer-security')
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"

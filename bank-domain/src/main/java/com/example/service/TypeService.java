@@ -21,7 +21,7 @@ public class TypeService {
     @Autowired
     private TypeRepository typeRepository;
 
-    public int getLength() { return typeRepository.findAll().size(); }
+    public boolean isExistType(int id) { return typeRepository.findById(id).orElse(null) != null; }
 
     public Page<Type> findAll(int offset, int limit) {
         return typeRepository.findAll(PageRequest.of(offset, limit, Sort.by(Sort.Direction.ASC, "id")));

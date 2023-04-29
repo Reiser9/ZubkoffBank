@@ -15,6 +15,6 @@ public class UserBlockedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException {
         httpServletResponse.setContentType("application/json");
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        httpServletResponse.getOutputStream().println("{ \"status\": \"Not Successful\", \"message\": \"You are blocked\" }");
+        httpServletResponse.getOutputStream().println("{ \"status\": \"Not Successful\", \"error\": \"You are blocked\" }");
     }
 }

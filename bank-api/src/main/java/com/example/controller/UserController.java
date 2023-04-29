@@ -92,12 +92,12 @@ public class UserController {
 	@PostMapping("/card/block")
 	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardId) {
 		try {
-			Card card = cardService.findCardByCardNum(cardId.get("id"));
+			Card card = cardService.findCardById(Long.parseLong(cardId.get("id")));
 			List<Card> cards = userService.findUserByPhoneNum(user.getName()).getCards();
-			if (cards.contains(card)) {
+			if (cards.stream().anyMatch(e -> e.getId() == Long.parseLong(cardId.get("id")))) {
 				card.setLock(true);
 				cardService.save(card);
-				return ResponseEntity.ok(card);
+				return ResponseEntity.ok(new CardResponse(card));
 			}
 			return ResponseEntity.status(403).body(new DefaultResponse("Not Successful", "Forbidden"));
 		}
@@ -108,7 +108,7 @@ public class UserController {
 
 	@PostMapping("/card")
 	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> dataCard) {
-		if (Integer.parseInt(dataCard.get("typeId")) > typeService.getLength())
+		if (!typeService.isExistType(Integer.parseInt(dataCard.get("typeId"))))
 			return ResponseEntity.badRequest().body(
 					new DefaultResponse("Not Successful", "Invalid card type"));
 		try {
