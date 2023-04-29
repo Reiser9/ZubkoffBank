@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 
-import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
-
+import useRequest from './useRequest';
+import { REQUEST_TYPE, HTTP_METHODS } from '../consts/HTTP';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import { setAuthIsLoading, setLogin, setIsAuth, setDataAuth } from '../redux/slices/auth';
 import { setAppIsLoading, setDataApp } from '../redux/slices/app';

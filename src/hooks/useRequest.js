@@ -4,26 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY, BASE_API_URL_CARD} from '../consts/API_URLS';
 import {REQUEST_STATUSES} from '../consts/REQUEST_STATUSES';
+import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
 
 import {setIsServerAvailable} from '../redux/slices/server';
 import {setBlocked} from '../redux/slices/app';
 import {isBot} from '../utils/isBot';
-
-export const HTTP_METHODS = {
-    GET: 'GET',
-    POST: 'POST',
-    PUT: 'PUT',
-    DELETE: 'DELETE',
-    PATCH: 'PATCH'
-};
-
-export const REQUEST_TYPE = {
-    USER: 'user',
-    ADMIN: 'admin',
-    AUTH: 'auth',
-    CARD: 'card',
-    EMPTY: 'empty'
-};
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -82,10 +67,6 @@ const useRequest = () => {
     ) => {
         if(isBot()){
             return;
-        }
-
-        if(!isServerAvailable){
-            return REQUEST_STATUSES.SITE_NOT_AVAILABLE;
         }
 
         setError(false);

@@ -100,20 +100,27 @@ export const adminSlice = createSlice({
         updateCard: (state, action) => {
             const indexUser = state.users.content.findIndex(item => item.id === action.payload.userId);
             const userCards = state.users.content[indexUser].cards;
+            const indexUserPagin = state.usersPagin.content.findIndex(item => item.id === action.payload.userId);
+            const userCardsPagin = state.usersPagin.content[indexUserPagin].cards;
 
             const indexToUpdate = userCards.findIndex(item => item.id === action.payload.id);
+            const indexToUpdatePagin = userCardsPagin.findIndex(item => item.id === action.payload.id);
             
-            if(indexToUpdate !== -1) {
+            if(indexToUpdate !== -1 && indexToUpdatePagin !== -1) {
                 userCards.splice(indexToUpdate, 1, action.payload.data);
+                userCardsPagin.splice(indexToUpdatePagin, 1, action.payload.data);
             }
         },
         updateUser: (state, action) => {
             const userData = state.users.content;
+            const userDataPagin = state.usersPagin.content;
 
             const indexToUpdate = userData.findIndex(item => item.id === action.payload.id);
+            const indexToUpdatePagin = userDataPagin.findIndex(item => item.id === action.payload.id);
             
-            if(indexToUpdate !== -1) {
+            if(indexToUpdate !== -1 && indexToUpdatePagin !== -1) {
                 userData.splice(indexToUpdate, 1, action.payload.data);
+                userDataPagin.splice(indexToUpdatePagin, 1, action.payload.data);
             }
         },
         addCardTypes: (state, action) => {

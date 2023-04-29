@@ -2,7 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
-import useRequest, { HTTP_METHODS, REQUEST_TYPE } from './useRequest';
+import useRequest from './useRequest';
+import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
 import useNotify, {NOTIFY_TYPES} from './useNotify';
 import { initUsers, updateCard, updateUser, initCardTypes, addCardTypesPaggination, getCardTypesPaggination, addUsersPaggination, getUsersPaggination } from '../redux/slices/admin';
 import {addCardTypes} from '../redux/slices/admin';

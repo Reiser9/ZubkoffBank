@@ -39,7 +39,7 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
                 </div>
             </>}
 
-            {newCardModal && <NewCardModal active={newCardModal} setActive={setNewCardModal} />}
+            <NewCardModal active={newCardModal} setActive={setNewCardModal} />
             <Confirm active={exitModal} setActive={setExitModal} text="Вы действительно хотите выйти?" action={logout} />
         </>
     )

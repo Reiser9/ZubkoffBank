@@ -10,12 +10,13 @@ import CardSkeleton from './CardSkeleton';
 import TitleWrapper from '../../components/Wrappers/TitleWrapper';
 import EmptyBlock from '../../components/EmptyBlock';
 
-import useRequest, { REQUEST_TYPE } from '../../hooks/useRequest';
+import useRequest from '../../hooks/useRequest';
+import { REQUEST_TYPE } from '../../consts/HTTP';
 import { concatCardTypes } from '../../redux/slices/cardTypes';
 
 const Cards = () => {
-    const [page, setPage] = React.useState(0);
-    const [load, setLoad] = React.useState(true);
+    const [page, setPage] = React.useState(1);
+    const [load, setLoad] = React.useState(false);
 
     const {error, isLoad, getCardTypes} = useCardTypes();
     const {cardTypes} = useSelector(state => state.cardTypes);
@@ -31,16 +32,19 @@ const Cards = () => {
         window.addEventListener("scroll", scrollHandler);
 
         return () => window.removeEventListener("scroll", scrollHandler);
-    }, []);
+    }, [cardTypes]);
 
     React.useEffect(() => {
         if(load){
-            request(REQUEST_TYPE.CARD, `/types?limit=10&offset=${page}`).then(data => {
+            request(REQUEST_TYPE.CARD, `/types?offset=${page}&limit=10`).then(data => {
                 dispatch(concatCardTypes(data));
                 setPage(prev => prev + 1);
             }).finally(() => {
                 setLoad(false);
             });
+        }
+        else{
+            setLoad(false);
         }
     }, [load]);
 
@@ -51,10 +55,10 @@ const Cards = () => {
         const footer = document.querySelector(".footer");
         const footerHeight = footer.scrollHeight;
         
-        if(scrollHeight - (scrollTop + innerHeight + footerHeight) < 10 && cardTypes?.content?.length < cardTypes.totalElements){
+        if(scrollHeight - (scrollTop + innerHeight + footerHeight) < -100 && cardTypes.content.length < cardTypes.totalElements){
             setLoad(true);
         }
-    }
+    };
 
     return (
         <TitleWrapper pageTitle="Наши карты">

@@ -1,7 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    cardTypes: {}
+    cardTypes: {
+        content: []
+    }
 };
 
 export const cardTypesSlice = createSlice({

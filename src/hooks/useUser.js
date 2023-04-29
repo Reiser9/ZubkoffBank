@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
-import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
+import useRequest from './useRequest';
+import { REQUEST_TYPE, HTTP_METHODS } from '../consts/HTTP';
 import useNotify, {NOTIFY_TYPES} from './useNotify';
 import { getNormalDate } from '../utils/getNormalDate';
 
