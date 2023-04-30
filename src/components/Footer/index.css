@@ -48,6 +48,7 @@
         gap: 25px;
     }
 }
+
 .footer__column {
     display: flex;
     justify-content: flex-start;
@@ -62,7 +63,7 @@
     }
 }
 
-.footer__logo--inner{
+.footer__logo--inner {
     margin-bottom: .8rem;
 }
 
@@ -90,8 +91,10 @@
     transition: .3s;
 }
 
-.footer__icon:hover {
-    opacity: 0.7;
+@media (any-hover:hover) {
+    .footer__icon:hover {
+        opacity: 0.7;
+    }
 }
 
 .footer__label {
@@ -122,8 +125,10 @@
     margin-bottom: 0;
 }
 
-.footer__link:hover {
-    color: var(--mainC);
+@media (any-hover:hover) {
+    .footer__link:hover {
+        color: var(--mainC);
+    }
 }
 
 .footer-bottom {

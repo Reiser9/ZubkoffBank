@@ -1,47 +1,150 @@
 /* Шапка */
-.header{
+.header {
 	width: 100%;
 	padding: 1.2rem 0;
 	border-bottom: 1px solid var(--backgroundC);
 }
 
-.header__inner{
+.header__inner {
 	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 }
 
-.header__logo--inner{
+.header__logo--inner {
 	display: flex;
 }
 
-.header__logo{
+.header__logo {
 	width: 100%;
 }
 
-.header__profile{
+.header__profile--inner {
+	position: relative;
+}
+
+.header__profile {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	font-weight: 500;
+	padding: 0.8rem 0;
 }
 
-.header__profile--icon{
+.submenu {
+	position: absolute;
+	background-color: var(--creditCardBg);
+	padding: .8rem 0;
+	z-index: 1;
+	border-radius: 4px;
+	transition: .2s linear;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+@media (any-hover:none) {
+	.submenu.active {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: all;
+	}
+
+	.header__profile--arrow.active {
+		transform: rotate(-180deg);
+	}
+}
+
+.submenu_header {
+	top: 100%;
+	right: 0;
+	min-width: 172px;
+}
+
+.submenu__item {
+	padding: .8rem;
+	display: flex;
+	align-items: center;
+	gap: .4rem;
+	transition: .2s linear;
+}
+
+.header__profile--arrow {
+	width: 16px;
+}
+
+.header__profile--arrow path {
+	stroke: #000;
+}
+
+@media (any-hover:hover) {
+	.header__profile {
+		cursor: pointer;
+	}
+
+	.header__profile--inner:hover .header__profile--arrow {
+		transform: rotate(-180deg);
+	}
+
+	.header__profile--inner:hover .submenu_header {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: all;
+	}
+
+	.submenu__item {
+		cursor: pointer;
+	}
+
+	.submenu__item:hover {
+		background-color: var(--submenuItemHoverC);
+	}
+
+	.submenu__item:hover .submenu__text {
+		color: var(--mainC);
+	}
+
+	.submenu__item:hover .submenu__icon path {
+		stroke: var(--mainC);
+	}
+}
+
+.submenu__icon {
+	width: 20px;
+}
+
+.submenu__text {
+	font-weight: 500;
+	font-size: 1.4rem;
+	color: rgba(0, 0, 0, 0.65);
+	transition: .2s linear;
+}
+
+.submenu__icon path {
+	stroke: rgba(0, 0, 0, 0.65);
+	;
+	transition: .2s linear;
+}
+
+.header__profile--icon {
 	width: 24px;
 }
 
-.header__profile:hover{
-	color: var(--mainC);
+@media (any-hover:hover) {
+	.header__profile:hover {
+		color: var(--mainC);
+	}
+
+	.header__profile:hover svg path {
+		stroke: var(--mainC);
+	}
 }
 
-.header__profile:hover svg path{
-	stroke: var(--mainC);
-}
-
-.header__profile--name{
+.header__profile--name {
 	max-width: 110px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	transition: .2s linear;
 }

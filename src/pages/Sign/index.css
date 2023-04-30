@@ -39,7 +39,7 @@
     justify-content: space-between;
 }
 
-.sign__content{
+.sign__content {
     width: calc(50% - 48px);
     display: flex;
     flex-direction: column;
@@ -137,7 +137,7 @@
 
 .sign__step:not(:first-child)::after {
     background-color: rgba(0, 0, 0, 0.25);
-    width: 48px;    
+    width: 48px;
 }
 
 .sign__step.active {
@@ -270,7 +270,7 @@
     cursor: pointer;
 }
 
-.sign__send.disabled{
+.sign__send.disabled {
     opacity: 0.5;
     pointer-events: none;
 }
@@ -290,13 +290,17 @@
         gap: 16px;
     }
 
-    .sign__content{
+    .sign__content {
         width: calc(50% - 24px);
     }
 }
 
 @media(max-width: 768px) {
-    .sign:before{
+    .sign__title {
+        font-size: 2.4rem;
+    }
+
+    .sign:before {
         display: none;
     }
 
@@ -336,5 +340,27 @@
 
     .sign__link {
         font-size: 1.4rem;
+    }
+
+    .sign__steps {
+        gap: 40px;
+    }
+
+    .sign__step {
+        width: 32px;
+        height: 32px;
+    }
+
+    .sign__step:not(:first-child):before,
+    .sign__step:not(:first-child)::after {
+        transform: translate(-40.75px, -50%);
+    }
+
+    .sign__step:not(:first-child)::after {
+        width: 40px;
+    }
+
+    .sign__tabs {
+        gap: unset;
     }
 }

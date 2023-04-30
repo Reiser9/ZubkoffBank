@@ -22,7 +22,7 @@ const Main = () => {
                     <div className="main-block__inner">
                         <div className="main-block__content">
                             <h1 className="main-block__title title">Привет 👋</h1>
-                                
+
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
                             <Button className="main-block__button" isLink to="/cards">
@@ -113,13 +113,13 @@ const Main = () => {
                         </div>
 
                         <div className="banner__downloads">
-                            <Link to="/" className="banner__link">
+                            <div>
                                 <img src="assets/img/play-market.svg" alt="play-market" />
-                            </Link>
+                            </div>
 
-                            <Link to="/" className="banner__link">
+                            <div>
                                 <img src="assets/img/app-store.svg" alt="app-store" />
-                            </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

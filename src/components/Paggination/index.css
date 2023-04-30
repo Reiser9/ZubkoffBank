@@ -33,6 +33,12 @@
     background: none;
 }
 
+@media (max-width:400px) {
+    .dots {
+        display: none;
+    }
+}
+
 .number__btn svg{
     max-width: 50%;
     max-height: 50%;

@@ -92,6 +92,9 @@
 }
 
 @media (max-width:480px) {
+    .confirm-popup {
+        padding: 0 0.5rem;
+    }
     .confirm-popup__inner{
         min-height: 160px;
     }

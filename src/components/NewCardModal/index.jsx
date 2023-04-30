@@ -63,7 +63,7 @@ const NewCardModal = ({active, setActive}) => {
     };
 
     return (
-        <Modal active={active} setActive={setActive}>
+        <Modal active={active} setActive={setActive} title="Наши карты">
             <div className="cards-popup__items">
                 {isLoad
                     ? <Preloader />

@@ -82,7 +82,7 @@
     justify-content: space-between;
     cursor: pointer;
     padding: 12px;
-    gap: 20px;
+    gap: 12px;
 }
 
 .item-admin__title {
@@ -107,8 +107,8 @@
 
 @media (max-width:480px) {
     .item-admin__number {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         font-size: 14px;
     }
 }
@@ -137,8 +137,8 @@
 
 @media (max-width:480px) {
     .item-admin__open-btn {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
     }
 }
 
