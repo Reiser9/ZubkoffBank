@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
-import Button from '../../components/Button';
-import Input from '../../components/Input';
 import SidebarItem from '../../components/SidebarItem';
 import { Leave, SettingsIcon, User } from '../../components/Icons';
 import SidebarTab from '../../components/SidebarTab';
@@ -16,23 +14,27 @@ import useCardTypes from '../../hooks/useCardTypes';
 import PageSidebarInner from '../../components/PageSidebarInner';
 import BackButton from '../../components/Button/BackButton';
 import CurrencyBlock from './CurrencyBlock';
-import PayMethod from './PayMethod';
-import SelectCard from './SelectCard';
 import Preloader from '../../components/Preloader';
 import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
 import CardViewBlock from './CardViewBlock';
 import EmptyBlock from '../../components/EmptyBlock';
 import CurrentCardsBlock from './CurrentCardsBlock';
+import PaymentScreen from './PaymentsScreen';
 
 const Profile = () => {
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
     const [active, setActive] = React.useState(false);
 
+    const [tab, setTab] = React.useState("");
     const [activeCard, setActiveCard] = React.useState("");
     
     const {getCards} = useUser();
     const {isLoad, getCardTypes} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
+
+    React.useEffect(() => {
+        setTab(activeCard);
+    }, [activeCard]);
 
     React.useEffect(() => {
         getCards();
@@ -72,33 +74,15 @@ const Profile = () => {
             <div className={`profile__content${active ? " active" : ""}`}>
                 <BackButton onClick={() => setActive(false)} />
 
-                {user.verified !== VERIFY_STATUS.VERIFIED
+                {tab !== "payment" && (user.verified !== VERIFY_STATUS.VERIFIED
                     ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
                     : cards.length
                         ? activeCard
-                            ? <CardViewBlock cardId={activeCard} />
+                            ? <CardViewBlock cardId={activeCard} setTab={setTab} />
                             : <EmptyBlock center title="Выберите карту" />
-                        : <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
+                        : <EmptyBlock center title="Для проведения операций нужно открыть счет" />)}
 
-                {/* <PayMethod />
-
-                <SelectCard />
-
-                <div className="transfer__step">
-                    <h5 className="transfer__title">Введите данные</h5>
-
-                    <Input className="transfer__input" placeholder="Номер карты" />
-
-                    <Input className="transfer__input" placeholder="Сумма" />
-
-                    <Input className="transfer__input" placeholder="Комментарий к переводу" />
-
-                    <Button className="transfer__btn">Перевести 500 ₽</Button>
-
-                    <p className="transfer__text">Комиссия не взимается банком</p>
-
-                    <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
-                </div> */}
+                {tab === "payment" && <PaymentScreen cardId={activeCard} />}
             </div>
         </PageSidebarInner>
     )

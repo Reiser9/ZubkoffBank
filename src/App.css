@@ -23,8 +23,9 @@
 	/* Цвета карт */
 	--cardBlackC: #000;
 	--cardJuniorC: #FF8C1B;
-	--cardPlatinumC: #C0C0C0;
+	--cardPlatinumC: #9d9d9d;
 	--cardDriveC: #7FB56C;
+	--cardDefaultC: #42464b;
 }
 
 body{

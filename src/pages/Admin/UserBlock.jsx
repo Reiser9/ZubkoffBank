@@ -4,7 +4,6 @@ import { FreeMode } from "swiper";
 
 import "swiper/css";
 import "swiper/css/free-mode";
-import "swiper/css/pagination";
 import './index.css';
 
 import {VERIFY_STATUS} from '../../consts/VERIFY_STATUS';

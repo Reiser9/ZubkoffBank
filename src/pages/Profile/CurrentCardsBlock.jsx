@@ -15,6 +15,7 @@ import NewCardModal from '../../components/NewCardModal';
 
 const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard}) => {
     const [newCardModal, setNewCardModal] = React.useState(false);
+    const [showMore, setShowMore] = React.useState(false);
 
     const {logout} = useAuth();
     const {user, cards} = useSelector(state => state.user);
@@ -26,7 +27,15 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
                 <ErrorBlock text="Необходима верификация" />
             </div>
             : <>
-                {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
+                <div className={`profile__bill--content${showMore ? " active" : ""}`}>
+                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
+                </div>
+
+                {cards.length > 4 && <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setShowMore(prev => !prev)}>
+                    <p className="profile__sidebar--check--add--text w100 center">
+                        Показать {showMore ? "меньше" : "больше"}
+                    </p>
+                </div>}
 
                 <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setNewCardModal(true)}>
                     <div className="profile__sidebar--check--icon--inner">

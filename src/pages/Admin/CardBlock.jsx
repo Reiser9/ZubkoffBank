@@ -14,11 +14,13 @@ const CardBlock = ({data, id}) => {
             <DataItem title="Данные" icon={<Data />} open>
                 <div className="section-admin__items">
                     <DataField title="Лимит" value={`${data?.limit.toLocaleString()} ₽`} />
+                    
                     <DataField title="Изображение карты">
                         <div className="section-admin__card-img-inner left">
                             <img src={data?.img} alt="card" className="section-admin__card-img" />
                         </div>
                     </DataField>
+
                     <DataField title="Описание" value={data?.description} big />
                 </div>
             </DataItem>

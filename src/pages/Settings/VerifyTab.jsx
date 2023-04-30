@@ -35,7 +35,7 @@ const VerifyTab = () => {
     }, []);
 
     React.useEffect(() => {
-        if(user.secondName){
+        if(user.birthdate){
             setPassportData(`${user.passportSer} ${user.passportNum}`);
             setGranted(user.granted);
             setGrantedDate(dayjs(user.grantedDate));

@@ -8,6 +8,7 @@ const DataField = ({title, value, big = false, children}) => {
             <p className="section-admin__label">{title}</p>
             
             {value && <p className="section-admin__value">{value}</p>}
+            
             {children}
         </div>
     )

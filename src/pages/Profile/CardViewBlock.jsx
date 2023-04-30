@@ -14,7 +14,7 @@ import CardLimitBlock from './CardLimitBlock';
 import CardRequisitesBlock from './CardRequisitesBlock';
 import EmptyBlock from '../../components/EmptyBlock';
 
-const CardViewBlock = ({cardId}) => {
+const CardViewBlock = ({cardId, setTab}) => {
     const {cards, userIsLoading} = useSelector(state => state.user);
     const {cardTypes} = useSelector(state => state.cardTypes);
     const {alertNotify} = useNotify();
@@ -51,12 +51,12 @@ const CardViewBlock = ({cardId}) => {
             </div>
 
             <div className="profile__content--card--buttons">
-                <Button className="profile__content--card--button" disabled={card.lock}>
+                <Button className="profile__content--card--button" disabled={card.lock} onClick={() => setTab("payment")}>
                     Перевести
                 </Button>
 
                 {card.lock
-                ? <Button className="profile__content--card--button">
+                ? <Button className="profile__content--card--button" disabled>
                     Разблокировать
                 </Button>
                 : <Button className="profile__content--card--button" onClick={blockCardHandler} disabled={userIsLoading}>
