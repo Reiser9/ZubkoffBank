@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import './index.css';
 
@@ -113,11 +112,11 @@ const Main = () => {
                         </div>
 
                         <div className="banner__downloads">
-                            <div>
+                            <div className="banner__download">
                                 <img src="assets/img/play-market.svg" alt="play-market" />
                             </div>
 
-                            <div>
+                            <div className="banner__download">
                                 <img src="assets/img/app-store.svg" alt="app-store" />
                             </div>
                         </div>

@@ -443,13 +443,8 @@
     gap: 12px;
 }
 
-.banner__link {
+.banner__download{
     display: flex;
-    transition: .3s;
-}
-
-.banner__link:hover {
-    opacity: 0.7;
 }
 
 /* faq */
