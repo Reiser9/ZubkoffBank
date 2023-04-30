@@ -281,6 +281,10 @@
         margin-top: 1.5rem;
     }
 
+    .card__item--points {
+        margin-top: 1.5rem;
+    }
+
     .card__item--img--inner, .card__img--skeleton{
         width: 236px;
         height: 150px;
