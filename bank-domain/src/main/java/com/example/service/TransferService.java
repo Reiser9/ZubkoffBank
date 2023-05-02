@@ -1,7 +1,8 @@
 package com.example.service;
 
+import com.example.dto.BankInfo;
 import com.example.model.Transfer;
-import com.example.model.TransferInfo;
+import com.example.dto.TransferInfo;
 import com.example.repository.CardRepository;
 import com.example.repository.TransferRepository;
 import com.example.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -65,8 +67,32 @@ public class TransferService {
                 .map(ResponseEntity::ok);
     }
 
+    public Mono<ResponseEntity<List<BankInfo>>> getBanksInfoByPhone(Map<String, String> transfer) {
+        return WebClient.create().post()
+                .uri(url + "/transfer/bank_info")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(transfer)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<BankInfo>>() {})
+                .flatMap(data -> {
+                    List<BankInfo> bankInfo = data;
+                    return Mono.just(bankInfo);
+                })
+                .map(ResponseEntity::ok);
+    }
+
+    public Mono<ResponseEntity<?>> sbpRegister(Map<String, String> transfer) {
+        return WebClient.create().post()
+                .uri(url + "/transfer/sbp_register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(transfer)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String,String>>() {})
+                .map(ResponseEntity::ok);
+    }
+
     public void sendMoney(Map<String, String> message) throws JsonProcessingException {
-        message.put("code", code);
+        message.put("sourceCode", code);
         transferProducer.sendMessage(message);
     }
 

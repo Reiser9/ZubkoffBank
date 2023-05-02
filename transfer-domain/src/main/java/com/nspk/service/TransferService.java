@@ -1,26 +1,27 @@
 package com.nspk.service;
 
-import com.nspk.dto.TransferInfo;
-import com.nspk.model.Transfer;
+import com.nspk.dto.TransferInfoClient;
+import com.nspk.dto.TransferResult;
+import com.nspk.dto.TransferFinish;
+import com.nspk.repository.BankRepository;
 import com.nspk.repository.TransferRepository;
-import com.nspk.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.sql.Timestamp;
 import java.util.Map;
 
 @Service
 public class TransferService {
     @Autowired
     private TransferRepository transferRepository;
+    @Autowired
+    private BankRepository bankRepository;
     private static final Logger logger = LoggerFactory.getLogger(String.class);
     public Mono<Map<String, String>> getInfoByPhoneAndOrganization(String url, Map<String, String> transfer) {
         return WebClient.create().post()
@@ -31,48 +32,52 @@ public class TransferService {
                 .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {});
     }
 
-    public void sendMoneyToUserByPhoneAndOrganization(String url, Map<String, String> dataTransfer) {
-        TransferInfo sourceResult = new TransferInfo();
+    public void sendMoneyToUserByPhoneAndOrganization(String sourceUrl, String destUrl, Map<String, String> dataTransfer) {
+        logger.error(dataTransfer.toString());
         WebClient.create().post()
-                .uri("http://" + url + ":8081/api/transfer/")
+                .uri("http://" + destUrl + ":8081/api/transfer/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(dataTransfer)
+                .bodyValue(new TransferInfoClient(dataTransfer))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {})
+                .bodyToMono(new ParameterizedTypeReference<TransferResult>() {})
                 .flatMap(data -> {
-
-                    TransferInfo destResult = new TransferInfo(
-                            data.get("fullName"),
-                            data.get("phoneNum"),
-                            data.get("cardNum"),
-                            data.get("organization"));
-                    logger.error(destResult.getOrganization());
+                    TransferResult destResult = new TransferResult(
+                            data.getStatus(),
+                            data.getTransferId());
+                    logger.error(data.toString());
                     return Mono.just(destResult);
                 })
                 .doOnNext(destResult -> {
-                    logger.error(destResult.toString());
-                    if (destResult.equals(new TransferInfo())) {
-//            Transfer transfer = new Transfer();
-//            transfer.setDate(new Timestamp());
-//            transfer.setMoney(data.get("money"));
-//            transfer.set
+                    if (destResult.getStatus() != 200) {
                         WebClient.create().post()
-                                .uri("http://" + dataTransfer.get("sourceUrl") + ":8081/api/rollback_transfer/")
+                                .uri("http://"+ sourceUrl +":8081/api/rollback_transfer/")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(dataTransfer)
+                                .bodyValue(new TransferFinish(dataTransfer))
                                 .retrieve()
-                                .bodyToMono(new ParameterizedTypeReference<TransferInfo>() {}).flatMap(data -> {
-                                    sourceResult.setOrganization(data.getOrganization());
-                                    return null;
-                                });
+                                .bodyToMono(new ParameterizedTypeReference<TransferResult>() {})
+                                .flatMap(data -> {
+                                    TransferResult sourceResult = new TransferResult(
+                                            data.getStatus(),
+                                            data.getTransferId());
+                                    logger.error(data.toString());
+                                    return Mono.just(sourceResult);
+                                }).subscribe();
+//                                .doOnNext(sourceResult -> {
+//                                    if (sourceResult.equals(new TransferResult())) {
+//                                        // add transfer error
+//                                    }
+//                                });
                     }
                     else {
+                        logger.error("1");
                         WebClient.create().post()
-                                .uri("http://" + dataTransfer.get("sourceUrl") + ":8081/api/commit_transfer/")
+                                .uri("http://"+sourceUrl+":8081/api/commit_transfer/")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .bodyValue(dataTransfer)
+                                .bodyValue(new TransferFinish(dataTransfer))
                                 .retrieve()
-                                .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {});
+                                .bodyToMono(new ParameterizedTypeReference<TransferResult>() {})
+                                .subscribe();
+                        // add if error add transfer error and rollback dest card
                     }
                 })
                 .subscribe();

@@ -38,6 +38,22 @@ public class Transfer {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "fk_id_card")
     private long cardId;
+
+    @Override
+    public String toString() {
+        return "Transfer{" +
+                "id=" + id +
+                ", date=" + date +
+                ", balance=" + balance +
+                ", money=" + money +
+                ", organization='" + organization + '\'' +
+                ", status='" + status + '\'' +
+                ", cardId=" + cardId +
+                '}';
+    }
 }

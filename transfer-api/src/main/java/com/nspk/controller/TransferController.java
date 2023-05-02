@@ -1,7 +1,9 @@
 package com.nspk.controller;
 
+import com.nspk.dto.BankInfo;
 import com.nspk.model.Bank;
 import com.nspk.model.User;
+import com.nspk.payload.DefaultResponse;
 import com.nspk.service.BankService;
 import com.nspk.service.TransferService;
 import com.nspk.service.UserService;
@@ -15,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -42,32 +45,32 @@ public class TransferController {
         return ResponseEntity.status(200).body("");
     }
 
-    @PostMapping(value = "/user_register", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/sbp_register", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> userRegister(@RequestBody Map<String, String> data) throws Exception {
         Bank bank = bankService.findBankByCode(Integer.parseInt(data.get("code")));
-        if (bank == null) {
-            bankService.createBank(Integer.parseInt(data.get("code")));
-        }
-        User user = new User();
+        User user = userService.findUserByPhoneNum(data.get("phoneNum"));
+        if (user == null)
+            user = new User();
         user.setPhoneNum(data.get("phoneNum"));
-        user.setBanks(Collections.singletonList(
-                bankService.findBankByCode(Integer.parseInt(data.get("code")))));
-        userService.save(user);
-        return ResponseEntity.status(200).body("");
+        List<Bank> banks = user.getBanks() == null ? new ArrayList<>() : user.getBanks();
+        if (banks == null || !banks.contains(bank)) {
+            banks.add(bank);
+            user.setBanks(banks);
+            userService.save(user);
+        }
+        return ResponseEntity.status(200).body(new DefaultResponse("Successful", ""));
     }
 
-    @PostMapping(value = "/send_without_reg", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> sendMoneyWithoutRegister(@RequestBody Map<String, String> data) throws Exception {
-        Bank bank = bankService.findBankByCode(Integer.parseInt(data.get("code")));
-        if (bank == null) {
-            bankService.createBank(Integer.parseInt(data.get("code")));
+    @PostMapping(value = "/bank_info", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getBankInfoByPhone(@RequestBody Map<String, String> data) throws Exception {
+        List<Bank> banks = null;
+        try {
+            banks = userService.findUserByPhoneNum(data.get("phoneNum")).getBanks();
+            return ResponseEntity.status(200).body(banks.stream().map(bank -> new BankInfo(bank)));
         }
-        User user = new User();
-        user.setPhoneNum(data.get("phoneNum"));
-        user.setBanks(Collections.singletonList(
-                bankService.findBankByCode(Integer.parseInt(data.get("code")))));
-        userService.save(user);
-        return ResponseEntity.status(200).body("");
+        catch (NullPointerException exception) {
+            return ResponseEntity.status(404).body(banks);
+        }
     }
 
     @PostMapping(value = "/info", produces = APPLICATION_JSON_VALUE)

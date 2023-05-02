@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.enums.TransferStatus;
+import com.example.enums.TransferType;
 import com.example.exception.InsufficientFundsException;
 import com.example.exception.UnknownRecipientException;
 import com.example.model.Card;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,9 +45,22 @@ public class UserTransferController {
     @Autowired
     private String organization;
 
-    @PostMapping("/info")
+    @PostMapping("/info_phone")
     public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> transfer) {
         return transferService.getInfoByPhone(transfer)
+                .map(response -> ResponseEntity.ok(response).getBody());
+    }
+
+    @PostMapping("/info_banks")
+    public Mono<ResponseEntity<?>> getInfoBanksByPhoneNum(@RequestBody Map<String, String> transfer) {
+        return transferService.getBanksInfoByPhone(transfer)
+                .map(response -> ResponseEntity.ok(response).getBody());
+    }
+
+    @PostMapping("/sbp_register")
+    public Mono<ResponseEntity<?>> sbpRegister(Principal user, @RequestBody Map<String, String> transfer) {
+        transfer.put("phoneNum", user.getName());
+        return transferService.sbpRegister(transfer)
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
 
@@ -55,7 +70,8 @@ public class UserTransferController {
             List<Card> cards = userService.findUserByPhoneNum(transfer.get("phoneNum")).getCards();
             Card sourceCard = cardService.findCardByCardNum(transfer.get("cardNum"));
             Double money = Double.parseDouble(transfer.get("money"));
-            if (userService.findUserByPhoneNum(user.getName()).getCards().contains(sourceCard))
+            if (userService.findUserByPhoneNum(user.getName()).getCards()
+                    .stream().filter(e -> e.getId() == sourceCard.getId()).findFirst().orElse(null) == null)
                 throw new NullPointerException();
             if (sourceCard.getBalance() < money) {
                 throw new InsufficientFundsException();
@@ -111,32 +127,41 @@ public class UserTransferController {
     }
 
     @PostMapping("/out_bank")
+    @Transactional
     public ResponseEntity<?> sendMoneyOutBank(Principal user, @RequestBody Map<String, String> transfer) {
         try {
             Double money = Double.parseDouble(transfer.get("money"));
-            Card sourceCard = cardService.findCardByCardNum(transfer.get("sourceCardNum"));
-//            if (userService.findUserByPhoneNum(user.getName()).getCards().contains(sourceCard))
-//                throw new NullPointerException();
+            Card sourceCard = cardService.findCardByCardNum(transfer.get("cardNum"));
+            if (userService.findUserByPhoneNum(user.getName()).getCards()
+                    .stream().filter(e -> e.getId() == sourceCard.getId()).findFirst().orElse(null) == null)
+                throw new NullPointerException();
             if (sourceCard.getBalance() < money) {
                 throw new InsufficientFundsException();
             }
-
             List<Transfer> sourceTransfers = sourceCard.getTransfers();
+
             Transfer sourceTransfer = new Transfer();
             sourceTransfer.setBalance(sourceCard.getBalance()-money);
             sourceTransfer.setMoney(money);
             sourceTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            sourceTransfer.setOrganization(transfer.get("organization"));
+            sourceTransfer.setOrganization(transfer.get("destOrganization"));
             sourceTransfer.setCardId(sourceCard.getId());
             sourceTransfer.setStatus(TransferStatus.PROCESS_STATUS.toString());
+            sourceTransfer.setType(TransferType.SEND_STATUS.toString());
             sourceTransfers.add(sourceTransfer);
             sourceCard.setTransfers(sourceTransfers);
-            sourceCard.setBalance(sourceCard.getBalance() - money);
+            sourceCard.setBalance(sourceCard.getBalance()-money);
             cardService.save(sourceCard);
+            transfer.put("transferId", String.valueOf(cardService.findCardByCardNum(sourceCard.getCardNum())
+                    .getTransfers().stream()
+                    .filter(e -> e.getDate().equals(sourceTransfer.getDate()))
+                    .findFirst()
+                    .get()
+                    .getId()));
             try {
                 transferService.sendMoney(transfer);
             } catch (JsonProcessingException e) {
-                e.printStackTrace();
+                return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown error"));
             }
             return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
         }
@@ -146,10 +171,9 @@ public class UserTransferController {
         catch (InsufficientFundsException exception) {
             return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
         }
-//        catch (Exception exception) {
-//            logger.error(exception.);
-//            return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown error"));
-//        }
+        catch (Exception exception) {
+            return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown error"));
+        }
 
     }
 }
