@@ -25,14 +25,14 @@ public class UserResponse {
     private List<CardResponse> cards;
     private DataUserResponse dataUsers;
 
-    public UserResponse(User user) {
+    public UserResponse(User user, String url) {
         try {
             this.id = user.getId();
             this.phoneNum = user.getPhoneNum();
             this.accountNum = user.getAccountNum();
             this.verify = user.getVerify();
             this.roles = user.getRoles().stream().map(Role::getRole).collect(Collectors.toList());
-            this.cards =  user.getCards().stream().map(CardResponse::new).collect(Collectors.toList());
+            this.cards =  user.getCards().stream().map(card -> new CardResponse(card, url)).collect(Collectors.toList());
             this.dataUsers = new DataUserResponse(user.getDataUsers().get(user.getDataUsers().size()-1));
         }
         catch (Exception exception) {

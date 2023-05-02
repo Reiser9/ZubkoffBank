@@ -56,7 +56,7 @@ public class AdminController {
 			User user = userService.findById(data.get("id"));
 			user.setVerify(UserVerify.VERIFIED_STATUS.toString());
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
@@ -69,7 +69,7 @@ public class AdminController {
 			User user = userService.findById(data.get("id"));
 			user.setVerify(UserVerify.REFUSED_STATUS.toString());
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
@@ -82,7 +82,7 @@ public class AdminController {
 			@RequestParam(value = "limit", defaultValue = "10") @Max(50) Integer limit
 	) {
 		Page<User> users = userService.findAll(offset, limit);
-		Page<UserResponse> userResponses = users.map(UserResponse::new);
+		Page<UserResponse> userResponses = users.map(user -> new UserResponse(user, link));
 		return userResponses;
 	}
 
@@ -92,7 +92,7 @@ public class AdminController {
 			Card card = cardService.findCardById(data.get("id"));
 			card.setLock(true);
 			cardService.save(card);
-			return ResponseEntity.ok(new CardResponse(card));
+			return ResponseEntity.ok(new CardResponse(card, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
@@ -108,7 +108,7 @@ public class AdminController {
 				roles.add(roleRepository.findByRole("blocked"));
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
@@ -121,7 +121,7 @@ public class AdminController {
 			Card card = cardService.findCardById(Long.valueOf(card_data.get("id")));
 			card.setBalance(card.getBalance() + Double.parseDouble(card_data.get("balance")));
 			cardService.save(card);
-			return ResponseEntity.ok(new CardResponse(card));
+			return ResponseEntity.ok(new CardResponse(card, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
@@ -134,7 +134,7 @@ public class AdminController {
 			Card card = cardService.findCardById(data.get("id"));
 			card.setLock(false);
 			cardService.save(card);
-			return ResponseEntity.ok(new CardResponse(card));
+			return ResponseEntity.ok(new CardResponse(card, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
@@ -151,7 +151,7 @@ public class AdminController {
 				roles.remove(roleRepository.findByRole("blocked"));
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
@@ -192,7 +192,7 @@ public class AdminController {
 			roles.add(addRole);
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (IllegalStateException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
@@ -214,7 +214,7 @@ public class AdminController {
 			roles.remove(delRole);
 			user.setRoles(roles);
 			userService.save(user);
-			return ResponseEntity.ok(new UserResponse(user));
+			return ResponseEntity.ok(new UserResponse(user, link));
 		}
 		catch (IllegalStateException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found role"));

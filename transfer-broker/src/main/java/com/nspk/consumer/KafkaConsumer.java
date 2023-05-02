@@ -29,9 +29,10 @@ public class KafkaConsumer {
     @KafkaListener(topics = TOPIC, groupId = "transfer-group")
     public void consume(String messageJson) throws JsonProcessingException {
         Map<String, String> message = objectMapper.readValue(messageJson, Map.class);
-        logger.error(bankService.findBankByOrganization(message.get("organization")).getIp());
         transferService.sendMoneyToUserByPhoneAndOrganization(
-                bankService.findBankByOrganization(message.get("organization")).getIp(), message);
+                bankService.findBankByCode(Integer.parseInt(message.get("code"))).getIp(),
+                bankService.findBankByCode(Integer.parseInt(message.get("destCode"))).getIp(),
+                message);
 
     }
 

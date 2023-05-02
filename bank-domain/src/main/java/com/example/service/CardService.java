@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.model.Card;
 import com.example.repository.CardRepository;
+import com.example.repository.TypeRepository;
 import com.example.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +26,13 @@ public class CardService {
     private UserRepository userRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private TypeRepository typeRepository;
 
     public Card findCardById(Long id) { return cardRepository.findById(id).get();}
 
     public List<Card> findCardByUserId(Long id) {
-        return cardRepository.findByUserId(id);
+        return cardRepository.findByUserIdOrderById(id);
     }
 
     public Card createCard(Map<String, String> data_card, String bankId) {
@@ -54,7 +57,7 @@ public class CardService {
         card.setFirstName(data_card.get("firstName"));
         card.setSecondName(data_card.get("secondName"));
         card.setLock(false);
-        card.setTypeId(Integer.parseInt(data_card.get("typeId")));
+        card.setType(typeRepository.findById(Integer.valueOf(data_card.get("typeId"))).get());
         return card;
     }
 

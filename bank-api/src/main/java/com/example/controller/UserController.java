@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
+	@Value("${path.img}")
+	private String link;
 	@Value("${bank.id}")
 	private String bankId;
 	@Autowired
@@ -45,7 +47,7 @@ public class UserController {
 	@GetMapping("/cards")
 	public ResponseEntity<?> findCardByUser(Principal user) {
 		try {
-			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()));
+			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()).stream().map(card -> new CardResponse(card, link)));
 		}
 		catch (NullPointerException e) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user card"));
@@ -97,7 +99,7 @@ public class UserController {
 			if (cards.stream().anyMatch(e -> e.getId() == Long.parseLong(cardId.get("id")))) {
 				card.setLock(true);
 				cardService.save(card);
-				return ResponseEntity.ok(new CardResponse(card));
+				return ResponseEntity.ok(new CardResponse(card, link));
 			}
 			return ResponseEntity.status(403).body(new DefaultResponse("Not Successful", "Forbidden"));
 		}
@@ -117,7 +119,7 @@ public class UserController {
 			userInfo.getCards().add(newCard);
 			userInfo.setCards(userInfo.getCards());
 			userService.save(userInfo);
-			return ResponseEntity.ok(new CardResponse(cardService.findCardByCardNum(newCard.getCardNum())));
+			return ResponseEntity.ok(new CardResponse(cardService.findCardByCardNum(newCard.getCardNum()), link));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));

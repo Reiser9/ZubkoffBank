@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
@@ -8,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,28 +49,26 @@ public class Card {
     @Column(name = "lock")
     private boolean lock;
 
-    @Column(name = "fk_id_type")
-    private int typeId;
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_id_card", referencedColumnName = "id")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Transfer> transfers;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "fk_id_type", referencedColumnName = "id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Type type;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return id == card.id && Double.compare(card.balance, balance) == 0 && lock == card.lock &&
-                typeId == card.typeId && cardNum.equals(card.cardNum) && cvc.equals(card.cvc) &&
-                expDate.equals(card.expDate) && firstName.equals(card.firstName) &&
-                secondName.equals(card.secondName) && userId.equals(card.userId) &&
-                Objects.equals(transfers, card.transfers);
+        return id == card.id && Double.compare(card.balance, balance) == 0 && lock == card.lock &&  cardNum.equals(card.cardNum) && cvc.equals(card.cvc) && expDate.equals(card.expDate) && firstName.equals(card.firstName) && secondName.equals(card.secondName) && userId.equals(card.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock, typeId, transfers);
+        return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock);
     }
 }

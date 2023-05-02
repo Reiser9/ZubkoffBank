@@ -36,11 +36,7 @@ public class Type {
     @Column(name = "description", length = 1000)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_id_type", referencedColumnName = "id")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
-    private List<Card> card;
+
 
 
 }

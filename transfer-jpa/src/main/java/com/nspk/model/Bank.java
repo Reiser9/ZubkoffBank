@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -26,4 +27,16 @@ public class Bank {
     @Column(name="organization")
     private String organization;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bank bank = (Bank) o;
+        return id == bank.id && code == bank.code && Objects.equals(ip, bank.ip) && Objects.equals(organization, bank.organization);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, ip, organization);
+    }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 
 public interface CardDAO<T extends Card> extends JpaRepository<T, Long> {
-    List<T> findByUserId(Long id);
+    List<T> findByUserIdOrderById(Long id);
     T findByCardNum(String cardNum);
 }
