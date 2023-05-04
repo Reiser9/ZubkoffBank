@@ -2,7 +2,8 @@ package com.example.enums;
 
 public enum TransferType {
     RECEIVE_STATUS("RECEIVE"),
-    SEND_STATUS("SEND");
+    SEND_STATUS("SEND"),
+    SUBSCRIBE_STATUS("SUBSCRIBE");
 
     private final String text;
 

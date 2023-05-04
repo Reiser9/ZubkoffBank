@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/transfer/**").anonymous()
+                .antMatchers("/transfer/**", "/**/**").anonymous()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .httpBasic().disable();

@@ -81,15 +81,7 @@ public class TransferService {
                 .map(ResponseEntity::ok);
     }
 
-    public Mono<ResponseEntity<?>> sbpRegister(Map<String, String> transfer) {
-        return WebClient.create().post()
-                .uri(url + "/transfer/sbp_register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(transfer)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String,String>>() {})
-                .map(ResponseEntity::ok);
-    }
+
 
     public void sendMoney(Map<String, String> message) throws JsonProcessingException {
         message.put("sourceCode", code);

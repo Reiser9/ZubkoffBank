@@ -57,13 +57,6 @@ public class UserTransferController {
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
 
-    @PostMapping("/sbp_register")
-    public Mono<ResponseEntity<?>> sbpRegister(Principal user, @RequestBody Map<String, String> transfer) {
-        transfer.put("phoneNum", user.getName());
-        return transferService.sbpRegister(transfer)
-                .map(response -> ResponseEntity.ok(response).getBody());
-    }
-
     @PostMapping("/in_bank")
     public ResponseEntity<?> sendMoneyInBank(Principal user, @RequestBody Map<String, String> transfer) {
         try {

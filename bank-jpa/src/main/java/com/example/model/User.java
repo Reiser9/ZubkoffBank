@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
@@ -40,6 +41,7 @@ public class User {
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_role"))
+	@BatchSize(size = 10)
 	private List<Role> roles;
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -56,6 +58,11 @@ public class User {
 	@JoinColumn(name = "fk_id_user", referencedColumnName = "id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Code> codes;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<UserSubscribe> userSubscribes;
 
 	@Override
 	public String toString() {

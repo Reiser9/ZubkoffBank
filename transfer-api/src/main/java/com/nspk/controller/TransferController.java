@@ -1,6 +1,7 @@
 package com.nspk.controller;
 
 import com.nspk.dto.BankInfo;
+import com.nspk.dto.SubscribeInfo;
 import com.nspk.model.Bank;
 import com.nspk.model.User;
 import com.nspk.payload.DefaultResponse;
@@ -45,21 +46,7 @@ public class TransferController {
         return ResponseEntity.status(200).body("");
     }
 
-    @PostMapping(value = "/sbp_register", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> userRegister(@RequestBody Map<String, String> data) throws Exception {
-        Bank bank = bankService.findBankByCode(Integer.parseInt(data.get("code")));
-        User user = userService.findUserByPhoneNum(data.get("phoneNum"));
-        if (user == null)
-            user = new User();
-        user.setPhoneNum(data.get("phoneNum"));
-        List<Bank> banks = user.getBanks() == null ? new ArrayList<>() : user.getBanks();
-        if (banks == null || !banks.contains(bank)) {
-            banks.add(bank);
-            user.setBanks(banks);
-            userService.save(user);
-        }
-        return ResponseEntity.status(200).body(new DefaultResponse("Successful", ""));
-    }
+
 
     @PostMapping(value = "/bank_info", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getBankInfoByPhone(@RequestBody Map<String, String> data) throws Exception {

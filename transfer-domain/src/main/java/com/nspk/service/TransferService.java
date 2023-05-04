@@ -33,7 +33,6 @@ public class TransferService {
     }
 
     public void sendMoneyToUserByPhoneAndOrganization(String sourceUrl, String destUrl, Map<String, String> dataTransfer) {
-        logger.error(dataTransfer.toString());
         WebClient.create().post()
                 .uri("http://" + destUrl + ":8081/api/transfer/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,7 +43,6 @@ public class TransferService {
                     TransferResult destResult = new TransferResult(
                             data.getStatus(),
                             data.getTransferId());
-                    logger.error(data.toString());
                     return Mono.just(destResult);
                 })
                 .doOnNext(destResult -> {
@@ -59,7 +57,6 @@ public class TransferService {
                                     TransferResult sourceResult = new TransferResult(
                                             data.getStatus(),
                                             data.getTransferId());
-                                    logger.error(data.toString());
                                     return Mono.just(sourceResult);
                                 }).subscribe();
 //                                .doOnNext(sourceResult -> {
@@ -69,7 +66,6 @@ public class TransferService {
 //                                });
                     }
                     else {
-                        logger.error("1");
                         WebClient.create().post()
                                 .uri("http://"+sourceUrl+":8081/api/commit_transfer/")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -81,48 +77,5 @@ public class TransferService {
                     }
                 })
                 .subscribe();
-
-
-
-
-        // Добавить Transfer = new Transfer();
-//        WebClient.create().post()
-//                .uri("http://" + url + ":8081/api/transfer/")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(dataTransfer)
-//                .retrieve()
-//                .bodyToMono(new ParameterizedTypeReference<TransferInfo>() {}).flatMap(data -> {
-//                    destResult.setFullName(data.getFullName());
-//                    destResult.setPhoneNum(data.getPhoneNum());
-//                    destResult.setCardNum(data.getCardNum());
-//                    destResult.setOrganization(data.getOrganization());
-//                    logger.error(destResult.toString());
-//                    return null;
-//
-//                });
-
-//        if (destResult.equals(new TransferInfo())) {
-////            Transfer transfer = new Transfer();
-////            transfer.setDate(new Timestamp());
-////            transfer.setMoney(data.get("money"));
-////            transfer.set
-//            WebClient.create().post()
-//                    .uri("http://" + dataTransfer.get("sourceUrl") + ":8081/api/rollback_transfer/")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .bodyValue(dataTransfer)
-//                    .retrieve()
-//                    .bodyToMono(new ParameterizedTypeReference<TransferInfo>() {}).flatMap(data -> {
-//                        sourceResult.setOrganization(data.getOrganization());
-//                        return null;
-//                    });
-//        }
-//        else {
-//            WebClient.create().post()
-//                    .uri("http://" + dataTransfer.get("sourceUrl") + ":8081/api/commit_transfer/")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .bodyValue(dataTransfer)
-//                    .retrieve()
-//                    .bodyToMono(new ParameterizedTypeReference<Map<String, String>>() {});
-//        }
     }
 }

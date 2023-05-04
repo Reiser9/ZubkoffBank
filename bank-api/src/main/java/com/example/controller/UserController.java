@@ -1,15 +1,11 @@
 package com.example.controller;
 
 import com.example.enums.UserVerify;
-import com.example.model.Card;
-import com.example.model.DataUser;
-import com.example.model.User;
-import com.example.payload.CardResponse;
-import com.example.payload.DefaultResponse;
-import com.example.payload.FullInfoUserResponse;
-import com.example.payload.ShortInfoUserResponse;
-import com.example.security.JwtRequestFilter;
+import com.example.exception.InsufficientFundsException;
+import com.example.model.*;
+import com.example.payload.*;
 import com.example.service.*;
+import org.glassfish.grizzly.utils.ArraySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +13,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	@Value("${path.img}")
 	private String link;
 	@Value("${bank.id}")
@@ -40,6 +37,10 @@ public class UserController {
 	private TypeService typeService;
 	@Autowired
 	private CardService cardService;
+	@Autowired
+	private UserSubscribeService userSubscribeService;
+	@Autowired
+	private SubscribeService subscribeService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -63,7 +64,7 @@ public class UserController {
 					userInfo.getId(),
 					userInfo.getPhoneNum(),
 					userInfo.getVerify(),
-					userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
+					userInfo.getRoles().stream().map(Role::getRole).collect(Collectors.toList()),
 					dataUser.getFirstName()));
 		}
 		catch (NullPointerException exception) {
@@ -79,7 +80,7 @@ public class UserController {
 		return ResponseEntity.ok(new FullInfoUserResponse(
 				userInfo.getId(), userInfo.getPhoneNum(),
 				userInfo.getVerify(),
-				userInfo.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()),
+				userInfo.getRoles().stream().map(Role::getRole).collect(Collectors.toList()),
 				dataUser.getFirstName(),
 				dataUser.getSecondName(),
 				dataUser.getMiddleName(),
@@ -106,6 +107,69 @@ public class UserController {
 		catch (NullPointerException exception) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
+	}
+
+
+	@PostMapping("/subscribe")
+	public ResponseEntity<?> subscribe(Principal userData, @RequestParam(value = "id") Integer id) {
+		try {
+			Subscribe subscribe = subscribeService.findSubscribeById(id);
+			User user = userService.findUserByPhoneNum(userData.getName());
+			if (userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe) != null)
+			{
+				logger.error("23");
+				return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeResponse::new));
+
+			}
+			if (user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney()).findFirst().orElse(null) == null)
+			{
+				throw new InsufficientFundsException();
+			}
+			if (!subscribe.isSource()) {
+				 subscribeService.subscribe(user).flatMap(result -> {
+					 if (result == 200)
+					 {
+						 logger.error("1");
+						 Calendar cal = Calendar.getInstance();
+						 cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
+						 cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
+						 Timestamp date = new Timestamp(cal.getTime().getTime());
+						 UserSubscribe userSubscribe = new UserSubscribe();
+						 userSubscribe.setSubscribe(subscribe);
+						 userSubscribe.setUser(user);
+						 userSubscribe.setDatePayment(date);
+						 userSubscribe.setStatus(true);
+						 List<UserSubscribe> userSubscribes = user.getUserSubscribes();
+						 userSubscribes.add(userSubscribe);
+						 user.setUserSubscribes(userSubscribes);
+						 userService.save(user);
+						 return Mono.just(ResponseEntity.ok().body(userService.findUserByPhoneNum(userData.getName()).getUserSubscribes().stream().map(SubscribeResponse::new)));
+					 }
+					 else {
+						 return Mono.just(ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Unknown error")));
+					 }
+				 }).subscribe();
+			}
+			else {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
+				cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
+				Timestamp date = new Timestamp(cal.getTime().getTime());
+				UserSubscribe userSubscribe = new UserSubscribe();
+				userSubscribe.setSubscribe(subscribe);
+				userSubscribe.setUser(user);
+				userSubscribe.setDatePayment(date);
+				userSubscribe.setStatus(true);
+				userSubscribeService.save(userSubscribe);
+			}
+			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeResponse::new));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
+		} catch (InsufficientFundsException exception) {
+			return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
+		}
+
 	}
 
 	@PostMapping("/card")
