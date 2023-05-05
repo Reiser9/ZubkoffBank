@@ -16,12 +16,10 @@ import EmptyBlock from '../../components/EmptyBlock';
 
 const CardViewBlock = ({cardId, setTab}) => {
     const {cards, userIsLoading} = useSelector(state => state.user);
-    const {cardTypes} = useSelector(state => state.cardTypes);
     const {alertNotify} = useNotify();
     const {blockCard} = useUser();
 
     const [card, setCard] = React.useState("");
-    const [currentCardType, setCurrentCardType] = React.useState("");
 
     const copy = (text) => {
         copyToClipboard(text);
@@ -35,15 +33,12 @@ const CardViewBlock = ({cardId, setTab}) => {
     React.useEffect(() => {
         const currentCard = findElementById(cards, cardId);
         setCard(currentCard);
-
-        const cardTypeData = findElementById(cardTypes.content, currentCard.typeId);
-        setCurrentCardType(cardTypeData);
     }, [cardId, cards]);
 
     return (
         <>
             <div className="profile__content--card--inner">
-                <img src={currentCardType.img} alt="card" className="profile__content--card--img" />
+                <img src={card?.type?.img} alt="card" className="profile__content--card--img" />
 
                 <p className="profile__content--card--number" onClick={() => copy(card.cardNum)}>
                     {maskCardNumber(card.cardNum)}
@@ -67,7 +62,7 @@ const CardViewBlock = ({cardId, setTab}) => {
             {card.lock
             ? <EmptyBlock title="Данная карта заблокирована" />
             : <>
-                <CardLimitBlock card={card} cardType={currentCardType} />
+                <CardLimitBlock cardType={card.type} />
                 <CardRequisitesBlock card={card} />
             </>}
         </>

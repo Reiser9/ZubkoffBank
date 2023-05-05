@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -8,18 +7,14 @@ import useAdmin from '../../hooks/useAdmin';
 import { getFormatCardNumber } from '../../utils/cardNumber';
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import { getNormalDate } from '../../utils/getNormalDate';
-import { findElementById } from '../../utils/findElement';
 
 import { Copy } from '../../components/Icons';
 
 const CardItem = ({data, userId}) => {
-    const {id, cardNum, cvc, expDate, balance, lock, typeId} = data;
-
-    const [img, setImg] = React.useState("");
+    const {id, cardNum, cvc, expDate, balance, lock, type} = data;
 
     const {alertNotify} = useNotify();
     const {blockCard, unblockCard, changeBalance} = useAdmin();
-    const {cardTypes} = useSelector(state => state.cardTypes);
 
     const copy = (text) => {
         copyToClipboard(text);
@@ -30,15 +25,10 @@ const CardItem = ({data, userId}) => {
         changeBalance(id, 50, userId);
     }
 
-    React.useEffect(() => {
-        const currentCard = findElementById(cardTypes.content, typeId);
-        setImg(currentCard?.img);
-    }, [typeId]);
-
     return (
         <div className="section-admin__item section-admin__item_card">
             <div className="section-admin__card-img-inner">
-                <img src={img} alt="card" className="section-admin__card-img" />
+                <img src={type.img} alt="card" className="section-admin__card-img" />
             </div>
 
             <div className="section-admin__card-items">
