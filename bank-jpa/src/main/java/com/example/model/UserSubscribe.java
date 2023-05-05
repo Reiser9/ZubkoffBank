@@ -36,4 +36,15 @@ public class UserSubscribe {
 
     @Column(name = "status")
     private boolean status;
+
+    @Override
+    public String toString() {
+        return "UserSubscribe{" +
+                "id=" + id +
+                ", user=" + user +
+                ", subscribe=" + subscribe +
+                ", datePayment=" + datePayment +
+                ", status=" + status +
+                '}';
+    }
 }

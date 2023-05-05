@@ -1,8 +1,8 @@
 package com.example.payload;
 
 
+
 import com.example.model.Subscribe;
-import com.example.model.User;
 import com.example.model.UserSubscribe;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,11 +18,11 @@ public class SubscribeResponse {
     private int period;
     private String description;
 
-    public SubscribeResponse(UserSubscribe subscribe) {
-        this.id = subscribe.getSubscribe().getId();
-        this.name = subscribe.getSubscribe().getName();
-        this.money = subscribe.getSubscribe().getMoney();
-        this.period = subscribe.getSubscribe().getPeriod();
-        this.description = subscribe.getSubscribe().getDescription();
+    public SubscribeResponse(Subscribe subscribe) {
+        this.id = subscribe.getId();
+        this.name = subscribe.getName();
+        this.money = subscribe.getMoney();
+        this.period = subscribe.getPeriod();
+        this.description = subscribe.getDescription();
     }
 }

@@ -71,4 +71,8 @@ public class Card {
     public int hashCode() {
         return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock);
     }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 }

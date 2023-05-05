@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +43,10 @@ public class SubscribeService {
 
     public Subscribe findSubscribeById(int id) {
         return subscribeRepository.findById(id).get();
+    }
+
+    public List<Subscribe> findSubscribes() {
+        return subscribeRepository.findAll();
     }
 
     public Mono<Integer> subscribe(User user) {

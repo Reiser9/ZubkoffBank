@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.enums.TransferStatus;
+import com.example.enums.TransferType;
 import com.example.enums.UserVerify;
 import com.example.exception.InsufficientFundsException;
 import com.example.model.*;
@@ -29,6 +31,8 @@ public class UserController {
 	private String link;
 	@Value("${bank.id}")
 	private String bankId;
+	@Value("${bank.organization}")
+	private String organization;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -109,17 +113,59 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/subscribe")
+	public ResponseEntity<?> getSubscribe(Principal userData) {
+		User user = userService.findUserByPhoneNum(userData.getName());
+		return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+	}
+
+	@PostMapping("/unSubscribe")
+	public ResponseEntity<?> unSubscribe(Principal userData, @RequestParam(value = "id") Integer id) {
+		Subscribe subscribe = subscribeService.findSubscribeById(id);
+		User user = userService.findUserByPhoneNum(userData.getName());
+		UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
+		if (userSubscribe != null)
+		{
+			userSubscribe.setStatus(false);
+			userSubscribeService.save(userSubscribe);
+			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+		}
+		else {
+			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
+		}
+	}
+
 
 	@PostMapping("/subscribe")
 	public ResponseEntity<?> subscribe(Principal userData, @RequestParam(value = "id") Integer id) {
 		try {
 			Subscribe subscribe = subscribeService.findSubscribeById(id);
 			User user = userService.findUserByPhoneNum(userData.getName());
-			if (userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe) != null)
+			UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
+			if (userSubscribe != null)
 			{
-				logger.error("23");
-				return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeResponse::new));
-
+				Card card = user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney() && !e.isLock()).findFirst().orElse(null);
+				if (card != null) {
+					userSubscribe.setStatus(true);
+					card.setBalance(card.getBalance() - subscribe.getMoney());
+					Transfer transfer = new Transfer();
+					transfer.setBalance(card.getBalance() - userSubscribe.getSubscribe().getMoney());
+					transfer.setMoney(userSubscribe.getSubscribe().getMoney());
+					transfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+					transfer.setOrganization(organization);
+					transfer.setCardId(card.getId());
+					transfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
+					transfer.setType(TransferType.SUBSCRIBE_STATUS.toString());
+					List<Transfer> transfers = card.getTransfers();
+					transfers.add(transfer);
+					card.setTransfers(transfers);
+					cardService.save(card);
+					userSubscribeService.save(userSubscribe);
+				}
+				else {
+					throw new InsufficientFundsException();
+				}
+				return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
 			}
 			if (user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney()).findFirst().orElse(null) == null)
 			{
@@ -129,21 +175,20 @@ public class UserController {
 				 subscribeService.subscribe(user).flatMap(result -> {
 					 if (result == 200)
 					 {
-						 logger.error("1");
 						 Calendar cal = Calendar.getInstance();
 						 cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
 						 cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
 						 Timestamp date = new Timestamp(cal.getTime().getTime());
-						 UserSubscribe userSubscribe = new UserSubscribe();
-						 userSubscribe.setSubscribe(subscribe);
-						 userSubscribe.setUser(user);
-						 userSubscribe.setDatePayment(date);
-						 userSubscribe.setStatus(true);
+						 UserSubscribe newUserSubscribe = new UserSubscribe();
+						 newUserSubscribe.setSubscribe(subscribe);
+						 newUserSubscribe.setUser(user);
+						 newUserSubscribe.setDatePayment(date);
+						 newUserSubscribe.setStatus(true);
 						 List<UserSubscribe> userSubscribes = user.getUserSubscribes();
-						 userSubscribes.add(userSubscribe);
+						 userSubscribes.add(newUserSubscribe);
 						 user.setUserSubscribes(userSubscribes);
 						 userService.save(user);
-						 return Mono.just(ResponseEntity.ok().body(userService.findUserByPhoneNum(userData.getName()).getUserSubscribes().stream().map(SubscribeResponse::new)));
+						 return Mono.just(ResponseEntity.ok().body(userService.findUserByPhoneNum(userData.getName()).getUserSubscribes().stream().map(SubscribeUserResponse::new)));
 					 }
 					 else {
 						 return Mono.just(ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Unknown error")));
@@ -155,14 +200,14 @@ public class UserController {
 				cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
 				cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
 				Timestamp date = new Timestamp(cal.getTime().getTime());
-				UserSubscribe userSubscribe = new UserSubscribe();
-				userSubscribe.setSubscribe(subscribe);
-				userSubscribe.setUser(user);
-				userSubscribe.setDatePayment(date);
-				userSubscribe.setStatus(true);
-				userSubscribeService.save(userSubscribe);
+				UserSubscribe newUserSubscribe = new UserSubscribe();
+				newUserSubscribe.setSubscribe(subscribe);
+				newUserSubscribe.setUser(user);
+				newUserSubscribe.setDatePayment(date);
+				newUserSubscribe.setStatus(true);
+				userSubscribeService.save(newUserSubscribe);
 			}
-			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeResponse::new));
+			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
