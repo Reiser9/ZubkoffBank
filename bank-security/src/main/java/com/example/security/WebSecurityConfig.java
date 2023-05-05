@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/websocket/**",
 					"/static/**", "/templates/**", "/auth/**", "/api/**",
-					"/h2-console/**", "/health/**", "/card/types/**", "/test-kafka/**").permitAll()
+					"/h2-console/**", "/health/**", "/card/types/**", "/test-kafka/**", "/subscribe/**").permitAll()
 			.antMatchers("/user/**").access("hasAnyAuthority('user') and !hasAnyAuthority('blocked')")
 			.antMatchers("/admin/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
 			.antMatchers("/admin/user/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")

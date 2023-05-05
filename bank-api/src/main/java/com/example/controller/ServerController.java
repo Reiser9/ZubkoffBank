@@ -44,8 +44,8 @@ public class ServerController {
         return types.map(type -> new TypeResponse(type, link));
     }
 
-    @GetMapping("/subscribe")
-    public ResponseEntity<?> getSubscribe(Principal userData) {
+    @GetMapping("/subscribes")
+    public ResponseEntity<?> getSubscribes() {
         return ResponseEntity.ok().body(subscribeService.findSubscribes().stream().map(SubscribeResponse::new));
     }
 }

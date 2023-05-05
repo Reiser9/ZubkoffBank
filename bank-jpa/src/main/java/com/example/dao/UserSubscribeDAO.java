@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserSubscribeDAO<T extends UserSubscribe>  extends JpaRepository<T, Integer> {
     List<T> findByUser(User user);
     T findByUserAndSubscribe(User user, Subscribe subscribe);
-    List<T> findByStatusAndDatePaymentBeforeAndMoneyIsNotZero(boolean status, Timestamp date);
+    List<T> findByStatusAndDatePaymentBefore(boolean status, Timestamp date);
 }

@@ -116,11 +116,11 @@ public class UserController {
 	@GetMapping("/subscribe")
 	public ResponseEntity<?> getSubscribe(Principal userData) {
 		User user = userService.findUserByPhoneNum(userData.getName());
-		return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+		return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
 	}
 
-	@PostMapping("/unSubscribe")
-	public ResponseEntity<?> unSubscribe(Principal userData, @RequestParam(value = "id") Integer id) {
+	@PostMapping("/unsubscribe")
+	public ResponseEntity<?> unsubscribe(Principal userData, @RequestParam(value = "id") Integer id) {
 		Subscribe subscribe = subscribeService.findSubscribeById(id);
 		User user = userService.findUserByPhoneNum(userData.getName());
 		UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
@@ -128,7 +128,7 @@ public class UserController {
 		{
 			userSubscribe.setStatus(false);
 			userSubscribeService.save(userSubscribe);
-			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+			return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
 		}
 		else {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
@@ -165,7 +165,7 @@ public class UserController {
 				else {
 					throw new InsufficientFundsException();
 				}
-				return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+				return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
 			}
 			if (user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney()).findFirst().orElse(null) == null)
 			{

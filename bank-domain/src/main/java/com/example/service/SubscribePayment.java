@@ -44,7 +44,7 @@ public class SubscribePayment {
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
         cal.add(Calendar.HOUR, -1);
         Timestamp timestamp = new Timestamp(cal.getTime().getTime());
-        List<UserSubscribe> userSubscribes = userSubscribeRepository.findByStatusAndDatePaymentBeforeAndMoneyIsNotZero(true, timestamp);
+        List<UserSubscribe> userSubscribes = userSubscribeRepository.findByStatusAndDatePaymentBefore(true, timestamp);
         for (UserSubscribe userSubscribe: userSubscribes) {
             if (TimeUnit.DAYS.convert(Math.abs(timestamp.getTime() - userSubscribe.getDatePayment().getTime()),
                     TimeUnit.MILLISECONDS) >= userSubscribe.getSubscribe().getPeriod()) {

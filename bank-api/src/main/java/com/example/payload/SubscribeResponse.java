@@ -17,6 +17,7 @@ public class SubscribeResponse {
     private double money;
     private int period;
     private String description;
+    private String img;
 
     public SubscribeResponse(Subscribe subscribe) {
         this.id = subscribe.getId();
@@ -24,5 +25,6 @@ public class SubscribeResponse {
         this.money = subscribe.getMoney();
         this.period = subscribe.getPeriod();
         this.description = subscribe.getDescription();
+        this.img = subscribe.getImg();
     }
 }

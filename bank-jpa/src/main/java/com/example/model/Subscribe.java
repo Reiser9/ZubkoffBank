@@ -35,6 +35,9 @@ public class Subscribe {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "pathFile")
+    private String img;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "subscribe_id", referencedColumnName = "id")
     @LazyCollection(LazyCollectionOption.FALSE)
