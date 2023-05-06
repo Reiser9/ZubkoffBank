@@ -27,9 +27,9 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
                 <ErrorBlock text="Необходима верификация" />
             </div>
             : <>
-                <div className={`profile__bill--content${showMore ? " active" : ""}`}>
+                {cards.length > 0 && <div className={`profile__bill--content${showMore ? " active" : ""}`}>
                     {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
-                </div>
+                </div>}
 
                 {cards.length > 4 && <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setShowMore(prev => !prev)}>
                     <p className="profile__sidebar--check--add--text w100 center">

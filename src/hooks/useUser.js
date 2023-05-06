@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 
+import { NOTIFY_TYPES } from '../consts/NOTIFY_TYPES';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
-import useRequest from './useRequest';
 import { REQUEST_TYPE, HTTP_METHODS } from '../consts/HTTP';
-import useNotify, {NOTIFY_TYPES} from './useNotify';
+import useRequest from './useRequest';
+import useNotify from './useNotify';
 import { getNormalDate } from '../utils/getNormalDate';
 
 import { updateUser, setUserIsLoading, initCards, addCards, updateCard } from '../redux/slices/user';
+import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useUser = () => {
     const dispatch = useDispatch();
@@ -14,6 +16,7 @@ const useUser = () => {
     const {user, cards} = useSelector(state => state.user);
     const {alertNotify, notifyTemplate} = useNotify();
 
+    // Получить короткую информацию пользователя
     const getUserShortInfo = async () => {
         dispatch(setUserIsLoading(true));
 
@@ -28,6 +31,7 @@ const useUser = () => {
         return data;
     }
 
+    // Получить полную информацию пользователя
     const getUserFullInfo = async () => {
         if(user.secondName){
             return;
@@ -39,13 +43,14 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+        if(requestDataIsError(data)){
             return;
         }
 
         dispatch(updateUser(data));
     };
 
+    // Отправить данные на верификацию
     const sendVerifyRequest = async (passportData, granted, grantedDate, birthdate, sex, successCallback = () => {}) => {
         if(passportData.length < 11){
             return alertNotify("Ошибка", "Введите корректные данные паспорта", "warn");
@@ -71,7 +76,7 @@ const useUser = () => {
             sex
         });
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
@@ -84,6 +89,7 @@ const useUser = () => {
         alertNotify("Успешно", "Данные успешно отправлены на рассмотрение", "success");
     }
 
+    // Создать карту
     const createCard = async (typeId, firstName, secondName, successCallback = () => {}) => {
         dispatch(setUserIsLoading(true));
 
@@ -95,7 +101,7 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
@@ -108,6 +114,7 @@ const useUser = () => {
         alertNotify("Успешно", "Карта успешно выпущена", "success");
     }
 
+    // Получить карты пользователя
     const getCards = async () => {
         if(cards.length){
             return;
@@ -119,13 +126,14 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+        if(requestDataIsError(data)){
             return;
         }
 
         dispatch(initCards(data));
     }
 
+    // Отменить верификацию
     const cancelVerify = async (successCallback = () => {}) => {
         dispatch(setUserIsLoading(true));
 
@@ -133,7 +141,7 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
@@ -146,6 +154,7 @@ const useUser = () => {
         alertNotify("Успешно", "Вы отменили отправку верификации", "success");
     }
 
+    // Заблокировать карту
     const blockCard = async (id, successCallback = () => {}) => {
         dispatch(setUserIsLoading(true));
 
@@ -153,7 +162,7 @@ const useUser = () => {
 
         dispatch(setUserIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);

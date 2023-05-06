@@ -13,13 +13,15 @@ import Button from '../../components/Button';
 import CardLimitBlock from './CardLimitBlock';
 import CardRequisitesBlock from './CardRequisitesBlock';
 import EmptyBlock from '../../components/EmptyBlock';
+import Confirm from '../../components/Confirm';
 
 const CardViewBlock = ({cardId, setTab}) => {
+    const [card, setCard] = React.useState("");
+    const [confirmBlockCard, setConfirmBlockCard] = React.useState(false);
+
     const {cards, userIsLoading} = useSelector(state => state.user);
     const {alertNotify} = useNotify();
     const {blockCard} = useUser();
-
-    const [card, setCard] = React.useState("");
 
     const copy = (text) => {
         copyToClipboard(text);
@@ -54,7 +56,7 @@ const CardViewBlock = ({cardId, setTab}) => {
                 ? <Button className="profile__content--card--button" disabled>
                     Разблокировать
                 </Button>
-                : <Button className="profile__content--card--button" onClick={blockCardHandler} disabled={userIsLoading}>
+                : <Button className="profile__content--card--button" onClick={() => setConfirmBlockCard(true)} disabled={userIsLoading}>
                     Заблокировать
                 </Button>}
             </div>
@@ -62,9 +64,11 @@ const CardViewBlock = ({cardId, setTab}) => {
             {card.lock
             ? <EmptyBlock title="Данная карта заблокирована" />
             : <>
-                <CardLimitBlock cardType={card.type} />
+                <CardLimitBlock card={card} />
                 <CardRequisitesBlock card={card} />
             </>}
+
+            <Confirm active={confirmBlockCard} setActive={setConfirmBlockCard} text="Вы действительно хотите заблокировать карту?" action={blockCardHandler} />
         </>
     )
 }

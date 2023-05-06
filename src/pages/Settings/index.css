@@ -207,3 +207,9 @@
         width: auto;
     }
 }
+
+.subscribes__reload{
+    margin-top: 1.6rem;
+    font-size: 1.4rem;
+    padding: 1.2rem 2.8rem;
+}

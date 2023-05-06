@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -9,14 +8,12 @@ import { maskCardNumber } from '../../utils/cardNumber';
 const CardItem = ({data, changeCardPay, active = false}) => {
     const {balance, cardNum, type, id} = data;
 
-    const {cardTypes} = useSelector(state => state.cardTypes);
-
     return (
         <div className={`bil-payment__wrapper${active ? " active" : ""}`} onClick={() => changeCardPay(id)}>
-            <div className={`bil-payment ${getCardColor(type.name)}`}>
-                <p className="bil-payment__type">{`${process.env.REACT_APP_BANK_NAME} ${type.name}`}</p>
+            <div className={`bil-payment ${getCardColor(type?.name)}`}>
+                <p className="bil-payment__type">{`${process.env.REACT_APP_BANK_NAME} ${type?.name}`}</p>
 
-                <p className="bil-payment__balance">{balance.toLocaleString()} ₽</p>
+                <p className="bil-payment__balance">{balance?.toLocaleString()} ₽</p>
 
                 <p className="bil-payment__number">{maskCardNumber(cardNum, true)}</p>
             </div>

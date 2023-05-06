@@ -1,16 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
+import {NOTIFY_TYPES} from '../consts/NOTIFY_TYPES';
 import {addNotify} from '../redux/slices/notify';
-
-export const NOTIFY_TYPES = {
-    PHONE: "phone",
-    ERROR: "error",
-    PASSWORD_SHORT: "password_short",
-    PASSWORD_LONG: "password_long",
-    CODE: "code",
-    INVALID_CODE: "invalid_code",
-    CONFIRM_PASSWORD: "confirm_password"
-}
 
 const useNotify = () => {
     const dispatch = useDispatch();
@@ -50,6 +41,10 @@ const useNotify = () => {
                 return alertNotify("Ошибка", "Неверный или недействительный код", "error");
             case NOTIFY_TYPES.CONFIRM_PASSWORD:
                 return alertNotify("Предупреждение", "Пароли не совпадают", "warn");
+            case NOTIFY_TYPES.USER_ALREADY_EXISTS:
+                return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+            case NOTIFY_TYPES.WRONG_PASSWORD:
+                return alertNotify("Ошибка", "Неверный пароль", "error");
             default:
                 break;
         }

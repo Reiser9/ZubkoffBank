@@ -24,23 +24,23 @@ const Cards = () => {
     const {request} = useRequest();
     const dispatch = useDispatch();
 
-    const scrollHandler = (e) => {
-        const scrollHeight = e.target.documentElement.scrollHeight;
-        const scrollTop = e.target.documentElement.scrollTop;
-        const innerHeight = window.innerHeight;
-        const footer = document.querySelector(".footer");
-        const footerHeight = footer.scrollHeight;
-        
-        if(scrollHeight - (scrollTop + innerHeight + footerHeight) < -100 && cardTypes.content.length < cardTypes.totalElements){
-            setLoad(true);
-        }
-    }
-
     React.useEffect(() => {
         getCardTypes();
     }, []);
 
     React.useEffect(() => {
+        const scrollHandler = (e) => {
+            const scrollHeight = e.target.documentElement.scrollHeight;
+            const scrollTop = e.target.documentElement.scrollTop;
+            const innerHeight = window.innerHeight;
+            const footer = document.querySelector(".footer");
+            const footerHeight = footer.scrollHeight;
+            
+            if(scrollHeight - (scrollTop + innerHeight + footerHeight) < -100 && cardTypes.content.length < cardTypes.totalElements){
+                setLoad(true);
+            }
+        }
+        
         window.addEventListener("scroll", scrollHandler);
 
         return () => window.removeEventListener("scroll", scrollHandler);

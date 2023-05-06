@@ -10,9 +10,10 @@ import {VERIFY_STATUS} from '../../consts/VERIFY_STATUS';
 
 import {getNormalDate} from '../../utils/getNormalDate';
 import { maskPhone } from '../../utils/maskPhone';
+import {getVerifyIcon} from '../../utils/getVerifyIcon';
 import useAdmin from '../../hooks/useAdmin';
 
-import { Actions, Card, Data, NotifyOkIcon, NotifyWarningIcon, CircleCross } from '../../components/Icons';
+import { Actions, Card, Data } from '../../components/Icons';
 
 import Button from '../../components/Button';
 import AdminItem from './AdminItem';
@@ -21,37 +22,10 @@ import DataField from './DataField';
 import CardItem from './CardItem';
 import EmptyBlock from '../../components/EmptyBlock';
 
-const getVerifyIcon = (verifyStatus) => {
-    switch (verifyStatus) {
-        case VERIFY_STATUS.VERIFIED:
-            return <NotifyOkIcon className="verify__success" />
-        case VERIFY_STATUS.PROCESS:
-            return <NotifyWarningIcon className="verify__process" />
-        default:
-            return <CircleCross className="verify__not" />
-    }
-}
-
 const UserBlock = ({data, id}) => {
     const {id: userId, dataUsers, verify, phoneNum, cards, accountNum, roles} = data;
 
     const {verifyUser, blockUser, unblockUser, rejectUserVerify, addRole, removeRole} = useAdmin();
-
-    const verifyUserHandler = () => {
-        verifyUser(userId);
-    }
-
-    const rejectVerifyUserHandler = () => {
-        rejectUserVerify(userId);
-    }
-
-    const getAdmin = () => {
-        addRole(userId, 2);
-    }
-
-    const removeAdmin = () => {
-        removeRole(userId, 2);
-    }
 
     return (
         <AdminItem id={id + 1} title={`${dataUsers?.secondName || "-"} ${dataUsers?.firstName || "-"} ${dataUsers?.middleName || "-"}`}>
@@ -73,8 +47,8 @@ const UserBlock = ({data, id}) => {
                 </div>}
 
                 {verify === VERIFY_STATUS.PROCESS && <div className="admin__verify--buttons">
-                    <Button onClick={verifyUserHandler} className="admin__btn admin__verify--button">Верифицировать</Button>
-                    <Button onClick={rejectVerifyUserHandler} className="admin__btn admin__verify--button red-btn">Отклонить</Button>
+                    <Button onClick={() => verifyUser(userId)} className="admin__btn admin__verify--button">Верифицировать</Button>
+                    <Button onClick={() => rejectUserVerify(userId)} className="admin__btn admin__verify--button red-btn">Отклонить</Button>
                 </div>}
                 {(verify === VERIFY_STATUS.NOT_VERIFIED || verify === VERIFY_STATUS.REFUSED) && <EmptyBlock title="Пользователь не верифицирован" />}
             </DataItem>
@@ -124,8 +98,8 @@ const UserBlock = ({data, id}) => {
                 : <p className="section-admin__text-btn" onClick={() => blockUser(userId)}>Заблокировать</p>}
 
                 {roles.includes("admin")
-                ? <p className="section-admin__text-btn" onClick={removeAdmin}>Забрать администратора</p>
-                : <p className="section-admin__text-btn" onClick={getAdmin}>Выдать администратора</p>}
+                ? <p className="section-admin__text-btn" onClick={() => removeRole(userId, 2)}>Забрать администратора</p>
+                : <p className="section-admin__text-btn" onClick={() => addRole(userId, 2)}>Выдать администратора</p>}
             </DataItem>
         </AdminItem>
     )

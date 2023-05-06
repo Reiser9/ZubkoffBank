@@ -3,11 +3,11 @@ export const maskCardNumber = (cardNumber, short = false) => {
         return cardNumber;
     }
 
-    if(!short){
-        return `**** **** **** ${cardNumber.substring(cardNumber.length - 4)}`;
+    if(short){
+        return `**** ${cardNumber.substring(cardNumber.length - 4)}`;
     }
 
-    return `**** ${cardNumber.substring(cardNumber.length - 4)}`;
+    return `**** **** **** ${cardNumber.substring(cardNumber.length - 4)}`;
 }
 
 export const getFormatCardNumber = (cardNumber) => {

@@ -18,7 +18,7 @@ const Header = () => {
     const { user } = useSelector(state => state.user);
     const {logout} = useAuth();
 
-    const { firstName } = user;
+    const { firstName, roles } = user;
 
     const documentClickHandler = (e) => {
         const targetElement = e.target;
@@ -56,6 +56,14 @@ const Header = () => {
                                 </div>
 
                                 <div className={`submenu submenu_header${submenuActive? " active": ""}`}>
+                                    {roles?.includes("admin") && <Link to="/admin" className="submenu__item">
+                                        <User className="submenu__icon" />
+
+                                        <p className="submenu__text">
+                                            Админка
+                                        </p>
+                                    </Link>}
+
                                     <Link to="/profile" className="submenu__item">
                                         <UserCircle className="submenu__icon" />
 

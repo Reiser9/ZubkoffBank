@@ -2,7 +2,9 @@ import React from 'react';
 
 import './index.css';
 
-const CardLimitBlock = ({cardType}) => {
+const CardLimitBlock = ({card}) => {
+    const {type} = card;
+
     const [progress, setProgress] = React.useState(0);
 
     return (
@@ -16,7 +18,7 @@ const CardLimitBlock = ({cardType}) => {
                     </p>
 
                     <p className="profile__content--limit--content--num">
-                        {cardType?.limit?.toLocaleString()} ₽
+                        {type?.limit?.toLocaleString()} ₽
                     </p>
                 </div>
 

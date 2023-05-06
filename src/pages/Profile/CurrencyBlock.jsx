@@ -21,7 +21,7 @@ const CurrencyBlock = () => {
                     </p>
 
                     <p className="profile__sidebar--currency--value">
-                        ₽ {currency.usd}
+                        ₽ {currency?.usd}
                     </p>
                 </div>
 
@@ -31,7 +31,7 @@ const CurrencyBlock = () => {
                     </p>
 
                     <p className="profile__sidebar--currency--value">
-                        ₽ {currency.eur}
+                        ₽ {currency?.eur}
                     </p>
                 </div>
             </>}

@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import '../Sign/index.css';
 import './index.css';
 
-import useAuth from '../../hooks/useAuth';
-import useNotify, { NOTIFY_TYPES } from '../../hooks/useNotify';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
-
+import { NOTIFY_TYPES } from '../../consts/NOTIFY_TYPES';
+import useAuth from '../../hooks/useAuth';
+import useNotify from '../../hooks/useNotify';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import NoAuthWrapper from '../../components/Wrappers/NoAuthWrapper';
@@ -116,9 +116,9 @@ const Recovery = () => {
                             </div>
                             
                             <SignImgBlock title={`Восстановление пароля на ${process.env.REACT_APP_BANK_NAME}`} img="recovery" points={[
-                                {text: "Введите номер телефона, указанный при регистрайии"},
+                                {text: "Введите номер телефона, указанный при регистрации"},
                                 {text: "После этого мы отправим код подтверждения"},
-                                {text: "После успешного ввода кода подтверждения  у Вас будет возможность придумать новый пароль"}
+                                {text: "После успешного ввода кода подтверждения у Вас будет возможность придумать новый пароль"}
                             ]} />
                         </div>
                     </div>

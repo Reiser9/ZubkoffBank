@@ -6,5 +6,6 @@ export const REQUEST_STATUSES = {
     ALREADY_REGISTERED: "The user is already registered",
     FILE_EXIST: "bank card with this name already exists",
     PHONE_NOT_FOUND: "This phone number was not found",
-    INVALID_CODE: "Invalid code"
+    INVALID_CODE: "Invalid code",
+    INSUFFICIENT_FUNDS: "Insufficient funds"
 }

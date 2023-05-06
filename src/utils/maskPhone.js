@@ -1,10 +1,15 @@
 export const unmaskPhone = (phoneNumber) => {
+    if(!phoneNumber){
+        return phoneNumber;
+    }
+
     return phoneNumber.replace(/[^\d+]/g, '');
 }
 
-export const maskPhone = (phoneNumber = "+79999999999") => {
-    if(phoneNumber.length < 12){
-        return "Некорректный номер телефона";
+// phoneNumber = +79999999999 - пример
+export const maskPhone = (phoneNumber) => {
+    if(phoneNumber.length < 12 || !phoneNumber){
+        return phoneNumber;
     }
 
     const countryCode = phoneNumber.slice(0, 2);

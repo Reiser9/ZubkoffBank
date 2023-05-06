@@ -46,6 +46,10 @@ const useRequest = () => {
     ]);
 
     const getHealthServer = async () => {
+        if(isBot()){
+            return;
+        }
+        
         try{
             await emptyRequest.get("/health", {
                 timeout: 5000
@@ -99,7 +103,6 @@ const useRequest = () => {
 
             setIsLoading(false);
 
-            console.log(response.data); // <--
             return response.data;
         }
         catch(err){
@@ -112,12 +115,10 @@ const useRequest = () => {
                 return serverHealth;
             }
             
-            console.log(err.response.data.error);
             if(err.response.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
                 dispatch(setBlocked(true));
             }
 
-            console.log(err.response.data); // <--
             return err.response.data;
         }
     }, [isServerAvailable]);

@@ -1,18 +1,22 @@
 import React from 'react';
 
 import './index.css';
+
+import {getPeriod} from '../../utils/getPeriod';
 import Button from '../../components/Button';
 
-const SubscribeItem = ({price, name, icon, active = false, buttonText = "Подключить"}) => {
+const SubscribeItem = ({data, active = false, buttonText = "Подключить"}) => {
+    const {name, money, description, period, img} = data;
+
     return (
         <div className="subscribe__item">
             <div className="subscribe__item--wrap">
                 <div className="subscribe__item--logo--inner">
-                    <img src={icon} alt={name} className="subscribe__item--logo" />
+                    <img src={img || '/assets/img/sbp.svg'} alt={name} className="subscribe__item--logo" />
                 </div>
 
                 <p className="subscribe__item--price">
-                    {price} ₽/мес.
+                    {money} ₽/{getPeriod(period)}
                 </p>
             </div>
 

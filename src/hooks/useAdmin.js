@@ -1,12 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { NOTIFY_TYPES } from '../consts/NOTIFY_TYPES';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 import useRequest from './useRequest';
 import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
-import useNotify, {NOTIFY_TYPES} from './useNotify';
+import useNotify from './useNotify';
 import { initUsers, updateCard, updateUser, initCardTypes, addCardTypesPaggination, getCardTypesPaggination, addUsersPaggination, getUsersPaggination } from '../redux/slices/admin';
 import {addCardTypes} from '../redux/slices/admin';
+import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useAdmin = () => {
     const [isLoad, setIsLoad] = React.useState(false);
@@ -27,9 +29,8 @@ const useAdmin = () => {
                 if(users.content[0] !== null && users.content[limit - 1] !== null){
                     return dispatch(getUsersPaggination({page: 0, limit}));
                 }
-                else{
-                    return getUsers(0, limit);
-                }
+                    
+                return getUsers(0, limit);
             }
 
             return dispatch(getUsersPaggination({page, limit}));
@@ -37,16 +38,15 @@ const useAdmin = () => {
 
         const data = await request(REQUEST_TYPE.ADMIN, `/users?offset=${page}&limit=${limit}`, HTTP_METHODS.GET, true);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
-            setError(true);
+        if(requestDataIsError(data)){
+            return setError(true);
         }
-        else if(Object.keys(users).length !== 0){
-            dispatch(addUsersPaggination({page, limit, data}));
+        
+        if(Object.keys(users).length !== 0){
+            return dispatch(addUsersPaggination({page, limit, data}));
         }
-        else{
-            dispatch(initUsers(data));
-        }
-
+            
+        dispatch(initUsers(data));
         setIsLoad(false);
     }
 
@@ -60,9 +60,8 @@ const useAdmin = () => {
                 if(cardTypes.content[0] !== null && cardTypes.content[limit - 1] !== null){
                     return dispatch(getCardTypesPaggination({page: 0, limit}));
                 }
-                else{
-                    return getUsers(0, limit);
-                }
+                
+                return getUsers(0, limit);
             }
 
             return dispatch(getCardTypesPaggination({page, limit}));
@@ -70,16 +69,15 @@ const useAdmin = () => {
 
         const data = await request(REQUEST_TYPE.CARD, `/types?offset=${page}&limit=${limit}`, HTTP_METHODS.GET);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
-            setError(true);
+        if(requestDataIsError(data)){
+            return setError(true);
         }
-        else if(Object.keys(cardTypes).length !== 0){
-            dispatch(addCardTypesPaggination({page, limit, data}));
+        
+        if(Object.keys(cardTypes).length !== 0){
+            return dispatch(addCardTypesPaggination({page, limit, data}));
         }
-        else{
-            dispatch(initCardTypes(data));
-        }
-
+  
+        dispatch(initCardTypes(data));
         setIsLoad(false);
     }
 
@@ -90,7 +88,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -112,7 +110,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -134,7 +132,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -156,7 +154,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -178,7 +176,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -202,7 +200,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -226,7 +224,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -251,7 +249,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -276,7 +274,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){
@@ -301,7 +299,7 @@ const useAdmin = () => {
 
         setIsLoad(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500 || data.status === 403){
+        if(requestDataIsError(data)){
             setError(true);
 
             switch(data.error){

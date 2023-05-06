@@ -1,16 +1,19 @@
 import { useDispatch } from 'react-redux';
 
-import useRequest from './useRequest';
 import { REQUEST_TYPE, HTTP_METHODS } from '../consts/HTTP';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
+import { NOTIFY_TYPES } from '../consts/NOTIFY_TYPES';
+
+import useRequest from './useRequest';
 import { setAuthIsLoading, setLogin, setIsAuth, setDataAuth } from '../redux/slices/auth';
 import { setAppIsLoading, setDataApp } from '../redux/slices/app';
 import { setDataAdmin } from '../redux/slices/admin';
 import { setDataUser } from '../redux/slices/user';
 import { setIsServerAvailable } from '../redux/slices/server';
-import useNotify, {NOTIFY_TYPES} from './useNotify';
+import useNotify from './useNotify';
 import useUser from './useUser';
 import {unmaskPhone} from '../utils/maskPhone';
+import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useAuth = () => {
     const dispatch = useDispatch();
@@ -75,10 +78,10 @@ const useAuth = () => {
             return;
         }
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 403){
+        if(requestDataIsError(data)){
             const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
             
-            if(newTokens.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+            if(requestDataIsError(newTokens)){
                 return clearData();
             }
 
@@ -102,7 +105,7 @@ const useAuth = () => {
         }
 
         if(password.length < 8){
-            return alertNotify("Предупреждение", "Пароль не может быть меньше 8 символов", "warn");
+            return notifyTemplate(NOTIFY_TYPES.PASSWORD_SHORT);
         }
 
         dispatch(setAuthIsLoading(true));
@@ -111,7 +114,7 @@ const useAuth = () => {
         
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
 
@@ -144,10 +147,10 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.ALREADY_REGISTERED:
-                    return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+                    return notifyTemplate(NOTIFY_TYPES.USER_ALREADY_EXISTS);
                 default:
                     return alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
             }
@@ -169,10 +172,10 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.ALREADY_REGISTERED:
-                    return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+                    return notifyTemplate(NOTIFY_TYPES.USER_ALREADY_EXISTS);
                 default:
                     return notifyTemplate(NOTIFY_TYPES.INVALID_CODE);
             }
@@ -192,7 +195,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch (data.error) {
                 case "Password is too short/long":
                     return alertNotify("Ошибка", "Новый пароль меньше 8 или больше 35 символов", "warn");
@@ -217,10 +220,10 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 default:
-                    return alertNotify("Ошибка", "Неверный пароль", "error");
+                    return notifyTemplate(NOTIFY_TYPES.WRONG_PASSWORD);
             }
         }
 
@@ -241,7 +244,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.PHONE_NOT_FOUND:
                     return alertNotify("Ошибка", "Пользователь с таким номером телефона не найден", "error");
@@ -258,7 +261,6 @@ const useAuth = () => {
         if(phoneNum.length < 17){
             return notifyTemplate(NOTIFY_TYPES.PHONE);
         }
-
         if(code.length !== 6){
             return notifyTemplate(NOTIFY_TYPES.PHONE);
         }
@@ -269,7 +271,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.INVALID_CODE:
                     return notifyTemplate(NOTIFY_TYPES.CODE);
@@ -286,15 +288,12 @@ const useAuth = () => {
         if(phoneNum.length < 17){
             return notifyTemplate(NOTIFY_TYPES.PHONE);
         }
-
         if(password.length < 8){
             return notifyTemplate(NOTIFY_TYPES.PASSWORD_SHORT);
         }
-
         if(password.length > 35){
             return notifyTemplate(NOTIFY_TYPES.PASSWORD_LONG);
         }
-
         if(code.length !== 6){
             return notifyTemplate(NOTIFY_TYPES.CODE);
         }
@@ -305,7 +304,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.INVALID_CODE:
                     return notifyTemplate(NOTIFY_TYPES.INVALID_CODE);

@@ -26,22 +26,22 @@ const NewCardModal = ({active, setActive}) => {
     const {request} = useRequest();
     const dispatch = useDispatch();
 
-    const scrollHandler = (e) => {
-        const scrollHeight = document.querySelector(".cards-popup__inner").scrollHeight;
-        const scrollTop = e.target.scrollTop;
-        const innerHeight = window.innerHeight;
-        
-        if(scrollHeight - (scrollTop + innerHeight) < 10 && cardTypes.content.length < cardTypes.totalElements){
-            setLoad(true);
-        }
-    }
-
     React.useEffect(() => {
         getUserFullInfo();
         getCardTypes();
     }, []);
 
     React.useEffect(() => {
+        const scrollHandler = (e) => {
+            const scrollHeight = document.querySelector(".cards-popup__inner").scrollHeight;
+            const scrollTop = e.target.scrollTop;
+            const innerHeight = window.innerHeight;
+            
+            if(scrollHeight - (scrollTop + innerHeight) < 10 && cardTypes.content.length < cardTypes.totalElements){
+                setLoad(true);
+            }
+        }
+        
         const popup = document.querySelector(".cards-popup");
         popup.addEventListener("scroll", scrollHandler);
 

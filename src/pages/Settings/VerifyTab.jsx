@@ -7,7 +7,6 @@ import './index.css';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 
 import useUser from '../../hooks/useUser';
-import {getNormalDate} from '../../utils/getNormalDate';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -43,10 +42,6 @@ const VerifyTab = () => {
             setSex(user.sex);
         }
     }, [user]);
-
-    const cancelVerifyHandler = () => {
-        cancelVerify();
-    }
 
     if(userIsLoading){
         return <Preloader />
@@ -87,8 +82,9 @@ const VerifyTab = () => {
             </>}
 
             {user.verified === VERIFY_STATUS.PROCESS && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте">
-                <Button onClick={cancelVerifyHandler}>Отменить заявку</Button>
+                <Button onClick={() => cancelVerify()}>Отменить заявку</Button>
             </VerifyStage>}
+            
             {user.verified === VERIFY_STATUS.VERIFIED && <VerifyStage icon="check" text="Верификация успешно пройдена" />}
         </>
     )

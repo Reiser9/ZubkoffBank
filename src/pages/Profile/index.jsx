@@ -72,17 +72,23 @@ const Profile = () => {
             </div>
 
             <div className={`profile__content${active ? " active" : ""}`}>
-                <BackButton onClick={() => setActive(false)} />
+                {tab !== "payment" && <>
+                    <BackButton onClick={() => setActive(false)} />
 
-                {tab !== "payment" && (user.verified !== VERIFY_STATUS.VERIFIED
-                    ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
-                    : cards.length
-                        ? activeCard
-                            ? <CardViewBlock cardId={activeCard} setTab={setTab} />
-                            : <EmptyBlock center title="Выберите карту" />
-                        : <EmptyBlock center title="Для проведения операций нужно открыть счет" />)}
+                    {user.verified !== VERIFY_STATUS.VERIFIED
+                        ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
+                        : cards.length
+                            ? activeCard
+                                ? <CardViewBlock cardId={activeCard} setTab={setTab} />
+                                : <EmptyBlock center title="Выберите карту" />
+                            : <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
+                </>}
 
-                {tab === "payment" && <PaymentScreen cardId={activeCard} />}
+                {tab === "payment" && <>
+                    <BackButton desktop onClick={() => setTab("")} />
+
+                    <PaymentScreen cardId={activeCard} />
+                </>}
             </div>
         </PageSidebarInner>
     )

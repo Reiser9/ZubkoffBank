@@ -8,6 +8,7 @@ import cardTypesSlice from './slices/cardTypes';
 import serverSlice from './slices/server';
 import adminSlice from './slices/admin';
 import appSlice from './slices/app';
+import subscribesSlice from './slices/subscribes';
 
 export const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
         cardTypes: cardTypesSlice,
         server: serverSlice,
         admin: adminSlice,
-        app: appSlice
+        app: appSlice,
+        subscribes: subscribesSlice
     }
 });

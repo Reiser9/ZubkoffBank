@@ -6,7 +6,7 @@ import PagginationItem from './PagginationItem';
 import usePaggination from '../../hooks/usePaggination';
 import { ArrowLeft, ArrowRight } from '../Icons';
 
-const Paggination = ({totalPages = 1, page, size, data, delta = 1}) => {
+const Paggination = ({totalPages = 1, page, size, data, delta = 1, separator = "..."}) => {
     const [pagginationElements, setPagginationElements] = React.useState([]);
 
     const {isLoad, paggination} = usePaggination();
@@ -31,11 +31,11 @@ const Paggination = ({totalPages = 1, page, size, data, delta = 1}) => {
         }
 
         if(page + 1 >= delta + 3){
-            currentElements.splice(1, 0, "...");
+            currentElements.splice(1, 0, separator);
         }
 
         if(page + 1 <= totalPages - delta - 2){
-            currentElements.splice(-1, 0, "...");
+            currentElements.splice(-1, 0, separator);
         }
 
         setPagginationElements(currentElements);
@@ -52,10 +52,10 @@ const Paggination = ({totalPages = 1, page, size, data, delta = 1}) => {
             </PagginationItem>
 
             {pagginationElements.map((number, id) => <PagginationItem
-                disabled={number === "..."}
-                dots={number === "..."}
+                disabled={number === separator}
+                dots={number === separator}
                 key={id}
-                number={number === "..." ? number : number + 1}
+                number={number === separator ? number : number + 1}
                 active={number === page}
                 onClick={() => paggination(number, size, data)}
             />)}

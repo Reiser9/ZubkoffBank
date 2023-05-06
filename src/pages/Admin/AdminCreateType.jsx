@@ -19,7 +19,7 @@ const AdminCreateType = ({setActive}) => {
     const {alertNotify} = useNotify();
     const {isLoad, createTypeCard} = useAdmin();
 
-    const createType = async () => {
+    const createType = () => {
         if(!image){
             return alertNotify("Ошибка", "Выберите изображение карты!", "warn");
         }

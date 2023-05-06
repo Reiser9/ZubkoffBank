@@ -27,11 +27,12 @@ const CardRequisites = ({card}) => {
 
     React.useEffect(() => {
         if(cardNum && expDate && cvc){
-            setShow(false);
             setCardNumData(cardNum);
             setExpDateData(getNormalDate(expDate, "MM / YY"));
             setCvcData(cvc);
         }
+
+        return () => setShow(false);
     }, [card]);
 
     return (
