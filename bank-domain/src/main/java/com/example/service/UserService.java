@@ -1,19 +1,19 @@
 package com.example.service;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
+import com.example.enums.TransferStatus;
+import com.example.enums.TransferType;
 import com.example.enums.UserVerify;
-import com.example.model.DataUser;
-import com.example.model.Role;
-import com.example.model.User;
+import com.example.model.*;
+import com.example.repository.CardRepository;
 import com.example.repository.CodeRepository;
 import com.example.repository.RoleRepository;
 import com.example.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,8 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private CardRepository cardRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -115,6 +118,8 @@ public class UserService {
 			return false;
 		return true;
 	}
+
+
 
 	@Transactional
 	public int deleteByPhoneNum(String phoneNum) {

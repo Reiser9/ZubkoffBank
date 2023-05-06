@@ -20,24 +20,24 @@ public class Transfer {
     @Column(name = "id")
     private long id;
 
-    @Column(name="ip")
+    @Column(name="money")
     private String money;
 
-    @Column(name="source_card_number")
+    @Column(name="source_card_num")
     private String sourceCardNum;
 
-    @Column(name="dest_card_number")
-    private String destCardNum;
+    @Column(name="dest_phone_num")
+    private String destPhoneNum;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "id", referencedColumnName = "fk_source_bank")
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    private Bank sourceBank;
-//
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "id", referencedColumnName = "fk_dest_bank")
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    private Bank destBank;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "fk_id_SBank", referencedColumnName = "id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Bank sourceBank;
+
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "fk_id_DBank", referencedColumnName = "id")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Bank destBank;
 
     @Column(name="status")
     private Boolean status;

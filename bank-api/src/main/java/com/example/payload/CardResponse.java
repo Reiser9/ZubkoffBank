@@ -21,6 +21,7 @@ public class CardResponse {
     private String cvc;
     private Date expDate;
     private double balance;
+    private double remainsLimit;
     private String firstName;
     private String secondName;
     private TypeResponse type;
@@ -33,6 +34,7 @@ public class CardResponse {
         this.cvc = card.getCvc();
         this.expDate = card.getExpDate();
         this.balance = card.getBalance();
+        this.remainsLimit = card.getRemainsLimit();
         this.firstName = card.getFirstName();
         this.secondName = card.getSecondName();
         this.type = new TypeResponse(card.getType(), url);

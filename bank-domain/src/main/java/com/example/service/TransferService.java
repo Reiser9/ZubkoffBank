@@ -1,6 +1,9 @@
 package com.example.service;
 
 import com.example.dto.BankInfo;
+import com.example.enums.TransferStatus;
+import com.example.enums.TransferType;
+import com.example.model.Card;
 import com.example.model.Transfer;
 import com.example.dto.TransferInfo;
 import com.example.repository.CardRepository;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +35,10 @@ import java.util.Map;
 public class TransferService {
     private static final Logger logger = LoggerFactory.getLogger(String.class);
     @Value("${nspk.url}")
-    @Autowired
     private String url;
+    @Value("${bank.organization}")
+    private String organization;
     @Value("${bank.id}")
-    @Autowired
     private String code;
     @Autowired
     private TransferProducer transferProducer;
@@ -47,6 +52,66 @@ public class TransferService {
     public Transfer findTransferById(long id) {
         return transferRepository.findById(id).get();
     }
+
+    public void sendInBank(Card sourceCard, Card destCard, Double money) {
+        destCard.setBalance(destCard.getBalance() + money);
+        sourceCard.setBalance(sourceCard.getBalance() - money);
+        List<Transfer> sourceTransfers = sourceCard.getTransfers();
+        List<Transfer> destTransfers = destCard.getTransfers();
+        Transfer sourceTransfer = new Transfer();
+        Transfer destTransfer = new Transfer();
+
+        sourceTransfer.setBalance(sourceCard.getBalance());
+        sourceTransfer.setMoney(money);
+        sourceTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        sourceTransfer.setOrganization(organization);
+        sourceTransfer.setCardId(sourceCard.getId());
+
+        destTransfer.setBalance(destCard.getBalance());
+        destTransfer.setMoney(money);
+        destTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        destTransfer.setOrganization(organization);
+        destTransfer.setCardId(destCard.getId());
+
+        sourceTransfers.add(sourceTransfer);
+        sourceCard.setTransfers(sourceTransfers);
+        destTransfers.add(destTransfer);
+        destCard.setTransfers(destTransfers);
+        cardRepository.save(sourceCard);
+        cardRepository.save(destCard);
+    }
+
+    public void sendOutBank(Card sourceCard, Double money, Map<String, String> transfer) throws JsonProcessingException {
+        List<Transfer> sourceTransfers = sourceCard.getTransfers();
+        Transfer sourceTransfer = new Transfer();
+        sourceTransfer.setMoney(money);
+        sourceTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        sourceTransfer.setOrganization(transfer.get("destOrganization"));
+        sourceTransfer.setCardId(sourceCard.getId());
+        sourceTransfer.setStatus(TransferStatus.PROCESS_STATUS.toString());
+        sourceTransfer.setType(TransferType.SEND_STATUS.toString());
+        sourceCard.setRemainsLimit(sourceCard.getType().getLimit() - money);
+        if (sourceCard.getRemainsLimit() < 0) {
+            double commission = Double.parseDouble(String.format("%.2f", sourceCard.getBalance() - (money) * 1.02));
+            sourceTransfer.setBalance(commission);
+            sourceCard.setBalance(commission);
+        }
+        else {
+            sourceTransfer.setBalance(sourceCard.getBalance()-money);
+            sourceCard.setBalance(sourceCard.getBalance()-money);
+        }
+        sourceTransfers.add(sourceTransfer);
+        sourceCard.setTransfers(sourceTransfers);
+        cardRepository.save(sourceCard);
+        transfer.put("transferId", String.valueOf(cardRepository.findByCardNum(sourceCard.getCardNum())
+                .getTransfers().stream()
+                .filter(e -> e.getDate().equals(sourceTransfer.getDate()))
+                .findFirst()
+                .get()
+                .getId()));
+        sendMoney(transfer);
+    }
+
 
     public Mono<ResponseEntity<TransferInfo>> getInfoByPhone(Map<String, String> transfer) {
         transfer.put("code", code);

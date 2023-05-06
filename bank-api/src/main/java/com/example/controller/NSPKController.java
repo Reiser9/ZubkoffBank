@@ -97,7 +97,15 @@ public class NSPKController {
             card.getTransfers().stream()
                     .filter(e -> e.getId() == data.getTransferId()).findFirst().get()
                     .setStatus(TransferStatus.NOT_SUCCESSFULLY_STATUS.toString());
-            card.setBalance(card.getBalance() + Double.parseDouble(data.getMoney()));
+            if (card.getRemainsLimit() < 0) {
+                double commission = Double.parseDouble(String.format("%.2f",
+                        card.getBalance() + (Double.parseDouble(data.getMoney()) * 1.02)));
+                card.setBalance(commission);
+            }
+            else {
+                card.setBalance(card.getBalance() + Double.parseDouble(data.getMoney()));
+            }
+            card.setRemainsLimit(card.getType().getLimit() + Double.parseDouble(data.getMoney()));
             cardService.save(card);
             return new TransferResult(200, data.getTransferId());
         } catch (NullPointerException exception) {

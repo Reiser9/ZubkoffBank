@@ -41,6 +41,9 @@ public class Transfer {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "comment", length = 100)
+    private String comment;
+
     @Column(name = "fk_id_card")
     private long cardId;
 

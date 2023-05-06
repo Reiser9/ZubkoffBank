@@ -1,6 +1,6 @@
 package com.example.enums;
 
-public enum CardType {
+public enum CodeType {
     REGISTER,
     RECOVERY,
     TRANSFER

@@ -49,6 +49,9 @@ public class Card {
     @Column(name = "lock")
     private boolean lock;
 
+    @Column(name = "remains_limit")
+    private double remainsLimit;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_id_card", referencedColumnName = "id")
     @LazyCollection(LazyCollectionOption.FALSE)

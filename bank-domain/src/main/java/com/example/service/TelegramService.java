@@ -2,14 +2,13 @@ package com.example.service;
 
 
 import com.example.config.BotConfig;
-import com.example.enums.CardType;
+import com.example.enums.CodeType;
 import com.example.model.Code;
 import com.example.model.User;
 import com.example.repository.CodeRepository;
 import com.example.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -104,10 +103,10 @@ public class TelegramService extends TelegramLongPollingBot {
         if (isExist(phoneNum, false)) {
             int code = generateCode();
             String message = "";
-            if (typeCode.equals(String.valueOf(CardType.RECOVERY))) {
+            if (typeCode.equals(String.valueOf(CodeType.RECOVERY))) {
                 message = String.format("Код для восстановления пароля: %06d", code);
             }
-            else if (typeCode.equals(String.valueOf(CardType.REGISTER))) {
+            else if (typeCode.equals(String.valueOf(CodeType.REGISTER))) {
                 message = String.format("Код для регистрации: %06d", code);
             }
             else {

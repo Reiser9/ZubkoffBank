@@ -35,6 +35,8 @@ public class CardService {
         return cardRepository.findByUserIdOrderById(id);
     }
 
+    public List<Card> findAllByRemainsLimitNotEqualsTypeLimit() { return cardRepository.findAllByRemainsLimitNotEqualsTypeLimit(); }
+
     public Card createCard(Map<String, String> data_card, String bankId) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
