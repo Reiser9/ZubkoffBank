@@ -16,6 +16,7 @@ public class TransferResponse {
     private String organization;
     private String status;
     private String type;
+    private String message;
 
     public TransferResponse(Transfer transfer) {
         this.date = transfer.getDate();
@@ -24,5 +25,6 @@ public class TransferResponse {
         this.organization = transfer.getOrganization();
         this.status = transfer.getStatus();
         this.type = transfer.getType();
+        this.message = transfer.getComment();
     }
 }
