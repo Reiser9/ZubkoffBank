@@ -1,6 +1,8 @@
 package com.example.service;
 
 import com.example.dto.BankInfo;
+import com.example.dto.TransferData;
+import com.example.dto.TransferUserInfo;
 import com.example.enums.TransferStatus;
 import com.example.enums.TransferType;
 import com.example.model.Card;
@@ -11,6 +13,7 @@ import com.example.repository.TransferRepository;
 import com.example.repository.UserRepository;
 import com.example.producer.TransferProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -48,6 +52,8 @@ public class TransferService {
     private TransferRepository transferRepository;
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public Transfer findTransferById(long id) {
         return transferRepository.findById(id).get();
@@ -81,40 +87,47 @@ public class TransferService {
         cardRepository.save(destCard);
     }
 
-    public void sendOutBank(Card sourceCard, Double money, Map<String, String> transfer) throws JsonProcessingException {
+    @Transactional
+    public void sendOutBank(Card sourceCard, Double money, TransferData transfer) throws JsonProcessingException {
         List<Transfer> sourceTransfers = sourceCard.getTransfers();
         Transfer sourceTransfer = new Transfer();
         sourceTransfer.setMoney(money);
         sourceTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-        sourceTransfer.setOrganization(transfer.get("destOrganization"));
+        sourceTransfer.setOrganization(transfer.getDestOrganization());
         sourceTransfer.setCardId(sourceCard.getId());
         sourceTransfer.setStatus(TransferStatus.PROCESS_STATUS.toString());
         sourceTransfer.setType(TransferType.SEND_STATUS.toString());
-        sourceCard.setRemainsLimit(sourceCard.getType().getLimit() - money);
+        sourceCard.setRemainsLimit(sourceCard.getRemainsLimit() - money);
+        logger.error(String.valueOf(sourceCard.getBalance()));
         if (sourceCard.getRemainsLimit() < 0) {
-            double commission = Double.parseDouble(String.format("%.2f", sourceCard.getBalance() - (money) * 1.02));
-            sourceTransfer.setBalance(commission);
-            sourceCard.setBalance(commission);
+            double commission = Double.parseDouble(String.format("%.2f", money * 1.02));
+            double moneyAndCommission = sourceCard.getBalance() - commission;
+            logger.error(String.valueOf(commission));
+            logger.error(String.valueOf(moneyAndCommission));
+            logger.error(String.valueOf(sourceCard.getBalance()));
+            sourceTransfer.setBalance(moneyAndCommission);
+            sourceCard.setBalance(moneyAndCommission);
         }
         else {
+            logger.error(String.valueOf(sourceCard.getBalance()));
             sourceTransfer.setBalance(sourceCard.getBalance()-money);
             sourceCard.setBalance(sourceCard.getBalance()-money);
         }
         sourceTransfers.add(sourceTransfer);
         sourceCard.setTransfers(sourceTransfers);
         cardRepository.save(sourceCard);
-        transfer.put("transferId", String.valueOf(cardRepository.findByCardNum(sourceCard.getCardNum())
+        transfer.setTransferId(cardRepository.findByCardNum(sourceCard.getCardNum())
                 .getTransfers().stream()
                 .filter(e -> e.getDate().equals(sourceTransfer.getDate()))
                 .findFirst()
                 .get()
-                .getId()));
+                .getId());
         sendMoney(transfer);
     }
 
 
-    public Mono<ResponseEntity<TransferInfo>> getInfoByPhone(Map<String, String> transfer) {
-        transfer.put("code", code);
+    public Mono<ResponseEntity<TransferInfo>> getInfoByPhone(TransferUserInfo transfer) {
+        transfer.setCode(Integer.parseInt(code));
         return WebClient.create().post()
                 .uri(url + "/transfer/info")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,14 +138,13 @@ public class TransferService {
                     TransferInfo transferInfo = new TransferInfo(
                             data.get("fullName"),
                             data.get("phoneNum"),
-                            data.get("cardNum"),
                             data.get("organization"));
                     return Mono.just(transferInfo);
                 })
                 .map(ResponseEntity::ok);
     }
 
-    public Mono<ResponseEntity<List<BankInfo>>> getBanksInfoByPhone(Map<String, String> transfer) {
+    public Mono<ResponseEntity<List<BankInfo>>> getBanksInfoByPhone(TransferUserInfo transfer) {
         return WebClient.create().post()
                 .uri(url + "/transfer/bank_info")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -148,9 +160,8 @@ public class TransferService {
 
 
 
-    public void sendMoney(Map<String, String> message) throws JsonProcessingException {
-        message.put("sourceCode", code);
-        transferProducer.sendMessage(message);
+    public void sendMoney(TransferData message) throws JsonProcessingException {
+        transferProducer.sendMessage(objectMapper.writeValueAsString(message));
     }
 
 }

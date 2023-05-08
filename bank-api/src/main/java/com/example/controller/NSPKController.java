@@ -1,8 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.TransferFinish;
-import com.example.dto.TransferInfo;
-import com.example.dto.TransferResult;
+import com.example.dto.*;
 import com.example.enums.TransferStatus;
 import com.example.enums.TransferType;
 import com.example.model.*;
@@ -38,17 +36,17 @@ public class NSPKController {
     @Autowired
     private CardService cardService;
     @Value("${bank.organization}")
-    private String oraganization;
+    private String organization;
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     @PostMapping(value = "/transfer/info", produces = APPLICATION_JSON_VALUE)
-    public TransferInfo getTransferInfo(@RequestBody Map<String, String> transfer) throws Exception {
+    public TransferInfo getTransferInfo(@RequestBody TransferUserInfo transfer) throws Exception {
         try {
-            User user = userService.findUserByPhoneNum(transfer.get("phoneNum"));
+            User user = userService.findUserByPhoneNum(transfer.getPhoneNum());
             DataUser dataUser = user.getDataUsers().get(user.getDataUsers().size() - 1);
             String fullName = dataUser.getSecondName() + " " + dataUser.getFirstName();
             TransferInfo transferInfo = new TransferInfo(fullName,
-                    user.getPhoneNum(), user.getCards().get(0).getCardNum(), oraganization);
+                    user.getPhoneNum(), organization);
             return transferInfo;
         } catch (NullPointerException exception) {
             return new TransferInfo();
@@ -56,11 +54,11 @@ public class NSPKController {
     }
 
     @PostMapping(value = "/transfer/", produces = APPLICATION_JSON_VALUE)
-    public TransferResult transfer(@RequestBody Map<String, String> transfer) throws Exception {
+    public TransferResult transfer(@RequestBody TransferUserDest transfer) throws Exception {
         try {
             logger.error(transfer.toString());
-            Double money = Double.parseDouble(transfer.get("money"));
-            User user = userService.findUserByPhoneNum(transfer.get("phoneNum"));
+            Double money = transfer.getMoney();
+            User user = userService.findUserByPhoneNum(transfer.getPhoneNum());
             Card destCard = null;
             for (Card card : user.getCards()) {
                 if (!card.isLock()) {
@@ -73,7 +71,7 @@ public class NSPKController {
             destTransfer.setBalance(destCard.getBalance() + money);
             destTransfer.setMoney(money);
             destTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-            destTransfer.setOrganization(transfer.get("organization"));
+            destTransfer.setOrganization(transfer.getOrganization());
             destTransfer.setCardId(destCard.getId());
             destTransfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
             destTransfer.setType(TransferType.RECEIVE_STATUS.toString());
@@ -99,13 +97,13 @@ public class NSPKController {
                     .setStatus(TransferStatus.NOT_SUCCESSFULLY_STATUS.toString());
             if (card.getRemainsLimit() < 0) {
                 double commission = Double.parseDouble(String.format("%.2f",
-                        card.getBalance() + (Double.parseDouble(data.getMoney()) * 1.02)));
+                        card.getBalance() + (data.getMoney() * 1.02)));
                 card.setBalance(commission);
             }
             else {
-                card.setBalance(card.getBalance() + Double.parseDouble(data.getMoney()));
+                card.setBalance(card.getBalance() + data.getMoney());
             }
-            card.setRemainsLimit(card.getType().getLimit() + Double.parseDouble(data.getMoney()));
+            card.setRemainsLimit(card.getType().getLimit() + data.getMoney());
             cardService.save(card);
             return new TransferResult(200, data.getTransferId());
         } catch (NullPointerException exception) {
@@ -114,15 +112,14 @@ public class NSPKController {
     }
 
     @PostMapping(value = "/commit_transfer/", produces = APPLICATION_JSON_VALUE)
-    public TransferResult commitRollback(@RequestBody Map<String, String> data) throws Exception {
+    public TransferResult commitRollback(@RequestBody TransferFinish data) throws Exception {
         try {
-            Card card = cardService.findCardByCardNum(data.get("cardNum"));
+            Card card = cardService.findCardByCardNum(data.getCardNum());
             card.getTransfers().stream()
-                    .filter(e -> e.getId() == Long.parseLong(data.get("transferId"))).findFirst().get()
+                    .filter(e -> e.getId() == data.getTransferId()).findFirst().get()
                     .setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
-            card.setBalance(card.getBalance() + Double.parseDouble(data.get("money")));
             cardService.save(card);
-            return new TransferResult(200, Long.parseLong(data.get("transferId")));
+            return new TransferResult(200, data.getTransferId());
         } catch (NullPointerException exception) {
             return new TransferResult(504, -1);
         }

@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.UserBalance;
+import com.example.dto.UserRole;
 import com.example.enums.UserVerify;
 import com.example.model.Card;
 import com.example.model.Role;
@@ -116,10 +118,10 @@ public class AdminController {
 	}
 
 	@PostMapping("/user/balance")
-	public ResponseEntity<?> setBalance(@RequestBody Map<String, String> card_data) {
+	public ResponseEntity<?> setBalance(@RequestBody UserBalance data) {
 		try {
-			Card card = cardService.findCardById(Long.valueOf(card_data.get("id")));
-			card.setBalance(card.getBalance() + Double.parseDouble(card_data.get("balance")));
+			Card card = cardService.findCardById(data.getId());
+			card.setBalance(card.getBalance() + data.getBalance());
 			cardService.save(card);
 			return ResponseEntity.ok(new CardResponse(card, link));
 		}
@@ -181,11 +183,11 @@ public class AdminController {
 	}
 
 	@PostMapping("/user/role")
-	public ResponseEntity<?> addRole(@RequestBody Map<String, String> data) {
+	public ResponseEntity<?> addRole(@RequestBody UserRole data) {
 		try {
-			User user = userService.findById(Long.parseLong(data.get("id")));
+			User user = userService.findById(data.getId());
 			List<Role> roles = user.getRoles();
-			Role addRole = roleRepository.findById(Integer.valueOf(data.get("roleId")));
+			Role addRole = roleRepository.findById(data.getRoleId());
 			if (addRole == null)
 				return ResponseEntity
 						.status(404).body(new DefaultResponse("Not Successful", "Not found role"));
@@ -203,11 +205,11 @@ public class AdminController {
 	}
 
 	@PatchMapping("/user/role")
-	public ResponseEntity<?> removeRole(@RequestBody Map<String, String> data) {
+	public ResponseEntity<?> removeRole(@RequestBody UserRole data) {
 		try {
-			User user = userService.findById(Long.parseLong(data.get("id")));
+			User user = userService.findById(data.getId());
 			List<Role> roles = user.getRoles();
-			Role delRole = roleRepository.findById(Integer.valueOf(data.get("roleId")));
+			Role delRole = roleRepository.findById(data.getRoleId());
 			if (delRole == null)
 				return ResponseEntity
 						.status(404).body(new DefaultResponse("Not Successful", "Not found role"));

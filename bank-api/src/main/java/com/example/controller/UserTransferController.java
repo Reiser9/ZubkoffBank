@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.TransferData;
+import com.example.dto.TransferUserInfo;
 import com.example.enums.CodeType;
 import com.example.exception.InsufficientFundsException;
 import com.example.exception.UnknownRecipientException;
@@ -34,24 +36,25 @@ public class UserTransferController {
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
     @Autowired
     private TransferService transferService;
+    @Value("${bank.organization}")
+    private String organization;
+    @Value("${bank.id}")
+    private String code;
     @Autowired
     private TelegramService telegramService;
     @Autowired
     private UserService userService;
     @Autowired
     private CardService cardService;
-    @Value("${bank.organization}")
-    @Autowired
-    private String organization;
 
     @PostMapping("/info_phone")
-    public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> transfer) {
+    public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody TransferUserInfo transfer) {
         return transferService.getInfoByPhone(transfer)
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
 
     @PostMapping("/info_banks")
-    public Mono<ResponseEntity<?>> getInfoBanksByPhoneNum(@RequestBody Map<String, String> transfer) {
+    public Mono<ResponseEntity<?>> getInfoBanksByPhoneNum(@RequestBody TransferUserInfo transfer) {
         return transferService.getBanksInfoByPhone(transfer)
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
@@ -73,34 +76,39 @@ public class UserTransferController {
 
     @PostMapping("/")
     @Transactional
-    public ResponseEntity<?> sendMoneyOutBank(Principal data, @RequestBody Map<String, String> transfer) {
+    public ResponseEntity<?> sendMoney(Principal data, @RequestBody TransferData transfer) {
         try {
-            Double money = Double.parseDouble(transfer.get("money"));
-            if (money >= 100000) {
-                if (!telegramService.compareCode(data.getName(), Integer.parseInt(transfer.get("code")), CodeType.TRANSFER.toString())) {
+            if (transfer.getMoney() >= 100000) {
+                if (!telegramService.compareCode(data.getName(), transfer.getCodeConfirm(), CodeType.TRANSFER.toString())) {
                     return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Invalid code"));
                 }
             }
-            Card sourceCard = cardService.findCardByCardNum(transfer.get("cardNum"));
+            Card sourceCard = cardService.findCardByCardNum(transfer.getCardNum());
             if (userService.findUserByPhoneNum(data.getName()).getCards()
                     .stream().filter(e -> e.getId() == sourceCard.getId()).findFirst().orElse(null) == null)
                 throw new NullPointerException();
-            if (sourceCard.getBalance() < money) {
+            if (sourceCard.getBalance() < transfer.getMoney()) {
                 throw new InsufficientFundsException();
             }
-            User user = userService.findUserByPhoneNum(transfer.get("destPhoneNum"));
-//            if (user != null) {
-            if (!transfer.get("destOrganization").equals(transfer.get("organization"))) {
+            transfer.setOrganization(organization);
+            transfer.setCode(code);
+            User user = userService.findUserByPhoneNum(transfer.getDestPhoneNum());
+            if (transfer.getDestOrganization().equals(transfer.getOrganization())) {
                 Card destCard = user.getCards().stream().filter(e -> !e.isLock()).findFirst().orElse(null);
                 if (destCard != null) {
-                    transferService.sendInBank(sourceCard, destCard, money);
+                    transferService.sendInBank(sourceCard, destCard, transfer.getMoney());
                 }
                 else {
                     throw new UnknownRecipientException();
                 }
             }
             else {
-                transferService.sendOutBank(sourceCard, money, transfer);
+                if (transfer.getMoney() >= sourceCard.getRemainsLimit()) {
+                    if (sourceCard.getBalance() - (transfer.getMoney() * 1.02) < 0) {
+                        throw new InsufficientFundsException();
+                    }
+                }
+                transferService.sendOutBank(sourceCard, transfer.getMoney(), transfer);
             }
             return ResponseEntity.badRequest().body(new DefaultResponse("Successful", ""));
        }

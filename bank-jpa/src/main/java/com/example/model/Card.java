@@ -7,6 +7,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class Card {
     public int hashCode() {
         return Objects.hash(id, cardNum, cvc, expDate, balance, firstName, secondName, userId, lock);
     }
-
+    @Transactional
     public void setBalance(double balance) {
         this.balance = balance;
     }

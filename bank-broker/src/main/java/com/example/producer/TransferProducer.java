@@ -15,11 +15,9 @@ public class TransferProducer {
 
     @Autowired
     private KafkaTemplate<Object, String> kafkaTemplate;
-    @Autowired
-    private ObjectMapper objectMapper;
 
-    public void sendMessage(Map<String, String> message) throws JsonProcessingException {
-        String jsonMessage = objectMapper.writeValueAsString(message);
-        kafkaTemplate.send(TOPIC, jsonMessage);
+
+    public void sendMessage(String message) throws JsonProcessingException {
+        kafkaTemplate.send(TOPIC, message);
     }
 }

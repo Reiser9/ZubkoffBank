@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.CardData;
 import com.example.model.Card;
 import com.example.repository.CardRepository;
 import com.example.repository.TypeRepository;
@@ -37,7 +38,7 @@ public class CardService {
 
     public List<Card> findAllByRemainsLimitNotEqualsTypeLimit() { return cardRepository.findAllByRemainsLimitNotEqualsTypeLimit(); }
 
-    public Card createCard(Map<String, String> data_card, String bankId) {
+    public Card createCard(CardData cardData, String bankId) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
         cal.add(Calendar.YEAR, 4);
@@ -56,10 +57,10 @@ public class CardService {
         card.setCvc(String.valueOf((int)(100 + (Math.random() * (999 - 100)))));
         card.setExpDate(date);
         card.setBalance(0);
-        card.setFirstName(data_card.get("firstName"));
-        card.setSecondName(data_card.get("secondName"));
+        card.setFirstName(cardData.getFirstName());
+        card.setSecondName(cardData.getSecondName());
         card.setLock(false);
-        card.setType(typeRepository.findById(Integer.valueOf(data_card.get("typeId"))).get());
+        card.setType(typeRepository.findById(cardData.getTypeId()).get());
         return card;
     }
 

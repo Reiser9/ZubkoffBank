@@ -12,7 +12,6 @@ import lombok.Setter;
 public class TransferInfo {
     private String fullName;
     private String phoneNum;
-    private String cardNum;
     private String organization;
 
     @Override
@@ -20,7 +19,7 @@ public class TransferInfo {
         return "TransferInfo{" +
                 "fullName='" + fullName + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
-                ", cardNum='" + cardNum + '\'' +
+                ", cardNum='" + '\'' +
                 ", organization='" + organization + '\'' +
                 '}';
     }

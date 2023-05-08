@@ -3,6 +3,7 @@ package com.example.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.dto.UserAuth;
 import com.example.enums.CodeType;
 import com.example.model.RefreshToken;
 import com.example.model.User;
@@ -66,11 +67,11 @@ public class AuthController {
 	}
 
 	@PostMapping("/send_code_register")
-	public ResponseEntity<?> sendCode(@RequestBody Map<String, String> phoneNumber) {
+	public ResponseEntity<?> sendCode(@RequestBody Map<String, String> data) {
 		try {
-			if (userService.isRegisteredUser(phoneNumber.get("phoneNum")))
+			if (userService.isRegisteredUser(data.get("phoneNum")))
 				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The user is already registered"));
-			boolean status = telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CodeType.REGISTER));
+			boolean status = telegramService.sendCode(data.get("phoneNum"), String.valueOf(CodeType.REGISTER));
 			if (!status)
 				throw new TelegramApiException();
 			return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
@@ -84,11 +85,11 @@ public class AuthController {
 	}
 
 	@PostMapping("/send_code_recovery")
-	public ResponseEntity<?> recoveryCode(@RequestBody Map<String, String> phoneNumber) {
+	public ResponseEntity<?> recoveryCode(@RequestBody Map<String, String> data) {
 		try {
-			if (!userService.isRegisteredUser(phoneNumber.get("phoneNum")))
+			if (!userService.isRegisteredUser(data.get("phoneNum")))
 				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "This phone number was not found"));
-			boolean status = telegramService.sendCode(phoneNumber.get("phoneNum"), String.valueOf(CodeType.RECOVERY));
+			boolean status = telegramService.sendCode(data.get("phoneNum"), String.valueOf(CodeType.RECOVERY));
 			if (!status)
 				throw new TelegramApiException();
 			return ResponseEntity.ok().body(new DefaultResponse("Successful", ""));
@@ -102,10 +103,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/check_recovery_code")
-	public ResponseEntity<?> recoveryPassword(@RequestBody Map<String, String> user) {
-		if (!userService.isRegisteredUser(user.get("phoneNum")))
+	public ResponseEntity<?> recoveryPassword(@RequestBody UserAuth user) {
+		if (!userService.isRegisteredUser(user.getPhoneNum()))
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
-		if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CodeType.RECOVERY))) {
+		if (telegramService.compareCode(user.getPhoneNum(), user.getCode(), String.valueOf(CodeType.RECOVERY))) {
 			return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 		}
 		else
@@ -113,16 +114,16 @@ public class AuthController {
 	}
 
 	@PostMapping("/recovery_password")
-	public ResponseEntity<?> confirmRecovery(@RequestBody Map<String, String> user) {
-		if (!userService.isRegisteredUser(user.get("phoneNum")))
+	public ResponseEntity<?> confirmRecovery(@RequestBody UserAuth user) {
+		if (!userService.isRegisteredUser(user.getPhoneNum()))
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found user"));
-		if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CodeType.RECOVERY))) {
-			if (user.get("password").length() >= 8 && user.get("password").length() <= 35) {
-				User userByPhoneNum = userService.findUserByPhoneNum(user.get("phoneNum"));
-				userByPhoneNum.setPassword(passwordEncoder.encode(user.get("password")));
+		if (telegramService.compareCode(user.getPhoneNum(), user.getCode(), String.valueOf(CodeType.RECOVERY))) {
+			if (user.getPassword().length() >= 8 && user.getPassword().length() <= 35) {
+				User userByPhoneNum = userService.findUserByPhoneNum(user.getPhoneNum());
+				userByPhoneNum.setPassword(passwordEncoder.encode(user.getPassword()));
 				userService.save(userByPhoneNum);
 				refreshTokenService.deleteByUserId(userByPhoneNum.getId());
-				codeService.changeStatusCode(userByPhoneNum.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CodeType.RECOVERY));
+				codeService.changeStatusCode(userByPhoneNum.getPhoneNum(), user.getCode(), String.valueOf(CodeType.RECOVERY));
 				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
 			else {
@@ -134,17 +135,17 @@ public class AuthController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@RequestBody Map<String, String> user) {
+	public ResponseEntity<?> registerUser(@RequestBody UserAuth user) {
 		try {
-			if (userService.isRegisteredUser(user.get("phoneNum")))
+			if (userService.isRegisteredUser(user.getPhoneNum()))
 				return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The user is already registered"));
-			if (telegramService.compareCode(user.get("phoneNum"), Integer.parseInt(user.get("code")), String.valueOf(CodeType.REGISTER))) {
-				if (user.get("password").length() < 8 && user.get("password").length() > 20) {
+			if (telegramService.compareCode(user.getPhoneNum(), user.getCode(), String.valueOf(CodeType.REGISTER))) {
+				if (user.getPassword().length() < 8 && user.getPassword().length() > 20) {
 					return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Password is too short/long"));
 				}
-				User newUser = userService.createUser(userService.findUserByPhoneNum(user.get("phoneNum")), user);
+				User newUser = userService.createUser(userService.findUserByPhoneNum(user.getPhoneNum()), user);
 				userService.saveUser(newUser);
-				codeService.changeStatusCode(newUser.getPhoneNum(), Integer.parseInt(user.get("code")), String.valueOf(CodeType.REGISTER));
+				codeService.changeStatusCode(newUser.getPhoneNum(), user.getCode(), String.valueOf(CodeType.REGISTER));
 				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
 			}
 			else

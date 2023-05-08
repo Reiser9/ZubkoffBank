@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import com.example.dto.CardData;
+import com.example.dto.UserData;
+import com.example.dto.UserPassword;
 import com.example.enums.TransferStatus;
 import com.example.enums.TransferType;
 import com.example.enums.UserVerify;
@@ -97,11 +100,11 @@ public class UserController {
 	}
 
 	@PostMapping("/card/block")
-	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> cardId) {
+	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> data) {
 		try {
-			Card card = cardService.findCardById(Long.parseLong(cardId.get("id")));
+			Card card = cardService.findCardById(Long.parseLong(data.get("id")));
 			List<Card> cards = userService.findUserByPhoneNum(user.getName()).getCards();
-			if (cards.stream().anyMatch(e -> e.getId() == Long.parseLong(cardId.get("id")))) {
+			if (cards.stream().anyMatch(e -> e.getId() == Long.parseLong(data.get("id")))) {
 				card.setLock(true);
 				cardService.save(card);
 				return ResponseEntity.ok(new CardResponse(card, link));
@@ -113,15 +116,15 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/subscribe")
+	@GetMapping("/subscribes")
 	public ResponseEntity<?> getSubscribe(Principal userData) {
 		User user = userService.findUserByPhoneNum(userData.getName());
 		return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
 	}
 
 	@PostMapping("/unsubscribe")
-	public ResponseEntity<?> unsubscribe(Principal userData, @RequestParam(value = "id") Integer id) {
-		Subscribe subscribe = subscribeService.findSubscribeById(id);
+	public ResponseEntity<?> unsubscribe(Principal userData, @RequestBody Map<String, String> data) {
+		Subscribe subscribe = subscribeService.findSubscribeById(Integer.parseInt(data.get("id")));
 		User user = userService.findUserByPhoneNum(userData.getName());
 		UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
 		if (userSubscribe != null)
@@ -137,9 +140,9 @@ public class UserController {
 
 
 	@PostMapping("/subscribe")
-	public ResponseEntity<?> subscribe(Principal userData, @RequestParam(value = "id") Integer id) {
+	public ResponseEntity<?> subscribe(Principal userData, @RequestBody Map<String, Integer> data) {
 		try {
-			Subscribe subscribe = subscribeService.findSubscribeById(id);
+			Subscribe subscribe = subscribeService.findSubscribeById(data.get("id"));
 			User user = userService.findUserByPhoneNum(userData.getName());
 			UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
 			if (userSubscribe != null)
@@ -218,13 +221,13 @@ public class UserController {
 	}
 
 	@PostMapping("/card")
-	public ResponseEntity<?> createCard(Principal user, @RequestBody Map<String, String> dataCard) {
-		if (!typeService.isExistType(Integer.parseInt(dataCard.get("typeId"))))
+	public ResponseEntity<?> createCard(Principal user, @RequestBody CardData data) {
+		if (!typeService.isExistType(data.getTypeId()))
 			return ResponseEntity.badRequest().body(
 					new DefaultResponse("Not Successful", "Invalid card type"));
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
-			Card newCard = cardService.createCard(dataCard, bankId);
+			Card newCard = cardService.createCard(data, bankId);
 			userInfo.getCards().add(newCard);
 			userInfo.setCards(userInfo.getCards());
 			userService.save(userInfo);
@@ -242,7 +245,7 @@ public class UserController {
 	}
 
 	@PostMapping("/data")
-	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody Map<String, String> data) throws ParseException {
+	public ResponseEntity<?> updateDataUser(Principal user, @RequestBody UserData data) throws ParseException {
 		try {
 			User userInfo = userService.findUserByPhoneNum(user.getName());
 			return ResponseEntity.ok(new FullInfoUserResponse(userService.setDataUser(userInfo, data)));
@@ -269,12 +272,12 @@ public class UserController {
 	}
 
 	@PostMapping("/change_pass")
-	public ResponseEntity<?> changePassword(Principal user, @RequestBody Map<String, String> pass) {
+	public ResponseEntity<?> changePassword(Principal user, @RequestBody UserPassword data) {
 		try {
-			if (pass.get("newPassword").length() >= 8 && pass.get("newPassword").length() <= 35) {
+			if (data.getNewPassword().length() >= 8 && data.getNewPassword().length() <= 35) {
 				User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
-				if (passwordEncoder.matches(pass.get("password"), userByPhoneNum.getPassword())) {
-					userByPhoneNum.setPassword(passwordEncoder.encode(pass.get("newPassword")));
+				if (passwordEncoder.matches(data.getPassword(), userByPhoneNum.getPassword())) {
+					userByPhoneNum.setPassword(passwordEncoder.encode(data.getNewPassword()));
 					userService.save(userByPhoneNum);
 					refreshTokenService.deleteByUserId(userService.findUserByPhoneNum(user.getName()).getId());
 					return ResponseEntity.ok(new DefaultResponse("Successful", ""));
@@ -292,10 +295,10 @@ public class UserController {
 	}
 
 	@DeleteMapping("/")
-	public ResponseEntity<?> deleteAccount(Principal user, @RequestBody Map<String, String> pass) {
+	public ResponseEntity<?> deleteAccount(Principal user, @RequestBody Map<String, String> data) {
 		try {
 				User userByPhoneNum = userService.findUserByPhoneNum(user.getName());
-				if (passwordEncoder.matches(pass.get("password"), userByPhoneNum.getPassword())) {
+				if (passwordEncoder.matches(data.get("password"), userByPhoneNum.getPassword())) {
 					userByPhoneNum.setRoles(new ArrayList<>());
 					userByPhoneNum.setCodes(new ArrayList<>());
 					userByPhoneNum.setDataUsers(new ArrayList<>());

@@ -21,7 +21,7 @@ public class Transfer {
     private long id;
 
     @Column(name="money")
-    private String money;
+    private Double money;
 
     @Column(name="source_card_num")
     private String sourceCardNum;

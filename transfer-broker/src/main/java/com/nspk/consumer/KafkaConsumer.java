@@ -2,6 +2,7 @@ package com.nspk.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nspk.dto.TransferData;
 import com.nspk.service.BankService;
 import com.nspk.service.TransferService;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,11 @@ public class KafkaConsumer {
     private ObjectMapper objectMapper;
     @KafkaListener(topics = TOPIC, groupId = "transfer-group")
     public void consume(String messageJson) throws JsonProcessingException {
-        Map<String, String> message = objectMapper.readValue(messageJson, Map.class);
+        TransferData transferData = objectMapper.readValue(messageJson, TransferData.class);
         transferService.sendMoneyToUserByPhoneAndOrganization(
-                bankService.findBankByCode(Integer.parseInt(message.get("code"))).getIp(),
-                bankService.findBankByCode(Integer.parseInt(message.get("destCode"))).getIp(),
-                message);
+                bankService.findBankByCode(Integer.parseInt(transferData.getCode())).getIp(),
+                bankService.findBankByCode(Integer.parseInt(transferData.getDestCode())).getIp(),
+                transferData);
 
     }
 

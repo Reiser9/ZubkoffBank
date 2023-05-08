@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.example.dto.UserAuth;
+import com.example.dto.UserData;
 import com.example.enums.TransferStatus;
 import com.example.enums.TransferType;
 import com.example.enums.UserVerify;
@@ -66,27 +68,28 @@ public class UserService {
 		return user = userRepository.save(user);
 	}
 
-	public User setDataUser(User user, Map<String, String> data) throws ParseException {
+	public User setDataUser(User user, UserData data) throws ParseException {
 		List<DataUser> dataUsers = user.getDataUsers();
 		DataUser dataUser = dataUsers.get(user.getDataUsers().size() - 1);
-		dataUser.setBirthdate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.get("birthdate")));
-		dataUser.setGranted(data.get("granted"));
-		dataUser.setPassportSer(data.get("passportSer"));
-		dataUser.setPassportNum(data.get("passportNum"));
-		dataUser.setGrantedDate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.get("grantedDate")));
-		dataUser.setSex(Boolean.valueOf(data.get("sex")));
+		dataUser.setBirthdate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.getBirthdate()));
+		dataUser.setGranted(data.getGranted());
+		dataUser.setPassportSer(data.getPassportSer());
+		dataUser.setPassportNum(data.getPassportNum());
+		dataUser.setGrantedDate(new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(data.getGrantedDate()));
+		dataUser.setSex(data.isSex());
 		dataUsers.set(user.getDataUsers().size() - 1, dataUser);
+
 		user.setVerify(UserVerify.PROCESS_STATUS.toString());
 		user.setDataUsers(dataUsers);
 		userRepository.save(user);
 		return user;
 	}
 
-	public User createUser(User user, Map<String, String> regDataUser) {
-		user.setPassword(passwordEncoder.encode(regDataUser.get("password")));
+	public User createUser(User user, UserAuth data) {
+		user.setPassword(passwordEncoder.encode(data.getPassword()));
 		user.setVerify(UserVerify.NOT_VERIFIED_STATUS.toString());
 		//Data users
-		user.setDataUsers(Arrays.asList(createDataUser(regDataUser.get("fullName"))));
+		user.setDataUsers(Arrays.asList(createDataUser(data.getFullName())));
 		// Gen accountNum
 		user.setAccountNum(generateAccountNum());
 		return user;

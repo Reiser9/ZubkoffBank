@@ -36,8 +36,8 @@ public class SubscribePayment {
     private CardRepository cardRepository;
     @Autowired
     private UserRepository userRepository;
-//    @Scheduled(fixedDelay = 60 * 60 * 1000) // 1 час
-    @Scheduled(fixedDelay = 60 * 1000) // 1 минута
+    @Scheduled(fixedDelay = 60 * 60 * 1000) // 1 час
+//    @Scheduled(fixedDelay = 60 * 1000) // 1 минута
     @Async
     public void payment() {
         Calendar cal = Calendar.getInstance();

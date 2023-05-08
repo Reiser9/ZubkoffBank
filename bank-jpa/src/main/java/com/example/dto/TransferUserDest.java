@@ -9,14 +9,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransferFinish {
-    private long transferId;
-    private String cardNum;
+public class TransferUserDest {
     private Double money;
+    private String phoneNum;
+    private String organization;
 
-    public TransferFinish(TransferData dataTransfer) {
-        this.transferId = dataTransfer.getTransferId();
-        this.cardNum = dataTransfer.getCardNum();
+    public TransferUserDest(TransferData dataTransfer) {
         this.money = dataTransfer.getMoney();
+        this.phoneNum = dataTransfer.getDestPhoneNum();
+        this.organization = dataTransfer.getOrganization();
     }
 }

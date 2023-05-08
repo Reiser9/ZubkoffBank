@@ -2,6 +2,7 @@ package com.nspk.controller;
 
 import com.nspk.dto.BankInfo;
 import com.nspk.dto.SubscribeInfo;
+import com.nspk.dto.TransferUserInfo;
 import com.nspk.model.Bank;
 import com.nspk.model.User;
 import com.nspk.payload.DefaultResponse;
@@ -49,10 +50,10 @@ public class TransferController {
 
 
     @PostMapping(value = "/bank_info", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getBankInfoByPhone(@RequestBody Map<String, String> data) throws Exception {
+    public ResponseEntity<?> getBankInfoByPhone(@RequestBody TransferUserInfo data) throws Exception {
         List<Bank> banks = null;
         try {
-            banks = userService.findUserByPhoneNum(data.get("phoneNum")).getBanks();
+            banks = userService.findUserByPhoneNum(data.getPhoneNum()).getBanks();
             return ResponseEntity.status(200).body(banks.stream().map(bank -> new BankInfo(bank)));
         }
         catch (NullPointerException exception) {
@@ -61,9 +62,9 @@ public class TransferController {
     }
 
     @PostMapping(value = "/info", produces = APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody Map<String, String> data) {
+    public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody TransferUserInfo data) {
         return transferService.getInfoByPhoneAndOrganization(
-                        bankService.findBankByCode(Integer.parseInt(data.get("code"))).getIp(),
+                        bankService.findBankByCode(data.getCode()).getIp(),
                         data)
                 .map(response -> ResponseEntity.ok(response));
     }

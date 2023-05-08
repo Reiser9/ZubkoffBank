@@ -1,9 +1,6 @@
 package com.nspk.service;
 
-import com.nspk.dto.TransferInfoClient;
-import com.nspk.dto.TransferResult;
-import com.nspk.dto.TransferFinish;
-import com.nspk.enums.TransferStatus;
+import com.nspk.dto.*;
 import com.nspk.model.Transfer;
 import com.nspk.repository.BankRepository;
 import com.nspk.repository.TransferRepository;
@@ -28,7 +25,7 @@ public class TransferService {
     @Autowired
     private BankRepository bankRepository;
     private static final Logger logger = LoggerFactory.getLogger(String.class);
-    public Mono<Map<String, String>> getInfoByPhoneAndOrganization(String url, Map<String, String> transfer) {
+    public Mono<Map<String, String>> getInfoByPhoneAndOrganization(String url, TransferUserInfo transfer) {
         return WebClient.create().post()
                 .uri("http://" + url + ":8081/api/transfer/info")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -38,22 +35,21 @@ public class TransferService {
     }
 
     @Transactional
-    public void sendMoneyToUserByPhoneAndOrganization(String sourceUrl, String destUrl, Map<String, String> dataTransfer) {
+    public void sendMoneyToUserByPhoneAndOrganization(String sourceUrl, String destUrl, TransferData dataTransfer) {
         Transfer transfer = new Transfer();
         Timestamp timestamp = new Timestamp(Calendar.getInstance().getTime().getTime());
         transfer.setDate(timestamp);
         transfer.setStatus(true);
-        transfer.setSourceBank(bankRepository.findByOrganization(dataTransfer.get("organization")));
-        transfer.setMoney(dataTransfer.get("money"));
-        transfer.setSourceCardNum(dataTransfer.get("cardNum"));
-        transfer.setDestBank(bankRepository.findByOrganization(dataTransfer.get("destOrganization")));
-        transfer.setDestPhoneNum(dataTransfer.get("destPhoneNum"));
-        logger.error("a");
+        transfer.setSourceBank(bankRepository.findByOrganization(dataTransfer.getOrganization()));
+        transfer.setMoney(dataTransfer.getMoney());
+        transfer.setSourceCardNum(dataTransfer.getCardNum());
+        transfer.setDestBank(bankRepository.findByOrganization(dataTransfer.getDestOrganization()));
+        transfer.setDestPhoneNum(dataTransfer.getDestPhoneNum());
         transferRepository.save(transfer);
         WebClient.create().post()
                 .uri("http://" + destUrl + ":8081/api/transfer/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new TransferInfoClient(dataTransfer))
+                .bodyValue(new TransferUserDest(dataTransfer))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<TransferResult>() {})
                 .flatMap(data -> {

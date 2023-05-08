@@ -42,4 +42,18 @@ public class Subscribe {
     @JoinColumn(name = "subscribe_id", referencedColumnName = "id")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<UserSubscribe> userSubscribes;
+
+    @Override
+    public String toString() {
+        return "Subscribe{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", source=" + source +
+                ", money=" + money +
+                ", period=" + period +
+                ", description='" + description + '\'' +
+                ", img='" + img + '\'' +
+                ", userSubscribes=" + userSubscribes +
+                '}';
+    }
 }
