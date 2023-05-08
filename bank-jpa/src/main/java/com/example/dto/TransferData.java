@@ -16,8 +16,9 @@ public class TransferData {
     private String destCode;
     private String code;
     private String destPhoneNum;
+    private String destCardNum;
     private String organization;
     private int codeConfirm;
     private long transferId;
-
+    private String message;
 }

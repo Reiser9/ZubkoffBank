@@ -73,6 +73,7 @@ public class NSPKController {
             destTransfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
             destTransfer.setOrganization(transfer.getOrganization());
             destTransfer.setCardId(destCard.getId());
+            destTransfer.setComment(transfer.getMessage());
             destTransfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
             destTransfer.setType(TransferType.RECEIVE_STATUS.toString());
             destTransfers.add(destTransfer);

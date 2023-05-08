@@ -19,5 +19,5 @@ public class TransferData {
     private String organization;
     private String codeConfirm;
     private long transferId;
-
+    private String message;
 }

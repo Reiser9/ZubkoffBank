@@ -15,10 +15,12 @@ public class TransferUserDest {
     private Double money;
     private String phoneNum;
     private String organization;
+    private String message;
 
     public TransferUserDest(TransferData dataTransfer) {
         this.money = dataTransfer.getMoney();
         this.phoneNum = dataTransfer.getDestPhoneNum();
         this.organization = dataTransfer.getOrganization();
+        this.message = dataTransfer.getMessage();
     }
 }

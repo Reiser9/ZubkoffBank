@@ -38,15 +38,6 @@ public class TransferController {
     @Autowired
     private TransferService transferService;
 
-    @PostMapping(value = "/check_register", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> checkRegister(@RequestBody Map<String, String> data) throws Exception {
-        User user = userService.findUserByPhoneNum(data.get("phoneNum"));
-        if (user == null) {
-            return ResponseEntity.status(404).body("");
-        }
-        return ResponseEntity.status(200).body("");
-    }
-
 
 
     @PostMapping(value = "/bank_info", produces = APPLICATION_JSON_VALUE)

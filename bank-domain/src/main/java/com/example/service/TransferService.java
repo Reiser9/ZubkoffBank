@@ -5,6 +5,7 @@ import com.example.dto.TransferData;
 import com.example.dto.TransferUserInfo;
 import com.example.enums.TransferStatus;
 import com.example.enums.TransferType;
+import com.example.exception.NoActiveSubscribeException;
 import com.example.model.Card;
 import com.example.model.Transfer;
 import com.example.dto.TransferInfo;

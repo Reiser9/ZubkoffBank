@@ -4,15 +4,13 @@ import com.example.dto.TransferData;
 import com.example.dto.TransferUserInfo;
 import com.example.enums.CodeType;
 import com.example.exception.InsufficientFundsException;
+import com.example.exception.NoActiveSubscribeException;
 import com.example.exception.UnknownRecipientException;
 import com.example.model.Card;
 import com.example.model.User;
 import com.example.payload.DefaultResponse;
 import com.example.security.JwtRequestFilter;
-import com.example.service.CardService;
-import com.example.service.TelegramService;
-import com.example.service.TransferService;
-import com.example.service.UserService;
+import com.example.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +40,8 @@ public class UserTransferController {
     private String code;
     @Autowired
     private TelegramService telegramService;
+    @Autowired
+    private SubscribeService subscribeService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -78,6 +78,9 @@ public class UserTransferController {
     @Transactional
     public ResponseEntity<?> sendMoney(Principal data, @RequestBody TransferData transfer) {
         try {
+            if (transfer.getMessage().length() > 100) {
+                return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "The message is more than 100 characters"));
+            }
             if (transfer.getMoney() >= 100000) {
                 if (!telegramService.compareCode(data.getName(), transfer.getCodeConfirm(), CodeType.TRANSFER.toString())) {
                     return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Invalid code"));
@@ -92,7 +95,18 @@ public class UserTransferController {
             }
             transfer.setOrganization(organization);
             transfer.setCode(code);
-            User user = userService.findUserByPhoneNum(transfer.getDestPhoneNum());
+            User user = null;
+            if (transfer.getDestCardNum() != null) {
+                user = userService.findById(cardService.findCardByCardNum(transfer.getDestCardNum()).getUserId());
+                transfer.setDestPhoneNum(user.getPhoneNum());
+            }
+            else {
+                user = userService.findUserByPhoneNum(transfer.getDestPhoneNum());
+            }
+            if (userService.findUserByPhoneNum(data.getName()).getUserSubscribes().stream()
+                    .filter(e -> e.getSubscribe().getId() == 1 && e.isStatus()).findFirst().orElse(null) == null) {
+                throw new NoActiveSubscribeException();
+            }
             if (transfer.getDestOrganization().equals(transfer.getOrganization())) {
                 Card destCard = user.getCards().stream().filter(e -> !e.isLock()).findFirst().orElse(null);
                 if (destCard != null) {
@@ -120,6 +134,9 @@ public class UserTransferController {
         }
         catch (InsufficientFundsException exception) {
             return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
+        }
+        catch (NoActiveSubscribeException exception) {
+            return ResponseEntity.badRequest().body(new DefaultResponse("Not successful", "No active sbp subscription"));
         }
         catch (UnknownRecipientException exception) {
             return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown recipient"));

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nspk.dto.TransferData;
 import com.nspk.service.BankService;
 import com.nspk.service.TransferService;
+import com.nspk.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,6 +18,8 @@ public class KafkaConsumer {
     private static final String TOPIC = "transfer-topic";
     @Autowired
     private TransferService transferService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private BankService bankService;
     @Autowired
