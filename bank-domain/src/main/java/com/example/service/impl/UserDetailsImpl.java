@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import com.example.enums.UserVerify;
 import com.example.model.Card;
 import com.example.model.Role;
 import com.example.model.User;
@@ -23,20 +24,17 @@ public class UserDetailsImpl implements UserDetails {
 	private Long id;
 	private String accountNum;
 	private String phoneNum;
-	@JsonIgnore
-	private List<Card> cards;
 	private Collection<? extends GrantedAuthority> authorities;
 
 	@JsonIgnore
 	private String password;
 
-	public UserDetailsImpl(Long id, String accountNum, String phoneNum, String password, List<Card> cards, Collection<? extends GrantedAuthority> authorities) {
+	public UserDetailsImpl(Long id, String accountNum, String phoneNum, String password, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.accountNum = accountNum;
 		this.phoneNum = phoneNum;
 		this.password = password;
 		this.authorities = authorities;
-		this.cards = cards;
 	}
 
 	public static UserDetailsImpl build(User user) {
@@ -45,8 +43,8 @@ public class UserDetailsImpl implements UserDetails {
 		for (Role role : user.getRoles()) {
 			roles.add(new SimpleGrantedAuthority(role.getRole()));
 		}
-
-		return new UserDetailsImpl(user.getId(), user.getAccountNum(), user.getPhoneNum(), user.getPassword(), user.getCards(), roles);
+		roles.add(new SimpleGrantedAuthority(user.getVerify()));
+		return new UserDetailsImpl(user.getId(), user.getAccountNum(), user.getPhoneNum(), user.getPassword(), roles);
 	}
 
 	public Long getId() {
@@ -79,9 +77,7 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+	public boolean isCredentialsNonExpired() { return true;	}
 
 	@Override
 	public boolean isEnabled() {

@@ -71,7 +71,6 @@ public class SubscribePayment {
                 calendar.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
                 calendar.add(Calendar.DATE, userSubscribe.getSubscribe().getPeriod());
                 userSubscribe.setDatePayment(new Timestamp(calendar.getTime().getTime()));
-                userSubscribeRepository.save(userSubscribe);
             }
             else {
                 if (user.getCards().size() != 0) {
@@ -88,8 +87,8 @@ public class SubscribePayment {
                     cardRepository.save(card);
                 }
                 userSubscribe.setStatus(false);
-                userSubscribeRepository.save(userSubscribe);
             }
+            userSubscribeRepository.save(userSubscribe);
         }
     }
 }

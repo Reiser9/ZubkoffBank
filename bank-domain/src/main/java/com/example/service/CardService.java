@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -39,29 +40,46 @@ public class CardService {
     public List<Card> findAllByRemainsLimitNotEqualsTypeLimit() { return cardRepository.findAllByRemainsLimitNotEqualsTypeLimit(); }
 
     public Card createCard(CardData cardData, String bankId) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
-        cal.add(Calendar.YEAR, 4);
-        Timestamp date = new Timestamp(cal.getTime().getTime());
-        String cardNum = "";
-        while(true) {
-            cardNum = bankId
-                    + String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))))
-                    + String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))))
-                    + String.valueOf((int)(1000 + (Math.random() * (9999 - 1000))));
-            if (findCardByCardNum(cardNum) == null)
-                break;
-        }
         Card card = new Card();
-        card.setCardNum(cardNum);
-        card.setCvc(String.valueOf((int)(100 + (Math.random() * (999 - 100)))));
-        card.setExpDate(date);
+        card.setCardNum(generateCardNum(bankId));
+        card.setCvc(generateCvc());
+        card.setExpDate(generateCardDateExpired());
         card.setBalance(0);
         card.setFirstName(cardData.getFirstName());
         card.setSecondName(cardData.getSecondName());
         card.setLock(false);
         card.setType(typeRepository.findById(cardData.getTypeId()).get());
         return card;
+    }
+
+    public Card reissueCard(Card card, String bankId) {
+        card.setExpDate(generateCardDateExpired());
+        card.setCardNum(generateCardNum(bankId));
+        card.setCvc(generateCvc());
+        card.setLock(false);
+        return card;
+    }
+
+    public String generateCvc() {
+        return String.valueOf((int)(100 + (Math.random() * (999 - 100))));
+    }
+
+    public String generateCardNum(String bankId) {
+        String cardNum = "";
+        do {
+            cardNum = bankId
+                    + String.valueOf((int) (1000 + (Math.random() * (9999 - 1000))))
+                    + String.valueOf((int) (1000 + (Math.random() * (9999 - 1000))))
+                    + String.valueOf((int) (1000 + (Math.random() * (9999 - 1000))));
+        } while (findCardByCardNum(cardNum) != null);
+        return cardNum;
+    }
+
+    public Timestamp generateCardDateExpired() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
+        cal.add(Calendar.YEAR, 4);
+        return new Timestamp(cal.getTime().getTime());
     }
 
     public Card findCardByCardNum(String cardNum) {

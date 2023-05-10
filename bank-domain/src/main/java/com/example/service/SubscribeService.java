@@ -2,7 +2,9 @@ package com.example.service;
 
 import com.example.dto.SubscribeInfo;
 import com.example.model.Subscribe;
+import com.example.model.Transfer;
 import com.example.model.User;
+import com.example.model.UserSubscribe;
 import com.example.repository.SubscribeRepository;
 import com.example.repository.UserRepository;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
