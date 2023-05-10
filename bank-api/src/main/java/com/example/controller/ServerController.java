@@ -46,6 +46,6 @@ public class ServerController {
 
     @GetMapping("/subscribes")
     public ResponseEntity<?> getSubscribes() {
-        return ResponseEntity.ok().body(subscribeService.findSubscribes().stream().map(SubscribeResponse::new));
+        return ResponseEntity.ok().body(subscribeService.findSubscribes().stream().map(e -> new SubscribeResponse(e, link)));
     }
 }

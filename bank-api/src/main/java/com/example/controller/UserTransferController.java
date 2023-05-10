@@ -110,7 +110,7 @@ public class UserTransferController {
             if (transfer.getDestOrganization().equals(transfer.getOrganization())) {
                 Card destCard = user.getCards().stream().filter(e -> !e.isLock()).findFirst().orElse(null);
                 if (destCard != null) {
-                    transferService.sendInBank(sourceCard, destCard, transfer.getMoney());
+                    transferService.sendInBank(sourceCard, destCard, transfer.getMoney(), transfer.getMessage());
                 }
                 else {
                     throw new UnknownRecipientException();

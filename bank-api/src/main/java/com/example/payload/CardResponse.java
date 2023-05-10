@@ -26,7 +26,6 @@ public class CardResponse {
     private String secondName;
     private TypeResponse type;
     private boolean isLock;
-    private List<TransferResponse> transfers;
 
     public CardResponse(Card card, String url) {
         this.id = card.getId();
@@ -39,7 +38,5 @@ public class CardResponse {
         this.secondName = card.getSecondName();
         this.type = new TypeResponse(card.getType(), url);
         this.isLock = card.isLock();
-        this.transfers = card.getTransfers() == null ? new ArrayList<>() :
-                card.getTransfers().stream().map(TransferResponse::new).collect(Collectors.toList());
     }
 }

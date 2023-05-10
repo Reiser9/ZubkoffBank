@@ -15,8 +15,8 @@ public class SubscribeUserResponse {
     private Timestamp datePayment;
     private boolean status;
 
-    public SubscribeUserResponse(UserSubscribe userSubscribe) {
-        this.subscribe = new SubscribeResponse(userSubscribe.getSubscribe());
+    public SubscribeUserResponse(UserSubscribe userSubscribe, String link) {
+        this.subscribe = new SubscribeResponse(userSubscribe.getSubscribe(), link);
         this.datePayment = userSubscribe.getDatePayment();
         this.status = userSubscribe.isStatus();
     }

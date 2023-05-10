@@ -15,11 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import javax.transaction.Transactional;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -43,6 +47,8 @@ public class UserController {
 	@Autowired
 	private TypeService typeService;
 	@Autowired
+	private TransferService transferService;
+	@Autowired
 	private CardService cardService;
 	@Autowired
 	private UserSubscribeService userSubscribeService;
@@ -58,7 +64,7 @@ public class UserController {
 			return ResponseEntity.ok(cardService.findCardByUserId(userService.findUserByPhoneNum(user.getName()).getId()).stream().map(card -> new CardResponse(card, link)));
 		}
 		catch (NullPointerException e) {
-			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user card"));
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
 		}
 	}
 
@@ -103,6 +109,9 @@ public class UserController {
 	public ResponseEntity<?> setBlock(Principal user, @RequestBody Map<String, String> data) {
 		try {
 			Card card = cardService.findCardById(Long.parseLong(data.get("id")));
+			if (card.getBalance() != 0) {
+				return ResponseEntity.status(402).body(new DefaultResponse("Not Successful", "There is money on the balance"));
+			}
 			List<Card> cards = userService.findUserByPhoneNum(user.getName()).getCards();
 			if (cards.stream().anyMatch(e -> e.getId() == Long.parseLong(data.get("id")))) {
 				card.setLock(true);
@@ -119,7 +128,7 @@ public class UserController {
 	@GetMapping("/subscribes")
 	public ResponseEntity<?> getSubscribe(Principal userData) {
 		User user = userService.findUserByPhoneNum(userData.getName());
-		return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
+		return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(e -> new SubscribeUserResponse(e, link)));
 	}
 
 	@PostMapping("/unsubscribe")
@@ -131,7 +140,7 @@ public class UserController {
 		{
 			userSubscribe.setStatus(false);
 			userSubscribeService.save(userSubscribe);
-			return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
+			return ResponseEntity.ok().body(userService.findUserByPhoneNum(userData.getName()).getUserSubscribes().stream().map(e -> new SubscribeUserResponse(e, link)));
 		}
 		else {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
@@ -140,77 +149,51 @@ public class UserController {
 
 
 	@PostMapping("/subscribe")
+	@Transactional
 	public ResponseEntity<?> subscribe(Principal userData, @RequestBody Map<String, Integer> data) {
+
 		try {
 			Subscribe subscribe = subscribeService.findSubscribeById(data.get("id"));
 			User user = userService.findUserByPhoneNum(userData.getName());
 			UserSubscribe userSubscribe = userSubscribeService.findUserSubscribeByUserAndSubscribe(user, subscribe);
-			if (userSubscribe != null)
-			{
-				Card card = user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney() && !e.isLock()).findFirst().orElse(null);
-				if (card != null) {
-					userSubscribe.setStatus(true);
-					card.setBalance(card.getBalance() - subscribe.getMoney());
-					Transfer transfer = new Transfer();
-					transfer.setBalance(card.getBalance() - userSubscribe.getSubscribe().getMoney());
-					transfer.setMoney(userSubscribe.getSubscribe().getMoney());
-					transfer.setDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-					transfer.setOrganization(organization);
-					transfer.setCardId(card.getId());
-					transfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
-					transfer.setType(TransferType.SUBSCRIBE_STATUS.toString());
-					List<Transfer> transfers = card.getTransfers();
-					transfers.add(transfer);
-					card.setTransfers(transfers);
-					cardService.save(card);
-					userSubscribeService.save(userSubscribe);
-				}
-				else {
-					throw new InsufficientFundsException();
-				}
-				return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(SubscribeUserResponse::new));
-			}
+			Card card = user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney() && !e.isLock()).findFirst().orElse(null);
 			if (user.getCards().stream().filter(e -> e.getBalance() >= subscribe.getMoney()).findFirst().orElse(null) == null)
 			{
 				throw new InsufficientFundsException();
 			}
+			if (userSubscribe != null)
+			{
+				user.getUserSubscribes().stream().filter(e -> e.getId().equals(userSubscribe.getId())).findFirst().get().setStatus(true);
+				List<Transfer> transfers = card.getTransfers();
+				transfers.add(transferService.createTransferSubscribe(card, subscribe));
+				card.setBalance(card.getBalance() - subscribe.getMoney());
+				card.setTransfers(transfers);
+				cardService.save(card);
+				userService.save(user);
+				return ResponseEntity.ok().body(user.getUserSubscribes().stream().map(e -> new SubscribeUserResponse(e, link)));
+			}
+			final boolean[] isSubscribeSuccessful = { false };
 			if (!subscribe.isSource()) {
 				 subscribeService.subscribe(user).flatMap(result -> {
 					 if (result == 200)
 					 {
-						 Calendar cal = Calendar.getInstance();
-						 cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
-						 cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
-						 Timestamp date = new Timestamp(cal.getTime().getTime());
-						 UserSubscribe newUserSubscribe = new UserSubscribe();
-						 newUserSubscribe.setSubscribe(subscribe);
-						 newUserSubscribe.setUser(user);
-						 newUserSubscribe.setDatePayment(date);
-						 newUserSubscribe.setStatus(true);
-						 List<UserSubscribe> userSubscribes = user.getUserSubscribes();
-						 userSubscribes.add(newUserSubscribe);
-						 user.setUserSubscribes(userSubscribes);
-						 userService.save(user);
-						 return Mono.just(ResponseEntity.ok().body(userService.findUserByPhoneNum(userData.getName()).getUserSubscribes().stream().map(SubscribeUserResponse::new)));
+						 isSubscribeSuccessful[0] = true;
 					 }
-					 else {
-						 return Mono.just(ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Unknown error")));
-					 }
+					 return null;
 				 }).subscribe();
 			}
-			else {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(new Timestamp(System.currentTimeMillis()).getTime());
-				cal.add(Calendar.DAY_OF_MONTH, subscribe.getPeriod());
-				Timestamp date = new Timestamp(cal.getTime().getTime());
-				UserSubscribe newUserSubscribe = new UserSubscribe();
-				newUserSubscribe.setSubscribe(subscribe);
-				newUserSubscribe.setUser(user);
-				newUserSubscribe.setDatePayment(date);
-				newUserSubscribe.setStatus(true);
-				userSubscribeService.save(newUserSubscribe);
+			if (isSubscribeSuccessful[0] || subscribe.isSource()) {
+				List<UserSubscribe> userSubscribes = user.getUserSubscribes() == null ? new ArrayList<>() : user.getUserSubscribes();
+				userSubscribes.add(userSubscribeService.createUserSubscribe(user, subscribe));
+				user.setUserSubscribes(userSubscribes);
+				List<Transfer> transfers = card.getTransfers();
+				transfers.add(transferService.createTransferSubscribe(card, subscribe));
+				card.setTransfers(transfers);
+				card.setBalance(card.getBalance() - subscribe.getMoney());
+				cardService.save(card);
+				userService.save(user);
 			}
-			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(SubscribeUserResponse::new));
+			return ResponseEntity.ok().body(userSubscribeService.findUserSubscribeByUser(user).stream().map(e -> new SubscribeUserResponse(e, link)));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.badRequest().body(new DefaultResponse("Not Successful", "Not found subscribe"));
@@ -218,6 +201,23 @@ public class UserController {
 			return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
 		}
 
+	}
+
+	@PostMapping("/reissue_card")
+	public ResponseEntity<?> reissueCard(Principal principal, @RequestBody Map<String, Long> data) {
+		try {
+			User user = userService.findUserByPhoneNum(principal.getName());
+			Card card = user.getCards().stream().filter(e -> e.getId() == data.get("id")).findFirst().get();
+			if (card.isLock()) {
+				card = cardService.reissueCard(card, bankId);
+				cardService.save(card);
+				return ResponseEntity.ok(new CardResponse(card, link));
+			}
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "The card is not blocked"));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found card"));
+		}
 	}
 
 	@PostMapping("/card")
@@ -232,6 +232,23 @@ public class UserController {
 			userInfo.setCards(userInfo.getCards());
 			userService.save(userInfo);
 			return ResponseEntity.ok(new CardResponse(cardService.findCardByCardNum(newCard.getCardNum()), link));
+		}
+		catch (NullPointerException exception) {
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
+		}
+	}
+
+	@DeleteMapping("/card")
+	public ResponseEntity<?> deleteCard(Principal principal, @RequestBody Map<String, Long> data) {
+		try {
+			User user = userService.findUserByPhoneNum(principal.getName());
+			Card card = user.getCards().stream().filter(e -> e.getId() == data.get("id")).findFirst().get();
+			if (card.isLock()) {
+				user.getCards().remove(card);
+				userService.save(user);
+				return ResponseEntity.ok(new DefaultResponse("Successful", ""));
+			}
+			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "The card is not blocked"));
 		}
 		catch (NullPointerException exception) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
@@ -269,6 +286,18 @@ public class UserController {
 		catch (NullPointerException exception) {
 			return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
 		}
+	}
+
+	@GetMapping("/transfers")
+	public Page<TransferResponse> getTransfers(Principal user, @RequestBody Map<String, Long> data,
+											   @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
+											   @RequestParam(value = "limit", defaultValue = "10") @Max(50) Integer limit) {
+		if (userService.findUserByPhoneNum(user.getName()).getCards().stream().filter(e -> e.getId() == data.get("id")).findFirst().orElse(null) != null)
+		{
+			Page<Transfer> transfers = transferService.findTopNByDateAfterOrderByDateAsc(data.get("id"), offset, limit);
+			return transfers.map(e -> new TransferResponse(e));
+		}
+		return null;
 	}
 
 	@PostMapping("/change_pass")

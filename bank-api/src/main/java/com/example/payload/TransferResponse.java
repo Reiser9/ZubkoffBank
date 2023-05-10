@@ -25,6 +25,6 @@ public class TransferResponse {
         this.organization = transfer.getOrganization();
         this.status = transfer.getStatus();
         this.type = transfer.getType();
-        this.message = transfer.getComment();
+        this.message = transfer.getComment() == null ? "" : transfer.getComment();
     }
 }

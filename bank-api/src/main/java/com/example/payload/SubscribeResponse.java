@@ -19,12 +19,12 @@ public class SubscribeResponse {
     private String description;
     private String img;
 
-    public SubscribeResponse(Subscribe subscribe) {
+    public SubscribeResponse(Subscribe subscribe, String link) {
         this.id = subscribe.getId();
         this.name = subscribe.getName();
         this.money = subscribe.getMoney();
         this.period = subscribe.getPeriod();
         this.description = subscribe.getDescription();
-        this.img = subscribe.getImg();
+        this.img = link + subscribe.getImg().substring(subscribe.getImg().lastIndexOf('/') + 1);
     }
 }
