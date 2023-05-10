@@ -85,10 +85,25 @@
     gap: 12px;
 }
 
+@media (max-width: 480px) {
+    .item-admin__header{
+        padding: 0.8rem 1.2rem;
+    }
+}
+
 .item-admin__title {
     display: flex;
     align-items: center;
     gap: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+    .item-admin__title{
+        gap: 8px;
+    }
 }
 
 .item-admin__number {
@@ -107,8 +122,6 @@
 
 @media (max-width:480px) {
     .item-admin__number {
-        width: 28px;
-        height: 28px;
         font-size: 14px;
     }
 }
@@ -116,6 +129,9 @@
 .item-admin__name {
     font-weight: 600;
     font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (max-width:480px) {
@@ -133,13 +149,6 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-}
-
-@media (max-width:480px) {
-    .item-admin__open-btn {
-        width: 28px;
-        height: 28px;
-    }
 }
 
 .item-admin__arrow {

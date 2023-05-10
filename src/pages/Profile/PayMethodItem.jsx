@@ -2,9 +2,9 @@ import React from 'react';
 
 import './index.css';
 
-const PayMethodItem = ({text, icon, active = false}) => {
+const PayMethodItem = ({text, icon, active = false, ...props}) => {
     return (
-        <div className={`payment-method${active ? " active" : ""}`}>
+        <div {...props} className={`payment-method${active ? " active" : ""}`}>
             <div className="payment-method__icon--inner">
                 {icon}
             </div>
