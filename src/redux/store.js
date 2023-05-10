@@ -9,6 +9,7 @@ import serverSlice from './slices/server';
 import adminSlice from './slices/admin';
 import appSlice from './slices/app';
 import subscribesSlice from './slices/subscribes';
+import transfersSlice from './slices/transfers';
 
 export const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
         server: serverSlice,
         admin: adminSlice,
         app: appSlice,
-        subscribes: subscribesSlice
+        subscribes: subscribesSlice,
+        transfers: transfersSlice
     }
 });

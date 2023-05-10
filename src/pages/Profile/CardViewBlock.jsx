@@ -59,6 +59,10 @@ const CardViewBlock = ({cardId, setTab}) => {
                 : <Button className="profile__content--card--button" onClick={() => setConfirmBlockCard(true)} disabled={userIsLoading}>
                     Заблокировать
                 </Button>}
+
+                <Button className="profile__content--card--button" disabled={card.lock} onClick={() => setTab("history")}>
+                    История
+                </Button>
             </div>
 
             {card.lock

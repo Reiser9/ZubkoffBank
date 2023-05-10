@@ -20,12 +20,13 @@ import CardViewBlock from './CardViewBlock';
 import EmptyBlock from '../../components/EmptyBlock';
 import CurrentCardsBlock from './CurrentCardsBlock';
 import PaymentScreen from './PaymentsScreen';
+import HistoryScreen from './HistoryScreen';
 
 const Profile = () => {
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
     const [active, setActive] = React.useState(false);
 
-    const [tab, setTab] = React.useState("");
+    const [tab, setTab] = React.useState("card");
     const [activeCard, setActiveCard] = React.useState("");
     
     const {getCards} = useUser();
@@ -33,13 +34,13 @@ const Profile = () => {
     const {user, cards} = useSelector(state => state.user);
 
     React.useEffect(() => {
-        setTab(activeCard);
-    }, [activeCard]);
-
-    React.useEffect(() => {
         getCards();
         getCardTypes();
     }, []);
+
+    React.useEffect(() => {
+        setTab("card");
+    }, [activeCard]);
 
     if(isLoad){
         return <Preloader page />
@@ -48,13 +49,14 @@ const Profile = () => {
     return(
         <PageSidebarInner pageTitle="Профиль">
             <div className={`profile__sidebar${active ? " active" : ""}`}>
-                <SidebarItem title="Счета и карты">
+                <SidebarItem title="Счета и карты" withReload>
                     <CurrentCardsBlock
                         exitModal={confirmExitModal}
                         setExitModal={setConfirmExitModal}
                         setActive={setActive}
                         activeCard={activeCard}
                         setActiveCard={setActiveCard}
+                        setTab={setTab}
                     />
                 </SidebarItem>
 
@@ -72,7 +74,7 @@ const Profile = () => {
             </div>
 
             <div className={`profile__content${active ? " active" : ""}`}>
-                {tab !== "payment" && <>
+                {tab === "card" && <>
                     <BackButton onClick={() => setActive(false)} />
 
                     {user.verified !== VERIFY_STATUS.VERIFIED
@@ -85,9 +87,15 @@ const Profile = () => {
                 </>}
 
                 {tab === "payment" && <>
-                    <BackButton desktop onClick={() => setTab("")} />
+                    <BackButton desktop onClick={() => setTab("card")} />
 
                     <PaymentScreen cardId={activeCard} />
+                </>}
+
+                {tab === "history" && <>
+                    <BackButton desktop onClick={() => setTab("card")} />
+
+                    <HistoryScreen />
                 </>}
             </div>
         </PageSidebarInner>

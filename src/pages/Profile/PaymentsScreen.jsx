@@ -82,7 +82,7 @@ const PaymentScreen = ({cardId}) => {
 
                 <p className="transfer__text">Комиссия не взимается банком</p>
 
-                <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 50 рублей + 2%</p>
+                <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p>
             </div>
         </>
     )

@@ -7,5 +7,17 @@ export const REQUEST_STATUSES = {
     FILE_EXIST: "bank card with this name already exists",
     PHONE_NOT_FOUND: "This phone number was not found",
     INVALID_CODE: "Invalid code",
-    INSUFFICIENT_FUNDS: "Insufficient funds"
+    INSUFFICIENT_FUNDS: "Insufficient funds",
+    NOT_FOUND_USER: "Not found user",
+    NOT_FOUND_CARD: "Not found card",
+    NOT_FOUND_ROLE: "Not found role",
+    INCORRECT_CREDENTIALS: "Incorrect credentials!",
+    USER_NOT_LINK_ACCOUNT: "User did not link the account",
+    YOU_HAVE_MONEY: "There is money on the balance",
+    PASSWORD_LONG_OR_SHORT: "Password is too short/long",
+    WRONG_PASSWORD: "Wrong password",
+    MESSAGE_LONG: "The message is more than 100 characters",
+    NO_SBP_SUBSCRIBE: "No active sbp subscription",
+    UNKNOWN_RECIPIENT: "Unknown recipient",
+    ACCESS_DENIED: "Access denied"
 }

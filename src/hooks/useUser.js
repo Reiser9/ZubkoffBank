@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { NOTIFY_TYPES } from '../consts/NOTIFY_TYPES';
@@ -7,10 +8,12 @@ import useRequest from './useRequest';
 import useNotify from './useNotify';
 import { getNormalDate } from '../utils/getNormalDate';
 
-import { updateUser, setUserIsLoading, initCards, addCards, updateCard } from '../redux/slices/user';
+import { updateUser, setUserIsLoading, initCards, addCards, updateCard, initSubscribes, addSubscribe, removeSubscribe } from '../redux/slices/user';
 import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useUser = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const dispatch = useDispatch();
     const {request} = useRequest();
     const {user, cards} = useSelector(state => state.user);
@@ -67,6 +70,8 @@ const useUser = () => {
 
         const passportDataSplit = passportData.split(" ");
 
+        setIsLoading(true);
+
         const data = await request(REQUEST_TYPE.USER, "/data", HTTP_METHODS.POST, true, {
             passportSer: passportDataSplit[0],
             passportNum: passportDataSplit[1],
@@ -75,6 +80,8 @@ const useUser = () => {
             birthdate: getNormalDate(birthdate),
             sex
         });
+
+        setIsLoading(false);
 
         if(requestDataIsError(data)){
             switch(data.error){
@@ -135,11 +142,11 @@ const useUser = () => {
 
     // Отменить верификацию
     const cancelVerify = async (successCallback = () => {}) => {
-        dispatch(setUserIsLoading(true));
+        setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/cancel_data", HTTP_METHODS.POST, true);
 
-        dispatch(setUserIsLoading(false));
+        setIsLoading(false);
 
         if(requestDataIsError(data)){
             switch(data.error){
@@ -156,11 +163,11 @@ const useUser = () => {
 
     // Заблокировать карту
     const blockCard = async (id, successCallback = () => {}) => {
-        dispatch(setUserIsLoading(true));
+        setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/card/block", HTTP_METHODS.POST, true, {id});
 
-        dispatch(setUserIsLoading(false));
+        setIsLoading(false);
 
         if(requestDataIsError(data)){
             switch(data.error){
@@ -175,14 +182,72 @@ const useUser = () => {
         alertNotify("Успешно", "Карта заблокирована", "success");
     }
 
+    // Получить список подписок
+    const getUserSubscribes = async () => {
+        dispatch(setUserIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.USER, "/subscribes", HTTP_METHODS.GET, true);
+
+        dispatch(setUserIsLoading(false));
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(initSubscribes(data));
+    }
+
+    // Подписаться
+    const subscribe = async (id) => {
+        setIsLoading(true);
+
+        const data = await request(REQUEST_TYPE.USER, "/subscribe", HTTP_METHODS.POST, true, {id});
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(addSubscribe(data));
+    }
+
+    // Отписаться
+    const unsubscribe = async (id) => {
+        setIsLoading(true);
+
+        const data = await request(REQUEST_TYPE.USER, "/unsubscribe", HTTP_METHODS.POST, true, {id});
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(removeSubscribe(data));
+    }
+
     return {
+        isLoading,
         getUserShortInfo,
         getUserFullInfo,
         sendVerifyRequest,
         createCard,
         getCards,
         cancelVerify,
-        blockCard
+        blockCard,
+        getUserSubscribes,
+        subscribe,
+        unsubscribe
     }
 }
 

@@ -5,12 +5,13 @@ import './index.css';
 import {Dollar} from '../Icons';
 import { getFormatedNumber } from '../../utils/getFormatedNumber';
 
-const CheckItem = ({data, active, setActive, setTab}) => {
+const CheckItem = ({data, active, setActiveCard, setActive, setTab}) => {
     const {balance, type, id} = data;
 
     const clickHandler = () => {
-        setTab(true);
-        setActive(id);
+        setActive(true);
+        setActiveCard(id);
+        setTab("card");
     }
 
     return(

@@ -13,7 +13,7 @@ import CheckItem from '../../components/CheckItem';
 import Confirm from '../../components/Confirm';
 import NewCardModal from '../../components/NewCardModal';
 
-const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard}) => {
+const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard, setTab}) => {
     const [newCardModal, setNewCardModal] = React.useState(false);
     const [showMore, setShowMore] = React.useState(false);
 
@@ -28,7 +28,7 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
             </div>
             : <>
                 {cards.length > 0 && <div className={`profile__bill--content${showMore ? " active" : ""}`}>
-                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
+                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActiveCard={setActiveCard} setActive={setActive} setTab={setTab} />)}
                 </div>}
 
                 {cards.length > 4 && <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setShowMore(prev => !prev)}>

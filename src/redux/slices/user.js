@@ -3,7 +3,8 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
     userIsLoading: false,
     user: {},
-    cards: []
+    cards: [],
+    subscribes: []
 };
 
 export const userSlice = createSlice({
@@ -31,6 +32,34 @@ export const userSlice = createSlice({
                 cardsData.splice(indexToUpdate, 1, action.payload.data);
             }
         },
+        initSubscribes: (state, action) => {
+            state.subscribes = action.payload
+        },
+        addSubscribe: (state, action) => {
+            const actionId = action.payload[0].subscribe.id;
+            const currentElement = state.subscribes.findIndex(element => element.subscribe.id === actionId);
+            
+            if(currentElement === -1){
+                return state.subscribes = [...state.subscribes, ...action.payload];
+            }
+
+            state.subscribes.map(data => {
+                if(data.subscribe.id === currentElement.id){
+                    return {...action.payload};
+                }
+            })
+            //state.subscribes.splice(currentElement, 1, ...action.payload);
+        },
+        removeSubscribe: (state, action) => {
+            const actionId = action.payload[0].subscribe.id;
+            const currentElement = state.subscribes.findIndex(element => element.subscribe.id === actionId);
+            
+            if(currentElement === -1){
+                return;
+            }
+
+            state.subscribes.splice(currentElement, 1, ...action.payload);
+        },
         setDataUser: () => initialState
     }
 });
@@ -41,7 +70,10 @@ export const {
     initCards,
     addCards,
     updateCard,
-    setDataUser
+    setDataUser,
+    initSubscribes,
+    addSubscribe,
+    removeSubscribe
 } = userSlice.actions;
 
 export default userSlice.reducer;
