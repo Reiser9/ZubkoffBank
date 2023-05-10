@@ -15,7 +15,7 @@
     font-weight: 500;
 }
 
-.profile__content--limit--value{
+.profile__content--limit--value {
     font-size: 1.4rem;
 }
 
@@ -52,7 +52,7 @@
     overflow: hidden;
 }
 
-.profile__content--limit--line--progress{
+.profile__content--limit--line--progress {
     height: 4px;
     background: var(--mainC);
     position: absolute;
@@ -62,15 +62,15 @@
     transition: .2s linear;
 }
 
-.profile__content--limit--line--progress.orange{
+.profile__content--limit--line--progress.orange {
     background: #e59313;
 }
 
-.profile__content--limit--line--progress.red{
+.profile__content--limit--line--progress.red {
     background: #e51313;
 }
 
-.profile__bill--content{
+.profile__bill--content {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -80,6 +80,45 @@
     overflow-y: hidden;
 }
 
-.profile__bill--content.active{
+.profile__bill--content.active {
     max-height: unset;
+}
+
+.profile__content--inner {
+    width: 100%;
+    position: relative;
+}
+
+.profile__content--card--options {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-bottom: 8px;
+}
+
+.profile__content--card--options--btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--creditCardBg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s linear;
+}
+
+@media (any-hover:hover) {
+    .profile__content--card--options--btn:hover {
+        background-color: var(--submenuItemHoverC);
+    }
+}
+
+.profile__content--card--options--icon {
+    width: 24px;
+    height: 24px;
+}
+
+.profile__content--card--options--icon path {
+    stroke: var(--mainC);
 }
