@@ -1,17 +1,55 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import useRequest from './useRequest';
 import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
 import { requestDataIsError } from '../utils/requestDataIsError';
 import {NOTIFY_TYPES} from '../consts/NOTIFY_TYPES';
 import useNotify from '../hooks/useNotify';
+import { initTransfersHistory } from '../redux/slices/user';
+import { initInfoBanks, initInfoTransfer, addInfoTransfer } from '../redux/slices/transfers';
 
 const useTransfer = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [error, setError] = React.useState(false);
 
+    const {cards} = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
     const {request} = useRequest();
-    const {notifyTemplate} = useNotify();
+    const {alertNotify, notifyTemplate} = useNotify();
+
+    // Получить информацию о пользователе по номеру телефона
+    const getInfoTransfer = async ({phoneNum, cardNum, code}) => {
+        setIsLoading(true);
+
+        let params = {
+            code
+        }
+
+        if(phoneNum){
+            params = {
+                ...params,
+                phoneNum
+            }
+        }
+        else{
+            params = {
+                ...params,
+                cardNum
+            }
+        }
+
+        const data = await request(REQUEST_TYPE.USER, "/transfer/info", HTTP_METHODS.POST, true, params);
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            return setError(true);
+        }
+
+        return data;
+    }
 
     // Получить по номеру телефона все банки пользователя
     const getInfoBanks = async (phoneNum, successCallback = () => {}) => {
@@ -21,8 +59,6 @@ const useTransfer = () => {
 
         setIsLoading(false);
 
-        console.log(data);
-
         if(requestDataIsError(data)){
             setError(true);
 
@@ -31,45 +67,39 @@ const useTransfer = () => {
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
         }
-        // Ретурн
 
-        successCallback();
-    }
+        dispatch(initInfoBanks(data));
+        dispatch(initInfoTransfer([]));
 
-    // Получить информацию о пользователе по номеру телефона
-    const getInfoByPhone = async (phoneNum, code, successCallback = () => {}) => {
-        setIsLoading(true);
+        for(let item of data){
+            const infoTransfer = await getInfoTransfer({phoneNum, code: item.code});
 
-        const data = await request(REQUEST_TYPE.USER, "/transfer/info_phone", HTTP_METHODS.POST, true, {phoneNum, code});
-
-        setIsLoading(false);
-
-        if(requestDataIsError(data)){
-            setError(true);
+            if(infoTransfer){
+                dispatch(addInfoTransfer(infoTransfer));
+            }
         }
-        // Ретурн
 
         successCallback();
     }
 
     // Получить историю платежей по карте
-    const getTransfersHistory = async (id, successCallback = () => {}) => {
+    const getTransfersHistory = async (id, page = 0, limit = 10) => {
         setIsLoading(true);
 
-        const data = await request(REQUEST_TYPE.USER, "/transfers", HTTP_METHODS.GET, true, {
-            params: {
-                id
+        const indexCard = cards.findIndex(item => item.id === id);
+
+        if(!cards[indexCard].transfers){
+            const data = await request(REQUEST_TYPE.USER, `/transfers?id=${id}&offset=${page}&limit=${limit}`, HTTP_METHODS.GET, true);
+
+            if(requestDataIsError(data)){
+                setError(true);
             }
-        });
-
-        setIsLoading(false);
-
-        if(requestDataIsError(data)){
-            setError(true);
+            else{
+                dispatch(initTransfersHistory({id, data}));
+            }
         }
 
-        successCallback();
-        console.log(data);
+        setIsLoading(false);
     }
 
     // Получить код для платежа свыше 100 000 рублей
@@ -133,13 +163,14 @@ const useTransfer = () => {
         }
 
         successCallback();
+        alertNotify("Успешно", "Перевод выполнен", "success");
     }
 
     return {
         isLoading,
         error,
         getInfoBanks,
-        getInfoByPhone,
+        getInfoTransfer,
         getTransfersHistory,
         getConfirmTransferCode,
         sendTransfer

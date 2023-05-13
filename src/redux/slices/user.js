@@ -35,30 +35,37 @@ export const userSlice = createSlice({
         initSubscribes: (state, action) => {
             state.subscribes = action.payload
         },
-        addSubscribe: (state, action) => {
-            const actionId = action.payload[0].subscribe.id;
-            const currentElement = state.subscribes.findIndex(element => element.subscribe.id === actionId);
-            
-            if(currentElement === -1){
-                return state.subscribes = [...state.subscribes, ...action.payload];
-            }
+        removeCard: (state, action) => {
+            const indexToRemove = state.cards.findIndex(item => item.id === action.payload);
 
-            state.subscribes.map(data => {
-                if(data.subscribe.id === currentElement.id){
-                    return {...action.payload};
-                }
-            })
-            //state.subscribes.splice(currentElement, 1, ...action.payload);
+            if(indexToRemove !== -1) {
+                state.cards = state.cards.filter((_, index) => index !== indexToRemove);
+            }
         },
-        removeSubscribe: (state, action) => {
-            const actionId = action.payload[0].subscribe.id;
-            const currentElement = state.subscribes.findIndex(element => element.subscribe.id === actionId);
-            
-            if(currentElement === -1){
-                return;
-            }
+        reissueCard: (state, action) => {
+            const indexToSwap = state.cards.findIndex(item => item.id === action.payload.id);
 
-            state.subscribes.splice(currentElement, 1, ...action.payload);
+            if(indexToSwap !== -1) {
+                state.cards.splice(indexToSwap, 1, action.payload.data);
+            }
+        },
+        initTransfersHistory: (state, action) => {
+            const indexTransfer = state.cards.findIndex(item => item.id === action.payload.id);
+            const elementTransfer = state.cards[indexTransfer];
+
+            if(indexTransfer !== -1) {
+                state.cards.splice(indexTransfer, 1, {
+                    ...elementTransfer,
+                    transfers: action.payload.data
+                });
+            }
+        },
+        concatTransfersHistory: (state, action) => {
+            const indexTransfer = state.cards.findIndex(item => item.id === action.payload.id);
+
+            if(indexTransfer !== -1) {
+                state.cards[indexTransfer].transfers.content = [...state.cards[indexTransfer].transfers.content, ...action.payload.data.content];
+            }
         },
         setDataUser: () => initialState
     }
@@ -72,8 +79,10 @@ export const {
     updateCard,
     setDataUser,
     initSubscribes,
-    addSubscribe,
-    removeSubscribe
+    removeCard,
+    reissueCard,
+    initTransfersHistory,
+    concatTransfersHistory
 } = userSlice.actions;
 
 export default userSlice.reducer;

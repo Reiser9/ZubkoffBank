@@ -15,6 +15,7 @@ import useTransfer from '../../hooks/useTransfer';
 import PayMethod from './PayMethod';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 import {unmaskPhone} from '../../utils/maskPhone';
+import { getFormatCardNumber } from '../../utils/cardNumber';
 
 const PaymentScreen = ({cardId}) => {
     const [userCards, setUserCards] = React.useState([]);
@@ -24,8 +25,12 @@ const PaymentScreen = ({cardId}) => {
     const [cardNum, setCardNum] = React.useState("");
     const [phoneNum, setPhoneNum] = React.useState("");
 
+    const [summ, setSum] = React.useState("");
+    const [message, setMessage] = React.useState("");
+
     const {cards} = useSelector(state => state.user);
-    const {error, isLoading, sendTransfer, getInfoBanks} = useTransfer();
+    const {infoTransfer} = useSelector(state => state.transfers);
+    const {error, isLoading, sendTransfer, getInfoBanks, getInfoTransfer} = useTransfer();
 
     const send = () => {
         sendTransfer({
@@ -33,7 +38,8 @@ const PaymentScreen = ({cardId}) => {
             cardNum: "123123",
             destOrganization: "TestOrg",
             destCode: "4732",
-            destPhoneNum: "324823647223423"
+            destPhoneNum: "324823647223423",
+            message
         });
     }
 
@@ -42,7 +48,7 @@ const PaymentScreen = ({cardId}) => {
             getInfoBanks(unmaskPhone(phoneNum));
         }
         else{
-            // Искать инфу по карте
+            
         }
     }
 
@@ -75,58 +81,64 @@ const PaymentScreen = ({cardId}) => {
                 </Button>
             </div>}
 
-            {/* <TransferBlock title="Выберите счет оплаты">
-                <Swiper
-                    className="transfer__bil-payments"
-                    spaceBetween={10}
-                    freeMode={true}
-                    modules={[FreeMode]}
-                    breakpoints={{
-                        0: {
-                            slidesPerView: 1.5
-                        },
-                        350: {
-                            slidesPerView: 1.75
-                        },
-                        430: {
-                            slidesPerView: 2.25
-                        },
-                        610: {
-                            slidesPerView: 2.75
-                        },
-                        769: {
-                            slidesPerView: 1.75
-                        },
-                        820: {
-                            slidesPerView: 2.25
-                        },
-                        930: {
-                            slidesPerView: 2.75
-                        },
-                        1100: {
-                            slidesPerView: 3.5
-                        },
-                    }}
-                >
-                    {userCards.map(data => <SwiperSlide key={data.id}>
-                        <CardItem data={data} changeCardPay={setPayCard} active={data.id === payCard} />
-                    </SwiperSlide>)}
-                </Swiper>
-            </TransferBlock> */}
-            
-            {/* <div className="transfer__step">
-                <h5 className="transfer__title">Данные перевода</h5>
+            {infoTransfer.length !== 0 && <>
+                <TransferBlock title="Счет снятия">
+                    <Swiper
+                        className="transfer__bil-payments"
+                        spaceBetween={10}
+                        freeMode={true}
+                        modules={[FreeMode]}
+                        breakpoints={{
+                            0: {
+                                slidesPerView: 1.5
+                            },
+                            350: {
+                                slidesPerView: 1.75
+                            },
+                            430: {
+                                slidesPerView: 2.25
+                            },
+                            610: {
+                                slidesPerView: 2.75
+                            },
+                            769: {
+                                slidesPerView: 1.75
+                            },
+                            820: {
+                                slidesPerView: 2.25
+                            },
+                            930: {
+                                slidesPerView: 2.75
+                            },
+                            1100: {
+                                slidesPerView: 3.5
+                            },
+                        }}
+                    >
+                        {userCards.map(data => <SwiperSlide key={data.id}>
+                            <CardItem data={data} changeCardPay={setPayCard} active={data.id === payCard} />
+                        </SwiperSlide>)}
+                    </Swiper>
+                </TransferBlock>
 
-                <Input className="transfer__input" placeholder="Сумма" />
+                {infoTransfer.map((data, id) => <div key={id}>
+                    {data.fullName}
+                </div>)}
 
-                <Input className="transfer__input" placeholder="Комментарий к переводу" />
+                <div className="transfer__step">
+                    <h5 className="transfer__title">Данные перевода</h5>
 
-                <Button className="transfer__btn">Перевести 500 ₽</Button>
+                    <Input className="transfer__input" placeholder="Сумма" />
 
-                <p className="transfer__text">Комиссия не взимается банком</p>
+                    <Input className="transfer__input" placeholder="Комментарий к переводу" />
 
-                <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p>
-            </div> */}
+                    <Button className="transfer__btn">Перевести 500 ₽</Button>
+
+                    <p className="transfer__text">Комиссия не взимается банком</p>
+
+                    <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p>
+                </div>
+            </>}
         </>
     )
 }

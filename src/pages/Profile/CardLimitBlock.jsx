@@ -8,7 +8,7 @@ const CardLimitBlock = ({card}) => {
     const [progress, setProgress] = React.useState(0);
 
     React.useEffect(() => {
-        if(type && remainsLimit){
+        if(type && typeof remainsLimit === "number"){
             if(remainsLimit >= 0){
                 setProgress((type.limit - remainsLimit) / type.limit * 100);
             }
@@ -16,6 +16,7 @@ const CardLimitBlock = ({card}) => {
                 setProgress(100);
             }
         }
+
     }, [remainsLimit, type]);
 
     return (

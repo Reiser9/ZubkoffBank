@@ -1,0 +1,112 @@
+.history__item{
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--borderC);
+    gap: 4px;
+}
+
+.history__item:first-child{
+    border-top: 1px solid var(--borderC);
+}
+
+.history__item--content{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.history__item--first{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.history__item--organization--icon--inner{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--borderC);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.history__item--organization--icon{
+    max-width: 70%;
+    flex-shrink: 0;
+}
+
+.history__item--last, .history__item--info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.history__item--info{
+    align-items: flex-start;
+}
+
+.history__item--info--name{
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.history__item--info--date, .history__item--info--type{
+    font-size: 1.4rem;
+    color: rgba(0, 0, 0, .65);
+}
+
+.history__item--info--money{
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.history__item--info--money.red{
+    color: #EF3B3B;
+}
+
+.history__item--info--money.green{
+    color: #10B97B;
+}
+
+.history__comment{
+    padding: 0.8rem 1.2rem;
+    font-size: 1.4rem;
+    border-radius: 4px;
+    background: var(--borderC);
+    margin-left: 6rem;
+}
+
+.history__item--organization--icon--skeleton{
+    width: 48px;
+    height: 48px;
+}
+
+.history__item--info--name--skeleton, .history__item--info--date--skeleton,
+.history__item--info--money--skeleton, .history__item--info--type--skeleton{
+    height: 18px;
+}
+
+.history__item--info--name--skeleton{
+    width: 90px;
+}
+
+.history__item--info--date--skeleton{
+    width: 120px;
+}
+
+.history__item--info--money--skeleton{
+    width: 50px;
+}
+
+.history__item--info--type--skeleton{
+    width: 65px;
+}

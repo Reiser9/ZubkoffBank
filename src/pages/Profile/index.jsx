@@ -29,7 +29,7 @@ const Profile = () => {
     const [tab, setTab] = React.useState("card");
     const [activeCard, setActiveCard] = React.useState("");
     
-    const {getCards} = useUser();
+    const {isLoading, getCards} = useUser();
     const {isLoad, getCardTypes} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
 
@@ -49,7 +49,7 @@ const Profile = () => {
     return(
         <PageSidebarInner pageTitle="Профиль">
             <div className={`profile__sidebar${active ? " active" : ""}`}>
-                <SidebarItem title="Счета и карты" withReload>
+                <SidebarItem title="Счета и карты" withReload reloadAction={() => getCards(true)} reloadActive={isLoading}>
                     <CurrentCardsBlock
                         exitModal={confirmExitModal}
                         setExitModal={setConfirmExitModal}
@@ -81,7 +81,7 @@ const Profile = () => {
                         ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
                         : cards.length
                             ? activeCard
-                                ? <CardViewBlock cardId={activeCard} setTab={setTab} />
+                                ? <CardViewBlock cardId={activeCard} setActiveCard={setActiveCard} setTab={setTab} />
                                 : <EmptyBlock center title="Выберите карту" />
                             : <EmptyBlock center title="Для проведения операций нужно открыть счет" />}
                 </>}

@@ -8,10 +8,11 @@ import useRequest from './useRequest';
 import useNotify from './useNotify';
 import { getNormalDate } from '../utils/getNormalDate';
 
-import { updateUser, setUserIsLoading, initCards, addCards, updateCard, initSubscribes, addSubscribe, removeSubscribe } from '../redux/slices/user';
+import { updateUser, setUserIsLoading, initCards, addCards, updateCard, initSubscribes, removeCard, reissueCard } from '../redux/slices/user';
 import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useUser = () => {
+    const [error, setError] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
 
     const dispatch = useDispatch();
@@ -122,16 +123,16 @@ const useUser = () => {
     }
 
     // Получить карты пользователя
-    const getCards = async () => {
-        if(cards.length){
+    const getCards = async (reload = false) => {
+        if(cards.length && !reload){
             return;
         }
 
-        dispatch(setUserIsLoading(true));
+        setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/cards", HTTP_METHODS.GET, true);
 
-        dispatch(setUserIsLoading(false));
+        setIsLoading(false);
 
         if(requestDataIsError(data)){
             return;
@@ -171,6 +172,8 @@ const useUser = () => {
 
         if(requestDataIsError(data)){
             switch(data.error){
+                case REQUEST_STATUSES.YOU_HAVE_MONEY:
+                    return alertNotify("Ошибка", "Нельзя заблокировать карту, на которой есть средства", "error");
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
@@ -215,7 +218,7 @@ const useUser = () => {
             }
         }
 
-        dispatch(addSubscribe(data));
+        dispatch(initSubscribes(data));
     }
 
     // Отписаться
@@ -233,7 +236,7 @@ const useUser = () => {
             }
         }
 
-        dispatch(removeSubscribe(data));
+        dispatch(initSubscribes(data));
     }
 
     // Перевыпустить карту
@@ -253,12 +256,35 @@ const useUser = () => {
             }
         }
 
-        // Перезаписать карту в стейте
+        dispatch(reissueCard({id, data}));
 
         successCallback();
+        alertNotify("Успешно", "Карта перевыпущена", "success");
+    }
+
+    // Удалить карту
+    const deleteCard = async (id, successCallback = () => {}) => {
+        setIsLoading(true);
+
+        const data = await request(REQUEST_TYPE.USER, "/card", HTTP_METHODS.DELETE, true, {id});
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        dispatch(removeCard(id));
+
+        successCallback();
+        alertNotify("Успешно", "Карта удалена", "success");
     }
 
     return {
+        error,
         isLoading,
         getUserShortInfo,
         getUserFullInfo,
@@ -270,7 +296,8 @@ const useUser = () => {
         getUserSubscribes,
         subscribe,
         unsubscribe,
-        recreateCard
+        recreateCard,
+        deleteCard
     }
 }
 

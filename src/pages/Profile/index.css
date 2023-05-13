@@ -15,7 +15,7 @@
     font-weight: 500;
 }
 
-.profile__content--limit--value{
+.profile__content--limit--value {
     font-size: 1.4rem;
 }
 
@@ -52,7 +52,7 @@
     overflow: hidden;
 }
 
-.profile__content--limit--line--progress{
+.profile__content--limit--line--progress {
     height: 4px;
     background: var(--mainC);
     position: absolute;
@@ -62,15 +62,15 @@
     transition: .2s linear;
 }
 
-.profile__content--limit--line--progress.orange{
+.profile__content--limit--line--progress.orange {
     background: #e59313;
 }
 
-.profile__content--limit--line--progress.red{
+.profile__content--limit--line--progress.red {
     background: #e51313;
 }
 
-.profile__bill--content{
+.profile__bill--content {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -80,7 +80,7 @@
     overflow-y: hidden;
 }
 
-.profile__bill--content.active{
+.profile__bill--content.active {
     max-height: unset;
 }
 
@@ -112,89 +112,41 @@
     align-items: flex-start;
 }
 
-.history__item{
+.profile__content--inner {
     width: 100%;
-    padding: 0.8rem 1.2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    border-bottom: 1px solid var(--borderC);
-    gap: 4px;
+    position: relative;
 }
 
-.history__item:first-child{
-    border-top: 1px solid var(--borderC);
+.profile__content--card--options {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-bottom: 8px;
 }
 
-.history__item--content{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.history__item--first{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.history__item--organization--icon--inner{
-    width: 48px;
-    height: 48px;
+.profile__content--card--options--btn {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    flex-shrink: 0;
-    background: var(--borderC);
+    background-color: var(--creditCardBg);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s linear;
 }
 
-.history__item--organization--icon{
-    max-width: 70%;
-    flex-shrink: 0;
+@media (any-hover:hover) {
+    .profile__content--card--options--btn:hover {
+        background-color: var(--submenuItemHoverC);
+    }
 }
 
-.history__item--last, .history__item--info{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
+.profile__content--card--options--icon {
+    width: 24px;
+    height: 24px;
 }
 
-.history__item--info{
-    align-items: flex-start;
-}
-
-.history__item--info--name{
-    font-size: 1.4rem;
-    font-weight: 500;
-}
-
-.history__item--info--date, .history__item--info--type{
-    font-size: 1.4rem;
-    color: rgba(0, 0, 0, .65);
-}
-
-.history__item--info--money{
-    font-size: 1.4rem;
-    font-weight: 500;
-}
-
-.history__item--info--money.red{
-    color: #EF3B3B;
-}
-
-.history__item--info--money.green{
-    color: #10B97B;
-}
-
-.history__comment{
-    padding: 0.8rem 1.2rem;
-    font-size: 1.4rem;
-    border-radius: 4px;
-    background: var(--borderC);
-    margin-left: 6rem;
+.profile__content--card--options--icon path {
+    stroke: var(--mainC);
 }
