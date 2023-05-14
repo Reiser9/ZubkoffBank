@@ -27,7 +27,7 @@ const HistoryItem = ({data}) => {
                         </p>
 
                         <p className="history__item--info--date">
-                            {getNormalDate(date, "DD.MM.YYYY hh:mm")}
+                            {getNormalDate(date, "DD.MM.YYYY HH:mm")}
                         </p>
                     </div>
                 </div>

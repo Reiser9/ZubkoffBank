@@ -8,6 +8,7 @@ import {NOTIFY_TYPES} from '../consts/NOTIFY_TYPES';
 import useNotify from '../hooks/useNotify';
 import { initTransfersHistory } from '../redux/slices/user';
 import { initInfoBanks, initInfoTransfer, addInfoTransfer } from '../redux/slices/transfers';
+import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 
 const useTransfer = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -20,7 +21,7 @@ const useTransfer = () => {
     const {alertNotify, notifyTemplate} = useNotify();
 
     // Получить информацию о пользователе по номеру телефона
-    const getInfoTransfer = async ({phoneNum, cardNum, code}) => {
+    const getInfoTransfer = async ({phoneNum, cardNum, code, successCallback = () => {}}) => {
         setIsLoading(true);
 
         let params = {
@@ -48,6 +49,7 @@ const useTransfer = () => {
             return setError(true);
         }
 
+        successCallback();
         return data;
     }
 
@@ -57,10 +59,9 @@ const useTransfer = () => {
 
         const data = await request(REQUEST_TYPE.USER, "/transfer/info_banks", HTTP_METHODS.POST, true, {phoneNum});
 
-        setIsLoading(false);
-
         if(requestDataIsError(data)){
             setError(true);
+            setIsLoading(false);
 
             switch(data.error){
                 default:
@@ -75,21 +76,26 @@ const useTransfer = () => {
             const infoTransfer = await getInfoTransfer({phoneNum, code: item.code});
 
             if(infoTransfer){
-                dispatch(addInfoTransfer(infoTransfer));
+                dispatch(addInfoTransfer({
+                    ...infoTransfer,
+                    code: item.code
+                }));
             }
         }
+
+        setIsLoading(false);
 
         successCallback();
     }
 
     // Получить историю платежей по карте
-    const getTransfersHistory = async (id, page = 0, limit = 10) => {
+    const getTransfersHistory = async (id, reload = false) => {
         setIsLoading(true);
 
         const indexCard = cards.findIndex(item => item.id === id);
 
-        if(!cards[indexCard].transfers){
-            const data = await request(REQUEST_TYPE.USER, `/transfers?id=${id}&offset=${page}&limit=${limit}`, HTTP_METHODS.GET, true);
+        if(!cards[indexCard].transfers || reload){
+            const data = await request(REQUEST_TYPE.USER, `/transfers?id=${id}`, HTTP_METHODS.GET, true);
 
             if(requestDataIsError(data)){
                 setError(true);
@@ -118,7 +124,7 @@ const useTransfer = () => {
     }
 
     // Отправить перевод
-    const sendTransfer = async ({money, cardNum, destOrganization, destCode, destPhoneNum = "", destCardNum = "", message = "", code = "", successCallback = () => {}}) => {
+    const sendTransfer = async ({money, cardNum, destOrganization, destCode, destPhoneNum = "", destCardNum = "", message = "", code = ""}, successCallback = () => {}) => {
         setIsLoading(true);
 
         let paymentInfo = {
@@ -149,7 +155,7 @@ const useTransfer = () => {
             }
         }
 
-        const data = await request(REQUEST_TYPE.USER, "/transfer", HTTP_METHODS.POST, true, paymentInfo);
+        const data = await request(REQUEST_TYPE.USER, "/transfer/", HTTP_METHODS.POST, true, paymentInfo);
 
         setIsLoading(false);
 
@@ -157,6 +163,12 @@ const useTransfer = () => {
             setError(true);
 
             switch(data.error){
+                case REQUEST_STATUSES.INSUFFICIENT_FUNDS:
+                    return alertNotify("Ошибка", "Недостаточно средств на карте", "error");
+                case REQUEST_STATUSES.NOT_SUBSCRIBE:
+                    return alertNotify("Ошибка", "Получатель не подключен к СБП", "error");
+                case REQUEST_STATUSES.MESSAGE_LONG:
+                    return alertNotify("Ошибка", "Комментарий слишком длинный", "error");
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }

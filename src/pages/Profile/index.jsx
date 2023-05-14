@@ -21,6 +21,7 @@ import EmptyBlock from '../../components/EmptyBlock';
 import CurrentCardsBlock from './CurrentCardsBlock';
 import PaymentScreen from './PaymentsScreen';
 import HistoryScreen from './HistoryScreen';
+import useTransfer from '../../hooks/useTransfer';
 
 const Profile = () => {
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
@@ -30,6 +31,7 @@ const Profile = () => {
     const [activeCard, setActiveCard] = React.useState("");
     
     const {isLoading, getCards} = useUser();
+    const {getTransfersHistory} = useTransfer();
     const {isLoad, getCardTypes} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
 
@@ -89,7 +91,7 @@ const Profile = () => {
                 {tab === "payment" && <>
                     <BackButton desktop onClick={() => setTab("card")} />
 
-                    <PaymentScreen cardId={activeCard} />
+                    <PaymentScreen cardId={activeCard} setTab={setTab} />
                 </>}
 
                 {tab === "history" && <>

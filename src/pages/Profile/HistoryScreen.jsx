@@ -10,6 +10,7 @@ import HistorySkeleton from '../../components/HistoryItem/HistorySkeleton';
 import EmptyBlock from '../../components/EmptyBlock';
 import { HTTP_METHODS, REQUEST_TYPE } from '../../consts/HTTP';
 import { concatTransfersHistory } from '../../redux/slices/user';
+import ReloadButton from '../../components/ReloadButton';
 
 const HistoryScreen = ({cardId}) => {
     const [page, setPage] = React.useState(1);
@@ -21,6 +22,11 @@ const HistoryScreen = ({cardId}) => {
 
     const {request} = useRequest();
     const dispatch = useDispatch();
+
+    const reloadHistory = () => {
+        getTransfersHistory(cardId, true);
+        setPage(1);
+    }
 
     React.useEffect(() => {
         getTransfersHistory(cardId);
@@ -38,7 +44,7 @@ const HistoryScreen = ({cardId}) => {
             const scrollTop = e.target.scrollTop;
             const innerHeight = window.innerHeight;
             
-            if(scrollHeight - (scrollTop + innerHeight) < 10 && currentTransfers.content.length < currentTransfers.totalElements){
+            if(scrollHeight - (scrollTop + innerHeight) < -180 && currentTransfers.content.length < currentTransfers.totalElements){
                 setLoad(true);
             }
         }
@@ -58,16 +64,17 @@ const HistoryScreen = ({cardId}) => {
                 setLoad(false);
             });
         }
-        else{
-            setLoad(false);
-        }
     }, [load]);
 
     return (
         <div className="history__inner">
-            <p className="history__title">
-                История платежей
-            </p>
+            <div className="history__title--inner">
+                <p className="history__title">
+                    История платежей
+                </p>
+
+                <ReloadButton active={isLoading} action={reloadHistory} />
+            </div>
 
             <div className="history__content">
                 {isLoading
