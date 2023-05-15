@@ -251,10 +251,6 @@
     .payment-method {
         width: calc(100% / 2 - 12px / 2);
     }
-
-    .payment-method:last-child {
-        width: 100%;
-    }
 }
 
 @media (max-width:576px) {

@@ -31,6 +31,7 @@ const UserBlock = ({data, id}) => {
         <AdminItem id={id + 1} title={`${dataUsers?.secondName || "-"} ${dataUsers?.firstName || "-"} ${dataUsers?.middleName || "-"}`}>
             <DataItem title="Данные" icon={<Data />}>
                 <div className="section-admin__items">
+                    <DataField title="ФИО" value={`${dataUsers?.secondName} ${dataUsers?.firstName} ${dataUsers?.middleName}`} big />
                     <DataField title="Номер телефона" value={maskPhone(phoneNum)} />
                     <DataField title="Номер счета" value={accountNum || "-"} />
                     <DataField title="Роли пользователя" value={roles.join(", ") || "-"} big />

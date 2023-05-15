@@ -95,7 +95,7 @@ const Profile = () => {
                 {tab === "history" && <>
                     <BackButton desktop onClick={() => setTab("card")} />
 
-                    <HistoryScreen />
+                    <HistoryScreen cardId={activeCard} />
                 </>}
             </div>
         </PageSidebarInner>

@@ -236,6 +236,28 @@ const useUser = () => {
         dispatch(removeSubscribe(data));
     }
 
+    // Перевыпустить карту
+    const recreateCard = async (id, successCallback = () => {}) => {
+        setIsLoading(true);
+
+        const data = await request(REQUEST_TYPE.USER, "/reissue_card", HTTP_METHODS.POST, true, {id});
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                case REQUEST_STATUSES.CARD_NOT_BLOCKED:
+                    return alertNotify("Ошибка", "Карта не заблокирована", "error");
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        // Перезаписать карту в стейте
+
+        successCallback();
+    }
+
     return {
         isLoading,
         getUserShortInfo,
@@ -247,7 +269,8 @@ const useUser = () => {
         blockCard,
         getUserSubscribes,
         subscribe,
-        unsubscribe
+        unsubscribe,
+        recreateCard
     }
 }
 

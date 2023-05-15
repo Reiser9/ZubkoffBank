@@ -19,5 +19,6 @@ export const REQUEST_STATUSES = {
     MESSAGE_LONG: "The message is more than 100 characters",
     NO_SBP_SUBSCRIBE: "No active sbp subscription",
     UNKNOWN_RECIPIENT: "Unknown recipient",
-    ACCESS_DENIED: "Access denied"
+    ACCESS_DENIED: "Access denied",
+    CARD_NOT_BLOCKED: "The card is not blocked"
 }

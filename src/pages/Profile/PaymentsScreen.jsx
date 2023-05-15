@@ -11,12 +11,45 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import TransferBlock from './TransferBlock';
 import CardItem from './CardItem';
+import useTransfer from '../../hooks/useTransfer';
+import PayMethod from './PayMethod';
+import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
+import {unmaskPhone} from '../../utils/maskPhone';
 
 const PaymentScreen = ({cardId}) => {
     const [userCards, setUserCards] = React.useState([]);
     const [payCard, setPayCard] = React.useState(cardId);
 
+    const [method, setMethod] = React.useState("");
+    const [cardNum, setCardNum] = React.useState("");
+    const [phoneNum, setPhoneNum] = React.useState("");
+
     const {cards} = useSelector(state => state.user);
+    const {error, isLoading, sendTransfer, getInfoBanks} = useTransfer();
+
+    const send = () => {
+        sendTransfer({
+            money: 500,
+            cardNum: "123123",
+            destOrganization: "TestOrg",
+            destCode: "4732",
+            destPhoneNum: "324823647223423"
+        });
+    }
+
+    const getInfo = () => {
+        if(method === "phone"){
+            getInfoBanks(unmaskPhone(phoneNum));
+        }
+        else{
+            // Искать инфу по карте
+        }
+    }
+
+    React.useEffect(() => {
+        setCardNum("");
+        setPhoneNum("");
+    }, [method]);
 
     React.useEffect(() => {
         const cardsWithoutLock = cards.filter(card => !card.lock);
@@ -28,7 +61,21 @@ const PaymentScreen = ({cardId}) => {
 
     return (
         <>
-            <TransferBlock title="Выберите счет оплаты">
+            <PayMethod method={method} setMethod={setMethod} />
+
+            {method && <div className="transfer__step">
+                <h5 className="transfer__title">Введите реквизиты</h5>
+                
+                {method === "phone"
+                ? <Input mask={INPUT_MASK_TYPE.PHONE} className="transfer__input" placeholder="Номер телефона" value={phoneNum} setValue={setPhoneNum} />
+                : <Input mask={INPUT_MASK_TYPE.CARD} className="transfer__input" placeholder="Номер карты" value={cardNum} setValue={setCardNum} />}
+
+                <Button onClick={getInfo} className="transfer__info--button" disabled={isLoading || (phoneNum.length !== 17 && cardNum.length !== 19)}>
+                    Далее
+                </Button>
+            </div>}
+
+            {/* <TransferBlock title="Выберите счет оплаты">
                 <Swiper
                     className="transfer__bil-payments"
                     spaceBetween={10}
@@ -65,13 +112,9 @@ const PaymentScreen = ({cardId}) => {
                         <CardItem data={data} changeCardPay={setPayCard} active={data.id === payCard} />
                     </SwiperSlide>)}
                 </Swiper>
-            </TransferBlock>
-
-            <div className="transfer__step">
-                <h5 className="transfer__title">Введите реквизиты</h5>
-
-                <Input className="transfer__input" placeholder="Номер карты" />
-
+            </TransferBlock> */}
+            
+            {/* <div className="transfer__step">
                 <h5 className="transfer__title">Данные перевода</h5>
 
                 <Input className="transfer__input" placeholder="Сумма" />
@@ -83,7 +126,7 @@ const PaymentScreen = ({cardId}) => {
                 <p className="transfer__text">Комиссия не взимается банком</p>
 
                 <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p>
-            </div>
+            </div> */}
         </>
     )
 }
