@@ -72,15 +72,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/auth/**", "/health/**", "/card/types/**", "/test-kafka/**", "/subscribes/**").anonymous()
 			.antMatchers("/api/**").access("hasIpAddress('"+ip+"')")
+			.antMatchers("/user/logout", "/user/data", "/user/cancel_data",
+					"/user/change_pass","/user/", "/user/short_info",
+					"/user/full_info")
+				.access("hasAnyAuthority('user') and" +
+					" !hasAnyAuthority('blocked')")
 			.antMatchers("/user/**").access("hasAnyAuthority('user') and" +
 						" !hasAnyAuthority('blocked') and" +
 						" hasAnyAuthority('VERIFIED')")
-			.antMatchers("/user/logout", "/user/data", "/user/cancel_data",
-						"/user/change_pass","/user/", "/user/short_info",
-						"/user/full_info")
-				.access("hasAnyAuthority('user') and" +
-						" !hasAnyAuthority('blocked') and" +
-						" !hasAnyAuthority('VERIFIED')")
 			.antMatchers("/admin/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
 			.antMatchers("/admin/user/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
 			.antMatchers("/admin/users/**").access("hasAnyAuthority('admin') and !hasAnyAuthority('blocked')")
