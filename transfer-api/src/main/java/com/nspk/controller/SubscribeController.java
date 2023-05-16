@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -52,6 +54,12 @@ public class SubscribeController {
         catch (Exception exception) {
             return ResponseEntity.badRequest().body("");
         }
+
+    }
+
+    @PostMapping(value = "/subscribe_check_user", produces = APPLICATION_JSON_VALUE)
+    public Mono<Map<String, String>> isSubscribed(@RequestBody SubscribeInfo subscribeInfo) {
+        return userService.isSubscribed(bankService.findBankByCode(subscribeInfo.getCode()).getIp(), subscribeInfo);
 
     }
 }

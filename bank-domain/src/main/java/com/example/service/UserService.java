@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.example.dto.SubscribeInfo;
 import com.example.dto.UserAuth;
 import com.example.dto.UserData;
 import com.example.enums.TransferStatus;
@@ -20,32 +21,52 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 
 @Service
 @Getter
 @Setter
-@AllArgsConstructor
 public class UserService {
+	@Value("${nspk.url}")
+	private String url;
+	@Value("${nspk.port}")
+	private String port;
+	@Value("${bank.id}")
+	private String code;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
 	private CardRepository cardRepository;
-
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	public User findUserByPhoneNum(String phoneNum) {
 		return userRepository.findByPhoneNum(phoneNum);
+	}
+
+	public Mono<Integer> isSubscribed(User user) {
+		return WebClient.create().post()
+				.uri("http://" + url + ":" + port + "/subscribe_check_user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.bodyValue(new SubscribeInfo(user.getPhoneNum(), Integer.parseInt(code)))
+				.exchangeToMono(response -> response.toEntity(String.class))
+				.flatMap(entityResponse -> {
+					int statusCode = entityResponse.getStatusCode().value();
+					return Mono.just(statusCode);
+				});
 	}
 
 	public User findUserByAccountNum(String accountNum) {

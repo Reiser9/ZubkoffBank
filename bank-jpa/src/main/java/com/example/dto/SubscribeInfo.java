@@ -12,5 +12,4 @@ import lombok.Setter;
 public class SubscribeInfo {
     private String phoneNum;
     private int code;
-
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,17 @@ public class NSPKController {
     @Value("${bank.organization}")
     private String organization;
     private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
+
+    @PostMapping(value = "/subscribe_check_user", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> isSubscribeActive(@RequestBody SubscribeInfo transfer) {
+        UserSubscribe userSubscribe = userService.findUserByPhoneNum(transfer.getPhoneNum()).getUserSubscribes().stream()
+                .filter(e -> e.getSubscribe().getId() == 1 && e.isStatus()).findFirst().orElse(null);
+        if (userSubscribe == null) {
+            return ResponseEntity.badRequest().body("");
+        }
+        else
+            return ResponseEntity.ok().body("");
+    }
 
     @PostMapping(value = "/transfer/info", produces = APPLICATION_JSON_VALUE)
     public TransferInfo getTransferInfo(@RequestBody TransferUserInfo transfer) throws Exception {

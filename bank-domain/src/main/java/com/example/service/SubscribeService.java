@@ -23,6 +23,8 @@ import java.util.List;
 public class SubscribeService {
     @Value("${nspk.url}")
     private String url;
+    @Value("${nspk.port}")
+    private String port;
     @Value("${bank.id}")
     private String code;
     @Autowired
@@ -45,7 +47,7 @@ public class SubscribeService {
 
     public Mono<Integer> subscribe(User user) {
         return WebClient.create().post()
-                .uri(url + "/subscribe")
+                .uri("http://" + url + ":" + port + "/subscribe")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new SubscribeInfo(user.getPhoneNum(), Integer.parseInt(code)))
                 .exchangeToMono(response -> response.toEntity(String.class))
