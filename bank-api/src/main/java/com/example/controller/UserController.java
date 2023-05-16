@@ -289,12 +289,12 @@ public class UserController {
 	}
 
 	@GetMapping("/transfers")
-	public Page<TransferResponse> getTransfers(Principal user, @RequestBody Map<String, Long> data,
+	public Page<TransferResponse> getTransfers(Principal user, @RequestParam(value = "id") Long id,
 											   @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
 											   @RequestParam(value = "limit", defaultValue = "10") @Max(50) Integer limit) {
-		if (userService.findUserByPhoneNum(user.getName()).getCards().stream().filter(e -> e.getId() == data.get("id")).findFirst().orElse(null) != null)
+		if (userService.findUserByPhoneNum(user.getName()).getCards().stream().filter(e -> e.getId() == id).findFirst().orElse(null) != null)
 		{
-			Page<Transfer> transfers = transferService.findTopNByDateAfterOrderByDateAsc(data.get("id"), offset, limit);
+			Page<Transfer> transfers = transferService.findTopNByDateAfterOrderByDateAsc(id, offset, limit);
 			return transfers.map(e -> new TransferResponse(e));
 		}
 		return null;

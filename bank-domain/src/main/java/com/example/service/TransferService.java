@@ -46,6 +46,8 @@ public class TransferService {
     private static final Logger logger = LoggerFactory.getLogger(String.class);
     @Value("${nspk.url}")
     private String url;
+    @Value("${nspk.port}")
+    private String port;
     @Value("${bank.organization}")
     private String organization;
     @Value("${bank.id}")
@@ -91,8 +93,8 @@ public class TransferService {
         destTransfer.setOrganization(organization);
         destTransfer.setCardId(destCard.getId());
         destTransfer.setComment(message);
-        sourceTransfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
-        sourceTransfer.setType(TransferType.RECEIVE_STATUS.toString());
+        destTransfer.setStatus(TransferStatus.SUCCESSFULLY_STATUS.toString());
+        destTransfer.setType(TransferType.RECEIVE_STATUS.toString());
         sourceTransfers.add(sourceTransfer);
         sourceCard.setTransfers(sourceTransfers);
         destTransfers.add(destTransfer);
@@ -103,7 +105,6 @@ public class TransferService {
 
 
     public Transfer createTransferSubscribe(Card card, Subscribe subscribe) {
-        logger.error("1");
         Transfer transfer = new Transfer();
         transfer.setBalance(card.getBalance() - subscribe.getMoney());
         transfer.setMoney(subscribe.getMoney());
@@ -135,7 +136,6 @@ public class TransferService {
             sourceCard.setBalance(moneyAndCommission);
         }
         else {
-            logger.error(String.valueOf(sourceCard.getBalance()));
             sourceTransfer.setBalance(sourceCard.getBalance()-money);
             sourceCard.setBalance(sourceCard.getBalance()-money);
         }
@@ -154,7 +154,7 @@ public class TransferService {
 
     public Mono<ResponseEntity<TransferInfo>> getInfoByPhone(TransferUserInfo transfer) {
         return WebClient.create().post()
-                .uri(url + "/transfer/info")
+                .uri("http://" + url + ":" + port + "/transfer/info")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(transfer)
                 .retrieve()
@@ -171,7 +171,7 @@ public class TransferService {
 
     public Mono<ResponseEntity<List<BankInfo>>> getBanksInfoByPhone(TransferUserInfo transfer) {
         return WebClient.create().post()
-                .uri(url + "/transfer/bank_info")
+                .uri("http://" + url + ":" + port + "/transfer/bank_info")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(transfer)
                 .retrieve()
