@@ -1,6 +1,7 @@
 export const REQUEST_STATUSES = {
     SUCCESSFUL: "Successful",
     NOT_SUCCESSFUL: "Not Successful",
+    NOT_SUCCESSFUL2: "Not successful",
     SITE_NOT_AVAILABLE: "Site not available",
     YOU_ARE_BLOCKED: "You are blocked",
     ALREADY_REGISTERED: "The user is already registered",
@@ -20,5 +21,6 @@ export const REQUEST_STATUSES = {
     NO_SBP_SUBSCRIBE: "No active sbp subscription",
     UNKNOWN_RECIPIENT: "Unknown recipient",
     ACCESS_DENIED: "Access denied",
-    CARD_NOT_BLOCKED: "The card is not blocked"
+    CARD_NOT_BLOCKED: "The card is not blocked",
+    NOT_SUBSCRIBE: "The recipient or you do not have an active subscription"
 }

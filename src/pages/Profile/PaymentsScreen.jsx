@@ -13,42 +13,83 @@ import TransferBlock from './TransferBlock';
 import CardItem from './CardItem';
 import useTransfer from '../../hooks/useTransfer';
 import PayMethod from './PayMethod';
+import TransferToItem from './TransferToItem';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 import {unmaskPhone} from '../../utils/maskPhone';
+import { getFormatCardNumber } from '../../utils/cardNumber';
 
-const PaymentScreen = ({cardId}) => {
+const PaymentScreen = ({cardId, setTab}) => {
+    const [stage, setStage] = React.useState(1);
+
     const [userCards, setUserCards] = React.useState([]);
-    const [payCard, setPayCard] = React.useState(cardId);
+    const [payCard, setPayCard] = React.useState("");
+    const [toPayInfo, setToPayInfo] = React.useState("");
 
     const [method, setMethod] = React.useState("");
     const [cardNum, setCardNum] = React.useState("");
     const [phoneNum, setPhoneNum] = React.useState("");
 
+    const [summ, setSum] = React.useState("");
+    const [message, setMessage] = React.useState("");
+
     const {cards} = useSelector(state => state.user);
-    const {error, isLoading, sendTransfer, getInfoBanks} = useTransfer();
+    const {infoTransfer} = useSelector(state => state.transfers);
+    const {error, isLoading, sendTransfer, getInfoBanks, getInfoTransfer} = useTransfer();
 
     const send = () => {
         sendTransfer({
-            money: 500,
-            cardNum: "123123",
-            destOrganization: "TestOrg",
-            destCode: "4732",
-            destPhoneNum: "324823647223423"
+            money: summ,
+            cardNum: payCard,
+            destOrganization: toPayInfo.organization,
+            destCode: toPayInfo.code,
+            destPhoneNum: toPayInfo.phoneNum,
+            message
+        },
+        () => {
+            setStage(1);
+            setMethod("");
+            setSum("");
+            setMessage("");
+            setTab("card");
         });
     }
 
     const getInfo = () => {
         if(method === "phone"){
-            getInfoBanks(unmaskPhone(phoneNum));
+            getInfoBanks(unmaskPhone(phoneNum), () => setStage(3));
         }
         else{
-            // Искать инфу по карте
+            
+        }
+    }
+
+    const transfersStagePrev = () => {
+        setStage(prev => prev - 1);
+
+        if(stage === 2){
+            setMethod("");
         }
     }
 
     React.useEffect(() => {
+        if(summ > 1000000){
+            setSum(1000000);
+        }
+        else if(summ <= 0 && summ != ""){
+            setSum(1);
+        }
+    }, [summ]);
+
+    React.useEffect(() => {
         setCardNum("");
         setPhoneNum("");
+        
+        if(method){
+            setStage(2);
+        }
+        else{
+            setStage(1);
+        }
     }, [method]);
 
     React.useEffect(() => {
@@ -56,14 +97,15 @@ const PaymentScreen = ({cardId}) => {
         const itemToMove = cardsWithoutLock.find(item => item.id === cardId);
         const otherItems = cardsWithoutLock.filter(item => item.id !== cardId);
 
+        setPayCard(itemToMove.cardNum);
         setUserCards([itemToMove].concat(otherItems));
     }, [cardId]);
 
     return (
         <>
-            <PayMethod method={method} setMethod={setMethod} />
+            {stage === 1 && <PayMethod method={method} setMethod={setMethod} />}
 
-            {method && <div className="transfer__step">
+            {stage === 2 && <div className="transfer__step">
                 <h5 className="transfer__title">Введите реквизиты</h5>
                 
                 {method === "phone"
@@ -75,58 +117,70 @@ const PaymentScreen = ({cardId}) => {
                 </Button>
             </div>}
 
-            {/* <TransferBlock title="Выберите счет оплаты">
-                <Swiper
-                    className="transfer__bil-payments"
-                    spaceBetween={10}
-                    freeMode={true}
-                    modules={[FreeMode]}
-                    breakpoints={{
-                        0: {
-                            slidesPerView: 1.5
-                        },
-                        350: {
-                            slidesPerView: 1.75
-                        },
-                        430: {
-                            slidesPerView: 2.25
-                        },
-                        610: {
-                            slidesPerView: 2.75
-                        },
-                        769: {
-                            slidesPerView: 1.75
-                        },
-                        820: {
-                            slidesPerView: 2.25
-                        },
-                        930: {
-                            slidesPerView: 2.75
-                        },
-                        1100: {
-                            slidesPerView: 3.5
-                        },
-                    }}
-                >
-                    {userCards.map(data => <SwiperSlide key={data.id}>
-                        <CardItem data={data} changeCardPay={setPayCard} active={data.id === payCard} />
-                    </SwiperSlide>)}
-                </Swiper>
-            </TransferBlock> */}
-            
-            {/* <div className="transfer__step">
-                <h5 className="transfer__title">Данные перевода</h5>
+            {stage === 3 && <>
+                <TransferBlock title="Счет снятия">
+                    <Swiper
+                        className="transfer__bil-payments"
+                        spaceBetween={10}
+                        freeMode={true}
+                        modules={[FreeMode]}
+                        breakpoints={{
+                            0: {
+                                slidesPerView: 1.5
+                            },
+                            350: {
+                                slidesPerView: 1.75
+                            },
+                            430: {
+                                slidesPerView: 2.25
+                            },
+                            610: {
+                                slidesPerView: 2.75
+                            },
+                            769: {
+                                slidesPerView: 1.75
+                            },
+                            820: {
+                                slidesPerView: 2.25
+                            },
+                            930: {
+                                slidesPerView: 2.75
+                            },
+                            1100: {
+                                slidesPerView: 3.5
+                            },
+                        }}
+                    >
+                        {userCards.map(data => <SwiperSlide key={data.id}>
+                            <CardItem data={data} changeCardPay={setPayCard} active={data.cardNum === payCard} />
+                        </SwiperSlide>)}
+                    </Swiper>
+                </TransferBlock>
 
-                <Input className="transfer__input" placeholder="Сумма" />
+                <div className="transfer__to--content">
+                    {infoTransfer.map((data, id) => <TransferToItem key={id} data={data} active={data.code === toPayInfo.code} changeToPay={setToPayInfo} />)}
+                </div>
 
-                <Input className="transfer__input" placeholder="Комментарий к переводу" />
+                <div className="transfer__step">
+                    <h5 className="transfer__title">Данные перевода</h5>
 
-                <Button className="transfer__btn">Перевести 500 ₽</Button>
+                    <Input className="transfer__input" placeholder="Сумма" value={summ} setValue={setSum} type="number" title="Не более 1 000 000₽" />
 
-                <p className="transfer__text">Комиссия не взимается банком</p>
+                    <Input className="transfer__input" placeholder="Комментарий к переводу" value={message} setValue={setMessage} title="Максимум 100 символов" />
 
-                <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p>
-            </div> */}
+                    {!summ || !toPayInfo
+                    ? <Button className="transfer__btn" disabled>Перевести</Button>
+                    : <Button className="transfer__btn" disabled={isLoading} onClick={send}>Перевести {summ} ₽</Button>}
+
+                    {summ && <p className="transfer__text">Комиссия не взимается банком</p>}
+
+                    {/* <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p> */}
+                </div>
+            </>}
+
+            <div className="transfer__buttons">
+                <Button className="transfer__button" disabled={stage <= 1} onClick={transfersStagePrev}>Назад</Button>
+            </div>
         </>
     )
 }

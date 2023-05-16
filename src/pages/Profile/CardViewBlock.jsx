@@ -17,30 +17,27 @@ import EmptyBlock from '../../components/EmptyBlock';
 import Confirm from '../../components/Confirm';
 import { Block, Delete, Dots, Reload } from '../../components/Icons';
 
-const CardViewBlock = ({ cardId, setTab }) => {
+const CardViewBlock = ({ cardId, setActiveCard, setTab }) => {
     const [card, setCard] = React.useState("");
     const [confirmBlockCard, setConfirmBlockCard] = React.useState(false);
     const [submenuActive, setSubmenuActive] = React.useState(false);
 
     const { cards, userIsLoading } = useSelector(state => state.user);
     const { alertNotify } = useNotify();
-    const { blockCard } = useUser();
+    const { blockCard, recreateCard, deleteCard } = useUser();
 
     const copy = (text) => {
         copyToClipboard(text);
         alertNotify("Успешно", "Текст скопирован", "success");
     }
 
-    const blockCardHandler = () => {
-        blockCard(cardId);
+    const removeCardHandler = () => {
+        deleteCard(cardId);
+        setActiveCard("");
     }
 
-    const documentClickHandler = (e) => {
-        const targetElement = e.target;
-
-        if (!targetElement.closest('.submenu') && !targetElement.closest('.profile__content--card--options') && !submenuActive) {
-            setSubmenuActive(false);
-        }
+    const recreateCardHandler = () => {
+        recreateCard(cardId);
     }
 
     React.useEffect(() => {
@@ -49,6 +46,14 @@ const CardViewBlock = ({ cardId, setTab }) => {
     }, [cardId, cards]);
 
     React.useEffect(() => {
+        const documentClickHandler = (e) => {
+            const targetElement = e.target;
+    
+            if (!targetElement.closest('.submenu') && !targetElement.closest('.profile__content--card--options') && !submenuActive) {
+                setSubmenuActive(false);
+            }
+        }
+
         document.addEventListener("click", documentClickHandler);
 
         return () => document.removeEventListener("click", documentClickHandler);
@@ -62,29 +67,31 @@ const CardViewBlock = ({ cardId, setTab }) => {
                         <Dots className="profile__content--card--options--icon" />
                     </div>
                     <div className={`submenu submenu_profile${submenuActive ? " active" : ""}`}>
-                        <div className="submenu__item red">
+                        {!card.lock && <div className="submenu__item red" onClick={() => setConfirmBlockCard(true)} disabled={userIsLoading}>
                             <Block className="submenu__icon" />
 
                             <p className="submenu__text">
                                 Заблокировать
                             </p>
-                        </div>
+                        </div>}
 
-                        <div className="submenu__item red">
-                            <Delete className="submenu__icon" />
+                        {card.lock && <>
+                            <div className="submenu__item red" onClick={removeCardHandler} disabled={userIsLoading}>
+                                <Delete className="submenu__icon" />
 
-                            <p className="submenu__text">
-                                Удалить
-                            </p>
-                        </div>
+                                <p className="submenu__text">
+                                    Удалить
+                                </p>
+                            </div>
 
-                        <div className="submenu__item">
-                            <Reload className="submenu__icon" />
-                            
-                            <p className="submenu__text">
-                                Перевыпустить
-                            </p>
-                        </div>
+                            <div className="submenu__item" onClick={recreateCardHandler} disabled={userIsLoading}>
+                                <Reload className="submenu__icon" />
+                                
+                                <p className="submenu__text">
+                                    Перевыпустить
+                                </p>
+                            </div>
+                        </>}
                     </div>
                 </div>
                 <div className="profile__content--card--inner">
@@ -100,16 +107,8 @@ const CardViewBlock = ({ cardId, setTab }) => {
                     Перевести
                 </Button>
 
-                {card.lock
-                    ? <Button className="profile__content--card--button" disabled>
-                        Разблокировать
-                    </Button>
-                    : <Button className="profile__content--card--button" onClick={() => setConfirmBlockCard(true)} disabled={userIsLoading}>
-                        Заблокировать
-                    </Button>}
-
                 <Button className="profile__content--card--button" disabled={card.lock} onClick={() => setTab("history")}>
-                    История
+                    История платежей
                 </Button>
             </div>
 
@@ -120,7 +119,7 @@ const CardViewBlock = ({ cardId, setTab }) => {
                     <CardRequisitesBlock card={card} />
                 </>}
 
-            <Confirm active={confirmBlockCard} setActive={setConfirmBlockCard} text="Вы действительно хотите заблокировать карту?" action={blockCardHandler} />
+            <Confirm active={confirmBlockCard} setActive={setConfirmBlockCard} text="Вы действительно хотите заблокировать карту?" action={() => blockCard(cardId)} />
         </>
     )
 }

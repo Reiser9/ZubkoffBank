@@ -1,0 +1,6 @@
+export const HISTORY_STATUSES = {
+    RECEIVE: "RECEIVE",
+    SUBSCRIBE: "SUBSCRIBE",
+    SEND: "SEND",
+    ATM: "ATM"
+}

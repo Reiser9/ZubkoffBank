@@ -2,8 +2,16 @@ import React from 'react';
 
 import './index.css';
 
+import {getNormalDate} from '../../utils/getNormalDate';
+import {getTypeTransfer} from '../../utils/getTypeTransfer';
+import {HISTORY_STATUSES} from '../../consts/HISTORY_STATUSES';
+
 const HistoryItem = ({data}) => {
-    const {money, type, organization, date, comment} = data;
+    const {date, message, money, organization, status, type} = data;
+
+    const positiveMoney = () => {
+        return type === HISTORY_STATUSES.ATM || type === HISTORY_STATUSES.RECEIVE;
+    }
 
     return (
         <div className="history__item">
@@ -19,24 +27,24 @@ const HistoryItem = ({data}) => {
                         </p>
 
                         <p className="history__item--info--date">
-                            {date}
+                            {getNormalDate(date, "DD.MM.YYYY HH:mm")}
                         </p>
                     </div>
                 </div>
 
                 <div className="history__item--last">
-                    <p className="history__item--info--money green">
-                        + {money} ₽
+                    <p className={`history__item--info--money ${positiveMoney() ? "green" : "red"}`}>
+                        {positiveMoney() ? "+" : "-"} {money} ₽
                     </p>
 
                     <p className="history__item--info--type">
-                        Пополнение
+                        {getTypeTransfer(type)}
                     </p>
                 </div>
             </div>
 
-            {comment && <p className="history__comment">
-                {comment}
+            {message && <p className="history__comment">
+                {message}
             </p>}
         </div>
     )
