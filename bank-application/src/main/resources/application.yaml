@@ -1,0 +1,39 @@
+---
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: true
+    generate-ddl: true
+    defer-datasource-initialization: true
+    hibirnate:
+      ddl-auto: true
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bank
+    username: program
+    password: test
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: 158.160.105.62:9092
+jwt:
+  secret: AAAAB3NzaC1yc2EAAAADAQABAAABAQCMvYO/DlcTD1r/TZnYXXxe6XI6SwYtlxBKWSt0VV3b1rHUrWhowK1Om3AWLpUBzbQ7GC6LObK+u4IvkRKAtI312IzR4rDVzYusUBp86VrxXOMFWbxtOsyMh6+/SLKU40s864SaCKA4nF0ghzOwlLJjzONZjbwRQHRsRpOAMTa5mSsAi8HauI3p8AnUEHKybnMQYEQmSFbxS/Lfc//Oj2KADalI899wrLe342ZfwA9SPf08cH1pTvTjqZTsfNmSLC5RcIJOqinspzcY5qLdcibvQDEZdBU1MMUJiePTzlL8KdmUjdWRTp1C0DsQTqZWn51hXXK+xL4WYonj1tFO4m7Spk7lV9uas5uiVfuf9o48Ct9LB6nWGVMNYw65arj67+1feyhcMF296q75BqjJc8qPjxDp2NtQuPZTeab42FYpiGR/pvuNShpEgqkw7mjXjKRyIDUWBczbEhjAyuWgHnnoz/eyaFcjyeaq7jVNCcQd+GAbB4kzJYAicv2u/MA+yk3MgVW5P8xoPzWcBJZ0PJfcBdXtEK4EALgaKm4cqk9lll005EKoukN5j9AEuLgHAbKkMC13UOzILV/b0wcVhh0TGEPCyPPiCkYgZ1t3URy4AwszH/jC85VlISUUChnL/yrXC5h/NLP1J1nOc3doE3Exrb8zm//CJQfebAjFgYFBeW8IxjY91J4HAJYE4o/JeaeanC7kWl7SS9je3ZH9HT0Fk+BYWpRh8ZDQINMTsk1uR59PK2QhR/5PeiaINucu+bV/Q11NwpJatI1XIZ130iPb7xeRe2o5YtjquFQmQLm1bpH3XHPUSs8X2fJcYYwe4UvPBKIskNRcGDm7/DBb8Rb/EvbK2psXXnT9qKFP0WnNscMV5UG6CBQGsfCtOCUY2Yk+5OlHIYpgfMpARITgErTr+9z8DyKat7U9P6GQEx66TP58GPRtAE6biQEKyGfUoojEz2fOfXch2vfUMv/TgoQh+PbGLTIVH3GI0WREl4XtZYd/w7ebyvxE9TfTtYrKXQDwSUnp9p6V/nKcFkZdPOrlAlWhxRaF2xxQsZlSa88E/Nx07dvavNDwbp+QItWYfotS8ZJOjgKDypMa9oUvGmw6xCilEGRk7woPyfYrZImhOJd+xd3P8cUW+Schvm/6SKsHMpnIS8g1x/qWtiTLOLtQWU5isuQECGw0Yoh5zeaOME2yV0F1e2BrT7NDqPxauSGFdS138LmHxB4GXuPz/s
+  jwtExp: 300000
+  refreshExp: 86400000
+nspk:
+  url: 62.84.127.106
+  port: 8082
+bank:
+  id: 4732
+  organization: zubbkoffbank
+telegram:
+  bot:
+    username: zubbkoffbot
+    token: 6190253117:AAFf0QM8Q0vl6EUrkvPptv54BkHLQJ6rM-o
+    owner: 889919996
+#    codeExp:
+path:
+  img: http://158.160.52.78/image/
+server:
+  port: 8081

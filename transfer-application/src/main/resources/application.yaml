@@ -1,0 +1,18 @@
+---
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: true
+    generate-ddl: true
+    defer-datasource-initialization: true
+    hibirnate:
+      ddl-auto: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/trans
+    username: program
+    password: test
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: 158.160.105.62:9092
+server:
+  port: 8082
