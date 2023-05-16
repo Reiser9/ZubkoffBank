@@ -14,6 +14,7 @@ import Preloader from '../Preloader';
 import CardShortBlock from '../CardShortBlock';
 import EmptyBlock from '../EmptyBlock';
 import CardShortBlockSkeleton from '../CardShortBlock/CardShortBlockSkeleton';
+import Button from '../Button';
 
 const NewCardModal = ({active, setActive}) => {
     const [page, setPage] = React.useState(1);
@@ -70,7 +71,9 @@ const NewCardModal = ({active, setActive}) => {
                     : !error
                     ? cardTypes.content?.length ? cardTypes.content.map((data, id) => <CardShortBlock key={id} data={data} setActive={setActive} />)
                     : <EmptyBlock title="Карт нет" />
-                    : <EmptyBlock title="Возникла ошибка" />}
+                    : <EmptyBlock title="Возникла ошибка">
+                        <Button small onClick={getCardTypes}>Перезагрузить</Button>
+                    </EmptyBlock>}
 
                 {load && [...Array(2)].map((_, id) => <CardShortBlockSkeleton key={id} />)}
             </div>

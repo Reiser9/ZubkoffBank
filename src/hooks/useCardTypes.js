@@ -16,6 +16,7 @@ const useCardTypes = () => {
     const {request} = useRequest();
 
     const getCardTypes = async (page = 0, limit = 10) => {
+        setError(false);
         setIsLoad(true);
 
         if(Object.keys(cardTypes).length === 0 || cardTypes.number !== page || cardTypes.size !== limit){

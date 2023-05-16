@@ -8,7 +8,7 @@ export const unmaskPhone = (phoneNumber) => {
 
 // phoneNumber = +79999999999 - пример
 export const maskPhone = (phoneNumber) => {
-    if(phoneNumber.length < 12 || !phoneNumber){
+    if(!phoneNumber || phoneNumber.length < 12){
         return phoneNumber;
     }
 

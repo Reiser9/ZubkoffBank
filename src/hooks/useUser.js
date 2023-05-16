@@ -22,6 +22,7 @@ const useUser = () => {
 
     // Получить короткую информацию пользователя
     const getUserShortInfo = async () => {
+        setError(false);
         dispatch(setUserIsLoading(true));
 
         const data = await request(REQUEST_TYPE.USER, "/short_info", HTTP_METHODS.GET, true);
@@ -37,6 +38,7 @@ const useUser = () => {
 
     // Получить полную информацию пользователя
     const getUserFullInfo = async () => {
+        setError(false);
         if(user.secondName){
             return;
         }
@@ -48,7 +50,7 @@ const useUser = () => {
         dispatch(setUserIsLoading(false));
 
         if(requestDataIsError(data)){
-            return;
+            return setError(true);
         }
 
         dispatch(updateUser(data));
@@ -56,6 +58,7 @@ const useUser = () => {
 
     // Отправить данные на верификацию
     const sendVerifyRequest = async (passportData, granted, grantedDate, birthdate, sex, successCallback = () => {}) => {
+        setError(false);
         if(passportData.length < 11){
             return alertNotify("Ошибка", "Введите корректные данные паспорта", "warn");
         }
@@ -99,6 +102,7 @@ const useUser = () => {
 
     // Создать карту
     const createCard = async (typeId, firstName, secondName, successCallback = () => {}) => {
+        setError(false);
         dispatch(setUserIsLoading(true));
 
         const data = await request(REQUEST_TYPE.USER, "/card", HTTP_METHODS.POST, true, {
@@ -124,6 +128,7 @@ const useUser = () => {
 
     // Получить карты пользователя
     const getCards = async (reload = false) => {
+        setError(false);
         if(cards.length && !reload){
             return;
         }
@@ -135,7 +140,7 @@ const useUser = () => {
         setIsLoading(false);
 
         if(requestDataIsError(data)){
-            return;
+            return setError(true);
         }
 
         dispatch(initCards(data));
@@ -143,6 +148,7 @@ const useUser = () => {
 
     // Отменить верификацию
     const cancelVerify = async (successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/cancel_data", HTTP_METHODS.POST, true);
@@ -164,6 +170,7 @@ const useUser = () => {
 
     // Заблокировать карту
     const blockCard = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/card/block", HTTP_METHODS.POST, true, {id});
@@ -187,6 +194,7 @@ const useUser = () => {
 
     // Получить список подписок
     const getUserSubscribes = async () => {
+        setError(false);
         dispatch(setUserIsLoading(true));
 
         const data = await request(REQUEST_TYPE.USER, "/subscribes", HTTP_METHODS.GET, true);
@@ -194,17 +202,16 @@ const useUser = () => {
         dispatch(setUserIsLoading(false));
 
         if(requestDataIsError(data)){
-            switch(data.error){
-                default:
-                    return notifyTemplate(NOTIFY_TYPES.ERROR);
-            }
+            setError(true);
         }
-
-        dispatch(initSubscribes(data));
+        else{
+            dispatch(initSubscribes(data));
+        }
     }
 
     // Подписаться
     const subscribe = async (id) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/subscribe", HTTP_METHODS.POST, true, {id});
@@ -223,6 +230,7 @@ const useUser = () => {
 
     // Отписаться
     const unsubscribe = async (id) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/unsubscribe", HTTP_METHODS.POST, true, {id});
@@ -241,6 +249,7 @@ const useUser = () => {
 
     // Перевыпустить карту
     const recreateCard = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/reissue_card", HTTP_METHODS.POST, true, {id});
@@ -264,6 +273,7 @@ const useUser = () => {
 
     // Удалить карту
     const deleteCard = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/card", HTTP_METHODS.DELETE, true, {id});

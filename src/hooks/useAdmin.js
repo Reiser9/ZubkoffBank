@@ -19,10 +19,11 @@ const useAdmin = () => {
     const {request} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
 
-    const getUsers = async (page = 0, limit = 10) => {
+    const getUsers = async (page = 0, limit = 10, reload = false) => {
+        setError(false);
         setIsLoad(true);
 
-        if(Object.keys(users).length !== 0 && users.content[page * limit] !== null && users.content[(page + 1) * limit - 1] !== null){
+        if(Object.keys(users).length !== 0 && users.content[page * limit] !== null && users.content[(page + 1) * limit - 1] !== null && !reload){
             setIsLoad(false);
 
             if(usersPagin.page === page && usersPagin.size !== limit){
@@ -38,22 +39,24 @@ const useAdmin = () => {
 
         const data = await request(REQUEST_TYPE.ADMIN, `/users?offset=${page}&limit=${limit}`, HTTP_METHODS.GET, true);
 
+        setIsLoad(false);
+
         if(requestDataIsError(data)){
             return setError(true);
         }
         
-        if(Object.keys(users).length !== 0){
+        if(Object.keys(users).length !== 0 && !reload){
             return dispatch(addUsersPaggination({page, limit, data}));
         }
             
         dispatch(initUsers(data));
-        setIsLoad(false);
     }
 
-    const getCardTypes = async (page = 0, limit = 10) => {
+    const getCardTypes = async (page = 0, limit = 10, reload = false) => {
+        setError(false);
         setIsLoad(true);
 
-        if(Object.keys(cardTypes).length !== 0 && cardTypes.content[page * limit] !== null && cardTypes.content[(page + 1) * limit - 1] !== null){
+        if(Object.keys(cardTypes).length !== 0 && cardTypes.content[page * limit] !== null && cardTypes.content[(page + 1) * limit - 1] !== null && !reload){
             setIsLoad(false);
 
             if(cardTypesPagin.page === page && cardTypesPagin.size !== limit){
@@ -73,7 +76,7 @@ const useAdmin = () => {
             return setError(true);
         }
         
-        if(Object.keys(cardTypes).length !== 0){
+        if(Object.keys(cardTypes).length !== 0 && !reload){
             return dispatch(addCardTypesPaggination({page, limit, data}));
         }
   
@@ -82,6 +85,7 @@ const useAdmin = () => {
     }
 
     const verifyUser = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/verify", HTTP_METHODS.POST, true, {id});
@@ -104,6 +108,7 @@ const useAdmin = () => {
     }
 
     const blockCard = async (id, userId, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/card/block", HTTP_METHODS.POST, true, {id});
@@ -126,6 +131,7 @@ const useAdmin = () => {
     }
 
     const unblockCard = async (id, userId, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/card/unblock", HTTP_METHODS.POST, true, {id});
@@ -148,6 +154,7 @@ const useAdmin = () => {
     }
 
     const blockUser = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/block", HTTP_METHODS.POST, true, {id});
@@ -170,6 +177,7 @@ const useAdmin = () => {
     }
 
     const unblockUser = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/unblock", HTTP_METHODS.POST, true, {id});
@@ -192,6 +200,7 @@ const useAdmin = () => {
     }
 
     const createTypeCard = async (formData, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/card/type", HTTP_METHODS.POST, true, formData, {
@@ -218,6 +227,7 @@ const useAdmin = () => {
     }
 
     const rejectUserVerify = async (id, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/not_verify", HTTP_METHODS.POST, true, {id});
@@ -240,6 +250,7 @@ const useAdmin = () => {
     }
 
     const addRole = async (id, roleId, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/role", HTTP_METHODS.POST, true, {
@@ -265,6 +276,7 @@ const useAdmin = () => {
     }
 
     const removeRole = async (id, roleId, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/role", HTTP_METHODS.PATCH, true, {
@@ -290,6 +302,7 @@ const useAdmin = () => {
     }
 
     const changeBalance = async (id, balance, userId, successCallback = () => {}) => {
+        setError(false);
         setIsLoad(true);
 
         const data = await request(REQUEST_TYPE.ADMIN, "/user/balance", HTTP_METHODS.POST, true, {

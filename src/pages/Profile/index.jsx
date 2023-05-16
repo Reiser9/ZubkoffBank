@@ -22,6 +22,7 @@ import CurrentCardsBlock from './CurrentCardsBlock';
 import PaymentScreen from './PaymentsScreen';
 import HistoryScreen from './HistoryScreen';
 import useTransfer from '../../hooks/useTransfer';
+import Button from '../../components/Button';
 
 const Profile = () => {
     const [confirmExitModal, setConfirmExitModal] = React.useState(false);
@@ -31,7 +32,6 @@ const Profile = () => {
     const [activeCard, setActiveCard] = React.useState("");
     
     const {isLoading, getCards} = useUser();
-    const {getTransfersHistory} = useTransfer();
     const {isLoad, getCardTypes} = useCardTypes();
     const {user, cards} = useSelector(state => state.user);
 
@@ -51,7 +51,7 @@ const Profile = () => {
     return(
         <PageSidebarInner pageTitle="Профиль">
             <div className={`profile__sidebar${active ? " active" : ""}`}>
-                <SidebarItem title="Счета и карты" withReload reloadAction={() => getCards(true)} reloadActive={isLoading}>
+                <SidebarItem title="Счета и карты" withReload={user.verified === VERIFY_STATUS.VERIFIED} reloadAction={() => getCards(true)} reloadActive={isLoading}>
                     <CurrentCardsBlock
                         exitModal={confirmExitModal}
                         setExitModal={setConfirmExitModal}
@@ -80,7 +80,9 @@ const Profile = () => {
                     <BackButton onClick={() => setActive(false)} />
 
                     {user.verified !== VERIFY_STATUS.VERIFIED
-                        ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию" />
+                        ? <EmptyBlock center title="Для проведения операций требуется пройти верификацию">
+                            <Button small isLink to="/settings">Верифицировать</Button>
+                        </EmptyBlock>
                         : cards.length
                             ? activeCard
                                 ? <CardViewBlock cardId={activeCard} setActiveCard={setActiveCard} setTab={setTab} />

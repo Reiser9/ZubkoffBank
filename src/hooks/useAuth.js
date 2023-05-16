@@ -20,7 +20,7 @@ const useAuth = () => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const dispatch = useDispatch();
-    const {request, getHealthServer} = useRequest();
+    const {request, getHealthServer, getNewTokens} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
     const {getUserShortInfo} = useUser();
 
@@ -82,15 +82,11 @@ const useAuth = () => {
         }
 
         if(requestDataIsError(data)){
-            const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
-            
-            if(requestDataIsError(newTokens)){
+            const tokens = await getNewTokens(refreshToken);
+
+            if(!tokens){
                 return clearData();
             }
-
-            localStorage.setItem("accessToken", newTokens.accessToken);
-            localStorage.setItem("refreshToken", newTokens.refreshToken);
-            localStorage.setItem("typeToken", newTokens.typeToken);
 
             return checkAuth();
         }
@@ -330,6 +326,7 @@ const useAuth = () => {
 
     return {
         isLoading,
+        getNewTokens,
         checkAuth,
         login,
         logout,

@@ -9,6 +9,7 @@ import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
 import {setIsServerAvailable} from '../redux/slices/server';
 import {setBlocked} from '../redux/slices/app';
 import {isBot} from '../utils/isBot';
+import {requestDataIsError} from '../utils/requestDataIsError';
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -61,6 +62,27 @@ const useRequest = () => {
         }
     }
 
+    // Получить новые токены
+    const getNewTokens = async (refreshToken) => {
+        const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
+            
+        if(requestDataIsError(newTokens)){
+            return;
+        }
+
+        localStorage.setItem("accessToken", newTokens.accessToken);
+        localStorage.setItem("refreshToken", newTokens.refreshToken);
+        localStorage.setItem("typeToken", newTokens.typeToken);
+
+        return newTokens;
+    }
+
+    const checkAccessDenied = async () => {
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        await getNewTokens(refreshToken);
+    }
+
     const request = React.useCallback(async (
         requestType = REQUEST_TYPE.USER,
         url,
@@ -106,6 +128,8 @@ const useRequest = () => {
             return response.data;
         }
         catch(err){
+            const error = err.response;
+
             const serverHealth = await getHealthServer();
 
             setError(true);
@@ -115,15 +139,21 @@ const useRequest = () => {
                 return serverHealth;
             }
             
-            if(err.response.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
+            if(error.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
                 dispatch(setBlocked(true));
             }
 
-            return err.response.data;
+            if(error.data.error === "Forbidden" && error.data.status === 403){
+                checkAccessDenied();
+
+                return REQUEST_STATUSES.TOKEN_EXPIRED;
+            }
+
+            return error.data;
         }
     }, [isServerAvailable]);
 
-    return {isLoading, error, request, getHealthServer};
+    return {isLoading, error, request, getHealthServer, checkAccessDenied, getNewTokens};
 }
 
 export default useRequest;

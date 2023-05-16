@@ -20,6 +20,12 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
     const {logout} = useAuth();
     const {user, cards} = useSelector(state => state.user);
 
+    React.useEffect(() => {
+        if(cards.length && !activeCard){
+            setActiveCard(cards[0].id);
+        }
+    }, [cards]);
+
     return (
         <>
             {user.verified !== VERIFY_STATUS.VERIFIED

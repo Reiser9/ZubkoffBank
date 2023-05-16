@@ -110,3 +110,34 @@
 .history__item--info--type--skeleton{
     width: 65px;
 }
+
+.history__item--last--inner{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.history__item--status{
+    display: flex;
+}
+
+.history__item--status svg{
+    width: 20px;
+    flex-shrink: 0;
+}
+
+.history__item--status svg path{
+    stroke-width: 1px;
+}
+
+.history__item--status svg.ok path{
+    stroke: var(--notifyOk);
+}
+
+.history__item--status svg.wait path{
+    stroke: var(--mainC);
+}
+
+.history__item--status svg.error path{
+    stroke: var(--notifyError);
+}

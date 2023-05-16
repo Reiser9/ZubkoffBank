@@ -79,7 +79,7 @@ h1, h2, h3, h4, h5, h5, p{
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button{
-	appearance: none;
+	-webkit-appearance: none;
 }
 
 .button, .input{

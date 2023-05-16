@@ -16,7 +16,6 @@ import PayMethod from './PayMethod';
 import TransferToItem from './TransferToItem';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 import {unmaskPhone} from '../../utils/maskPhone';
-import { getFormatCardNumber } from '../../utils/cardNumber';
 
 const PaymentScreen = ({cardId, setTab}) => {
     const [stage, setStage] = React.useState(1);
@@ -29,22 +28,52 @@ const PaymentScreen = ({cardId, setTab}) => {
     const [cardNum, setCardNum] = React.useState("");
     const [phoneNum, setPhoneNum] = React.useState("");
 
+    const [transferCode, setTransferCode] = React.useState(false);
+    const [confirmCode, setConfirmCode] = React.useState("");
+
     const [summ, setSum] = React.useState("");
     const [message, setMessage] = React.useState("");
 
     const {cards} = useSelector(state => state.user);
     const {infoTransfer} = useSelector(state => state.transfers);
-    const {error, isLoading, sendTransfer, getInfoBanks, getInfoTransfer} = useTransfer();
+    const {error, isLoading, sendTransfer, getInfoBanks, getInfoByCard, getConfirmTransferCode} = useTransfer();
 
     const send = () => {
-        sendTransfer({
+        if(summ >= 100000 && !transferCode){
+            setTransferCode(true);
+
+            return getConfirmTransferCode();
+        }
+
+        let transferProp = {
             money: summ,
             cardNum: payCard,
             destOrganization: toPayInfo.organization,
             destCode: toPayInfo.code,
-            destPhoneNum: toPayInfo.phoneNum,
             message
-        },
+        }
+
+        if(phoneNum){
+            transferProp = {
+                ...transferProp,
+                destPhoneNum: toPayInfo.phoneNum
+            }
+        }
+        else{
+            transferProp = {
+                ...transferProp,
+                destCardNum: cardNum.split(/\s+/).join('')
+            }
+        }
+
+        if(transferCode){
+            transferProp = {
+                ...transferProp,
+                confirmCode
+            }
+        }
+
+        sendTransfer(transferProp,
         () => {
             setStage(1);
             setMethod("");
@@ -54,12 +83,12 @@ const PaymentScreen = ({cardId, setTab}) => {
         });
     }
 
-    const getInfo = () => {
+    const getInfo = async () => {
         if(method === "phone"){
             getInfoBanks(unmaskPhone(phoneNum), () => setStage(3));
         }
         else{
-            
+            getInfoByCard(cardNum.split(/\s+/).join(''), () => setStage(3));
         }
     }
 
@@ -168,9 +197,11 @@ const PaymentScreen = ({cardId, setTab}) => {
 
                     <Input className="transfer__input" placeholder="Комментарий к переводу" value={message} setValue={setMessage} title="Максимум 100 символов" />
 
+                    {transferCode && <Input mask={INPUT_MASK_TYPE.CONFIRM_CODE} className="transfer__input" placeholder="Код" value={confirmCode} setValue={setConfirmCode} title="Код подтверждения" />}
+
                     {!summ || !toPayInfo
                     ? <Button className="transfer__btn" disabled>Перевести</Button>
-                    : <Button className="transfer__btn" disabled={isLoading} onClick={send}>Перевести {summ} ₽</Button>}
+                    : <Button className="transfer__btn" disabled={isLoading || (transferCode && confirmCode.length !== 6)} onClick={send}>Перевести {summ} ₽</Button>}
 
                     {summ && <p className="transfer__text">Комиссия не взимается банком</p>}
 

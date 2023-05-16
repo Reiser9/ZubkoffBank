@@ -13,6 +13,7 @@ import EmptyBlock from '../../components/EmptyBlock';
 import useRequest from '../../hooks/useRequest';
 import { REQUEST_TYPE } from '../../consts/HTTP';
 import { concatCardTypes } from '../../redux/slices/cardTypes';
+import Button from '../../components/Button';
 
 const Cards = () => {
     const [page, setPage] = React.useState(1);
@@ -72,7 +73,9 @@ const Cards = () => {
                             : !error
                             ? cardTypes?.content?.length ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
                             : <EmptyBlock title="Карт нет" fill />
-                            : <EmptyBlock title="Возникла ошибка" fill />}
+                            : <EmptyBlock title="Возникла ошибка" fill>
+                                <Button small onClick={getCardTypes}>Перезагрузить</Button>
+                            </EmptyBlock>}
 
                             {load && [...Array(3)].map((_, id) => <CardSkeleton key={id} />)}
                         </div>

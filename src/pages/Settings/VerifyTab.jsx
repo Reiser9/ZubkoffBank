@@ -14,10 +14,11 @@ import VerifyStage from './VerifyStage';
 import Preloader from '../../components/Preloader';
 import Choice from '../../components/Choice';
 import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const VerifyTab = () => {
     const {user, userIsLoading} = useSelector(state => state.user);
-    const {sendVerifyRequest, getUserFullInfo, cancelVerify} = useUser();
+    const {error, sendVerifyRequest, getUserFullInfo, cancelVerify} = useUser();
 
     const [passportData, setPassportData] = React.useState("");
     const [granted, setGranted] = React.useState("");
@@ -45,6 +46,12 @@ const VerifyTab = () => {
 
     if(userIsLoading){
         return <Preloader />
+    }
+
+    if(error){
+        return <EmptyBlock title="Возникла ошибка при загрузке данных" center>
+            <Button small onClick={getUserFullInfo}>Перезагрузить</Button>
+        </EmptyBlock>
     }
 
     return (

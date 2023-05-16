@@ -446,3 +446,9 @@
 .section__admin--card--icon path{
     stroke: #fff;
 }
+
+.admin__wrap{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

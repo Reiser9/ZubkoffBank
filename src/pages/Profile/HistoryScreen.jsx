@@ -29,8 +29,10 @@ const HistoryScreen = ({cardId}) => {
     }
 
     React.useEffect(() => {
-        getTransfersHistory(cardId);
-    }, [cardId]);
+        if(!currentTransfers){
+            getTransfersHistory(cardId);
+        }
+    }, [cardId, currentTransfers]);
 
     React.useEffect(() => {
         const indexCard = cards.findIndex(item => item.id === cardId);
@@ -44,7 +46,7 @@ const HistoryScreen = ({cardId}) => {
             const scrollTop = e.target.scrollTop;
             const innerHeight = window.innerHeight;
             
-            if(scrollHeight - (scrollTop + innerHeight) < -180 && currentTransfers.content.length < currentTransfers.totalElements){
+            if(scrollHeight - (scrollTop + innerHeight) < -180 && currentTransfers?.content?.length < currentTransfers?.totalElements){
                 setLoad(true);
             }
         }
@@ -81,8 +83,8 @@ const HistoryScreen = ({cardId}) => {
                     ? [...Array(5)].map((_, id) => <HistorySkeleton key={id} />)
                     : !error
                     ? currentTransfers?.content?.length ? currentTransfers.content.map((data, id) => <HistoryItem key={id} data={data} />)
-                    : <EmptyBlock title="Операций по карте не найдено" />
-                    : <EmptyBlock title="Возникла ошибка" />}
+                    : <EmptyBlock title="Операций по карте не найдено" center />
+                    : <EmptyBlock title="Возникла ошибка" center />}
 
                 {load && [...Array(5)].map((_, id) => <HistorySkeleton key={id} />)}
             </div>

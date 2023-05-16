@@ -5,6 +5,7 @@ export const requestDataIsError = (data) => {
         data.status === REQUEST_STATUSES.NOT_SUCCESSFUL ||
         data.status === REQUEST_STATUSES.NOT_SUCCESSFUL2 ||
         data.status === REQUEST_STATUSES.SITE_NOT_AVAILABLE ||
+        data === REQUEST_STATUSES.TOKEN_EXPIRED ||
         data.status === 500 ||
         data.status === 403 ||
         data.status === 404

@@ -20,8 +20,9 @@ const useTransfer = () => {
     const {request} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
 
-    // Получить информацию о пользователе по номеру телефона
+    // Получить информацию о пользователе по номеру телефона/номеру карты
     const getInfoTransfer = async ({phoneNum, cardNum, code, successCallback = () => {}}) => {
+        setError(false);
         setIsLoading(true);
 
         let params = {
@@ -53,8 +54,31 @@ const useTransfer = () => {
         return data;
     }
 
+    const getInfoByCard = async (cardNum, successCallback = () => {}) => {
+        setError(false);
+        setIsLoading(true);
+
+        const data = await getInfoTransfer({cardNum, code: process.env.REACT_APP_BANK_CODE});
+
+        setIsLoading(false);
+
+        if(!data){
+            return setError(true);
+        }
+
+        dispatch(initInfoTransfer([]));
+
+        dispatch(addInfoTransfer({
+            ...data,
+            code: process.env.REACT_APP_BANK_CODE
+        }));
+
+        successCallback();
+    }
+
     // Получить по номеру телефона все банки пользователя
     const getInfoBanks = async (phoneNum, successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/transfer/info_banks", HTTP_METHODS.POST, true, {phoneNum});
@@ -90,6 +114,7 @@ const useTransfer = () => {
 
     // Получить историю платежей по карте
     const getTransfersHistory = async (id, reload = false) => {
+        setError(false);
         setIsLoading(true);
 
         const indexCard = cards.findIndex(item => item.id === id);
@@ -110,6 +135,7 @@ const useTransfer = () => {
 
     // Получить код для платежа свыше 100 000 рублей
     const getConfirmTransferCode = async (successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/transfer/code", HTTP_METHODS.POST, true);
@@ -121,10 +147,12 @@ const useTransfer = () => {
         }
 
         successCallback();
+        alertNotify("Подтверждение", "Введите код для подтверждения платежа", "info");
     }
 
     // Отправить перевод
-    const sendTransfer = async ({money, cardNum, destOrganization, destCode, destPhoneNum = "", destCardNum = "", message = "", code = ""}, successCallback = () => {}) => {
+    const sendTransfer = async ({money, cardNum, destOrganization, destCode, destPhoneNum = "", destCardNum = "", message = "", confirmCode = ""}, successCallback = () => {}) => {
+        setError(false);
         setIsLoading(true);
 
         let paymentInfo = {
@@ -148,10 +176,10 @@ const useTransfer = () => {
             }
         }
 
-        if(code){
+        if(confirmCode){
             paymentInfo = {
                 ...paymentInfo,
-                code
+                confirmCode
             }
         }
 
@@ -178,6 +206,22 @@ const useTransfer = () => {
         alertNotify("Успешно", "Перевод выполнен", "success");
     }
 
+    const checkComission = async () => {
+        setError(false);
+        setIsLoading(true);
+
+        const data = request(REQUEST_TYPE.USER, "/transfer/commission", HTTP_METHODS.POST, true);
+
+        setIsLoading(false);
+
+        if(requestDataIsError(data)){
+            setError(true);
+            return;
+        }
+
+        return data.commission;
+    }
+
     return {
         isLoading,
         error,
@@ -185,7 +229,9 @@ const useTransfer = () => {
         getInfoTransfer,
         getTransfersHistory,
         getConfirmTransferCode,
-        sendTransfer
+        sendTransfer,
+        checkComission,
+        getInfoByCard
     }
 }
 

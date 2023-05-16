@@ -22,5 +22,6 @@ export const REQUEST_STATUSES = {
     UNKNOWN_RECIPIENT: "Unknown recipient",
     ACCESS_DENIED: "Access denied",
     CARD_NOT_BLOCKED: "The card is not blocked",
-    NOT_SUBSCRIBE: "The recipient or you do not have an active subscription"
+    NOT_SUBSCRIBE: "The recipient or you do not have an active subscription",
+    TOKEN_EXPIRED: "Access token expired"
 }

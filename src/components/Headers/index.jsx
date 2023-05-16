@@ -48,9 +48,9 @@ const Header = () => {
                                 <div className="header__profile" onClick={() => setSubmenuActive(prev => !prev)}>
                                     <User className="header__profile--icon" />
 
-                                    <p className="header__profile--name">
+                                    {firstName && <p className="header__profile--name">
                                         {firstName}
-                                    </p>
+                                    </p>}
 
                                     <Arrow className={`header__profile--arrow${submenuActive? " active": ""}`} />
                                 </div>

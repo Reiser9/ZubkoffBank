@@ -16,7 +16,7 @@ const SubscribesTab = () => {
 
     const {isLoading, error, getSubscribes} = useSubscribes();
     const {subscribes} = useSelector(state => state.subscribes);
-    const {isLoading: isLoadingUser, getUserSubscribes, subscribe, unsubscribe} = useUser();
+    const {error: userError, isLoading: isLoadingUser, getUserSubscribes, subscribe, unsubscribe} = useUser();
     const {userIsLoading, subscribes: userSubscribes} = useSelector(state => state.user);
 
     React.useEffect(() => {
@@ -54,9 +54,9 @@ const SubscribesTab = () => {
         return <Preloader />
     }
 
-    if(error){
+    if(error || userError){
         return <EmptyBlock center title="Ошибка при загрузке данных">
-            <Button className="subscribes__reload" onClick={getSubscribes}>Перезагрузить</Button>
+            <Button small onClick={getUserSubscribes}>Перезагрузить</Button>
         </EmptyBlock>
     }
 

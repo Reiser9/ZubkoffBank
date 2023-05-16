@@ -15,6 +15,7 @@ const useSubscribes = () => {
     const {subscribes} = useSelector(state => state.subscribes);
 
     const getSubscribes = async () => {
+        setError(false);
         setIsLoading(true);
 
         if(!subscribes.length){
