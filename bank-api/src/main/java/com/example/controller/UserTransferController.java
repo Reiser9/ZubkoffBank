@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.CommissionData;
 import com.example.dto.TransferData;
 import com.example.dto.TransferUserInfo;
 import com.example.enums.CodeType;
@@ -8,6 +9,7 @@ import com.example.exception.NoActiveSubscribeException;
 import com.example.exception.UnknownRecipientException;
 import com.example.model.Card;
 import com.example.model.User;
+import com.example.payload.CommissionResponse;
 import com.example.payload.DefaultResponse;
 import com.example.security.JwtRequestFilter;
 import com.example.service.*;
@@ -18,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import reactor.core.publisher.Mono;
 
@@ -47,8 +46,11 @@ public class UserTransferController {
     @Autowired
     private CardService cardService;
 
-    @PostMapping("/info_phone")
+    @PostMapping("/info")
     public Mono<ResponseEntity<?>> getInfoByPhoneAndOrganization(@RequestBody TransferUserInfo transfer) {
+        if (transfer.getCardNum() != null) {
+            transfer.setPhoneNum(userService.findById(cardService.findCardByCardNum(transfer.getCardNum()).getUserId()).getPhoneNum());
+        }
         return transferService.getInfoByPhone(transfer)
                 .map(response -> ResponseEntity.ok(response).getBody());
     }
@@ -72,6 +74,26 @@ public class UserTransferController {
         catch (NullPointerException exception) {
             return ResponseEntity.status(404).body(new DefaultResponse("Not Successful", "Not found user"));
         }
+    }
+
+    @PostMapping("/commission")
+    public ResponseEntity<?> getCommissionTransfer(Principal principal, @RequestBody CommissionData commissionData) {
+        User user = null;
+        if (commissionData.getCardNum() != null) {
+            user = userService.findById(cardService.findCardByCardNum(commissionData.getCardNum()).getUserId());
+        }
+        else {
+            user = userService.findUserByPhoneNum(commissionData.getPhoneNum());
+        }
+        if (user != null) {
+            return ResponseEntity.ok(new CommissionResponse(1.00));
+        }
+        else {
+            if (userService.findUserByPhoneNum(principal.getName()).getCards().stream().filter(e -> e.getCardNum().equals(commissionData.getSourceCardNum())).findFirst().get().getRemainsLimit() - commissionData.getMoney() < 0)
+                return ResponseEntity.ok(new CommissionResponse(1.02));
+            return ResponseEntity.ok(new CommissionResponse(1.00));
+        }
+
     }
 
     @PostMapping("/")
@@ -103,10 +125,6 @@ public class UserTransferController {
             else {
                 user = userService.findUserByPhoneNum(transfer.getDestPhoneNum());
             }
-            if (userService.findUserByPhoneNum(data.getName()).getUserSubscribes().stream()
-                    .filter(e -> e.getSubscribe().getId() == 1 && e.isStatus()).findFirst().orElse(null) == null) {
-                throw new NoActiveSubscribeException();
-            }
             if (transfer.getDestOrganization().equals(transfer.getOrganization())) {
                 Card destCard = user.getCards().stream().filter(e -> !e.isLock()).findFirst().orElse(null);
                 if (destCard != null) {
@@ -122,6 +140,18 @@ public class UserTransferController {
                         throw new InsufficientFundsException();
                     }
                 }
+                final boolean[] isSubscribeSuccessful = { false };
+                userService.isSubscribed(user).flatMap(result -> {
+                    if (result == 200)
+                    {
+                        isSubscribeSuccessful[0] = true;
+                    }
+                    return null;
+                }).subscribe();
+                if (userService.findUserByPhoneNum(data.getName()).getUserSubscribes().stream()
+                        .filter(e -> e.getSubscribe().getId() == 1 && e.isStatus()).findFirst().orElse(null) == null || !isSubscribeSuccessful[0]) {
+                    throw new NoActiveSubscribeException();
+                }
                 transferService.sendOutBank(sourceCard, transfer.getMoney(), transfer);
             }
             return ResponseEntity.badRequest().body(new DefaultResponse("Successful", ""));
@@ -136,7 +166,7 @@ public class UserTransferController {
             return ResponseEntity.status(402).body(new DefaultResponse("Not successful", "Insufficient funds"));
         }
         catch (NoActiveSubscribeException exception) {
-            return ResponseEntity.badRequest().body(new DefaultResponse("Not successful", "No active sbp subscription"));
+            return ResponseEntity.badRequest().body(new DefaultResponse("Not successful", "The recipient or you do not have an active subscription"));
         }
         catch (UnknownRecipientException exception) {
             return ResponseEntity.status(404).body(new DefaultResponse("Not successful", "Unknown recipient"));
