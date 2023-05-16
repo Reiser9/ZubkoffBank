@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Modifying;
 
 
 public interface UserDAO<T extends User>  extends JpaRepository<T, Long>  {
-
 	T findByPhoneNum(String phoneNum);
 
 	T findByAccountNum(String accountNum);

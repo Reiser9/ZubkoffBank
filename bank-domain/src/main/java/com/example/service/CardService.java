@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dto.CardData;
 import com.example.model.Card;
+import com.example.model.Type;
 import com.example.repository.CardRepository;
 import com.example.repository.TypeRepository;
 import com.example.repository.UserRepository;
@@ -45,10 +46,13 @@ public class CardService {
         card.setCvc(generateCvc());
         card.setExpDate(generateCardDateExpired());
         card.setBalance(0);
+
         card.setFirstName(cardData.getFirstName());
         card.setSecondName(cardData.getSecondName());
         card.setLock(false);
-        card.setType(typeRepository.findById(cardData.getTypeId()).get());
+        Type type = typeRepository.findById(cardData.getTypeId()).get();
+        card.setType(type);
+        card.setRemainsLimit(type.getLimit());
         return card;
     }
 
