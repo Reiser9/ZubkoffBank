@@ -162,7 +162,9 @@ public class AuthController {
 		if(token != null && refreshTokenService.verifyExpiration(token) != null) {
 			User user = token.getUser();
 			Map<String, Object> claims = new HashMap<>();
-			claims.put("ROLES", user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList()));
+			List<String> roles = user.getRoles().stream().map(item -> item.getRole()).collect(Collectors.toList());
+			roles.add(user.getVerify());
+			claims.put("ROLES", roles);
 			String jwt = jwtUtils.createToken(claims, user.getPhoneNum());
 			Long id = refreshTokenService.findUserByRefreshToken(refreshToken.get("refreshToken"));
 			refreshTokenService.deleteByRefreshToken(refreshToken.get("refreshToken"));
