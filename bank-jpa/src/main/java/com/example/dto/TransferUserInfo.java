@@ -12,4 +12,5 @@ import lombok.Setter;
 public class TransferUserInfo {
     private int code;
     private String phoneNum;
+    private String cardNum;
 }
