@@ -28,11 +28,14 @@ export const authSlice = createSlice({
             state.typeToken = action.payload;
         },
         setLogin: (state, action) => {
-            state.isAuth = action.payload.isAuth;
-            state.accessToken = action.payload.accessToken;
-            state.refreshToken = action.payload.refreshToken;
-            state.typeToken = action.payload.typeToken;
-        }
+            const {isAuth, accessToken, refreshToken, typeToken} = action.payload;
+
+            state.isAuth = isAuth;
+            state.accessToken = accessToken;
+            state.refreshToken = refreshToken;
+            state.typeToken = typeToken;
+        },
+        setDataAuth: () => initialState
     }
 });
 
@@ -42,7 +45,8 @@ export const {
     setAccessToken,
     setRefreshToken,
     setTypeToken,
-    setLogin
+    setLogin,
+    setDataAuth
 } = authSlice.actions;
 
 export default authSlice.reducer;

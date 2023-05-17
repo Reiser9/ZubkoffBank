@@ -1,30 +1,40 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
-import CardBlock from '../../components/CardBlock';
-import cardData from '../../cardData.json';
+import useCardTypes from '../../hooks/useCardTypes';
+
+import CardBlock from './CardBlock';
+import CardSkeleton from './CardSkeleton';
+import TitleWrapper from '../../components/Wrappers/TitleWrapper';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const Cards = () => {
-    React.useEffect(() => {
-        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Наши карты`;
-        window.scrollTo(0, 0);
-    }, []);
+    const {error, isLoad} = useCardTypes();
+    const {cardTypes} = useSelector(state => state.cardTypes);
 
     return (
-        <section className="card">
-            <div className="container">
-                <div className="card__inner">
-                    <h1 className="card__title">
-                        Наши карты
-                    </h1>
+        <TitleWrapper pageTitle="Наши карты">
+            <section className="card">
+                <div className="container">
+                    <div className="card__inner">
+                        <h1 className="card__title">
+                            Наши карты
+                        </h1>
 
-                    <div className="card__content">
-                        {cardData.map((data, id) => <CardBlock key={id} data={data} />)}
+                        <div className="card__content">
+                            {isLoad
+                            ? [...Array(3)].map((_, id) => <CardSkeleton key={id} />)
+                            : !error
+                            ? cardTypes?.content?.length ? cardTypes.content.map((data, id) => <CardBlock key={id} data={data} />)
+                            : <EmptyBlock title="Карт нет" fill />
+                            : <EmptyBlock title="Возникла ошибка" fill />}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </TitleWrapper>
     )
 }
 

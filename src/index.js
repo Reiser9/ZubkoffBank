@@ -6,6 +6,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import App from "./App";
+import Notifies from './components/Notify';
 
 import { store } from './redux/store';
 
@@ -16,11 +17,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <Provider store={store}>
         <BrowserRouter>
-            <SkeletonTheme baseColor="#eee" highlightColor="#d7d7d7">
-                <InitialWrapper>
+            <InitialWrapper>
+                <SkeletonTheme baseColor="#eaeaea" highlightColor="#d8d8d8">
                     <App />
-                </InitialWrapper>
-            </SkeletonTheme>
+                </SkeletonTheme>
+            </InitialWrapper>
+
+            <Notifies />
         </BrowserRouter>
     </Provider>
 );

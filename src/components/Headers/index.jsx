@@ -1,13 +1,16 @@
 import React from 'react';
-import {User} from '../../components/Icons';
 import {Link} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import {User} from '../../components/Icons';
+
 const Header = () => {
-    const auth = useSelector(state => state.auth);
-    const user = useSelector(state => state.user);
+    const {isAuth} = useSelector(state => state.auth);
+    const {user} = useSelector(state => state.user);
+
+    const {firstName} = user;
 
     return(
         <header className="header">
@@ -17,11 +20,13 @@ const Header = () => {
                         <img src="/assets/img/logo1.svg" alt="logo" className="header__logo" />
                     </Link>
                     
-                    {auth.isAuth
+                    {isAuth
                     ? <Link to="/profile" className="header__profile">
                         <User className="header__profile--icon" />
 
-                        {user.user.firstName}
+                        <p className="header__profile--name">
+                            {firstName}
+                        </p>
                     </Link>
                     : <Link to="/sign" className="header__profile">
                         <User className="header__profile--icon" />

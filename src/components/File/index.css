@@ -1,0 +1,33 @@
+.file{
+    display: none;
+}
+
+.input__file--label{
+    border: 1px dashed #7B7C7D;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: .2s linear;
+}
+
+.input__file--label:hover{
+    border: 1px dashed var(--mainC);
+}
+
+.input__file--label.preview{
+    border: none;
+}
+
+.input__file--label.standart{
+    width: 260px;
+    height: 165px;
+}
+
+.input__file--preview{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

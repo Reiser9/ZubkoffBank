@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import './index.css';
 
@@ -26,15 +27,18 @@ const Register = () => {
     const [agree, setAgree] = React.useState(false);
 
     const {alertNotify} = useNotify();
-    const {sendCodeRegister} = useAuth();
+    const {authIsLoading} = useSelector(state => state.auth);
+    const {sendCodeRegister, register} = useAuth();
 
     const goToSmsCode = () => {
+        const fioValid = nameRegister.trim().split(" ").length;
+
         if(phoneRegister.length < 17){
             return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
         }
 
-        if(!nameRegister){
-            return alertNotify("Предупреждение", "Введите ФИО", "warn");
+        if(!nameRegister || (fioValid < 3 || fioValid > 3)){
+            return alertNotify("Предупреждение", "Введите корретные данные ФИО", "warn");
         }
 
         if(passwordRegister.length < 8){
@@ -66,16 +70,15 @@ const Register = () => {
     }, [isCodeAgain, seconds]);
 
     const sendSmsCode = async () => {
-        sendCodeRegister(phoneRegister);
-
-        setIsCodeAgain(false);
-        setSeconds(60);
-
-        setStage(3);
+        sendCodeRegister(phoneRegister, () => {
+            setIsCodeAgain(false);
+            setSeconds(60);
+            setStage(3);
+        });
     }
 
-    const register = async () => {
-        
+    const registerHandler = () => {
+        register(phoneRegister, passwordRegister, nameRegister, registerCode);
     }
 
     return (
@@ -132,10 +135,10 @@ const Register = () => {
                 </div>
 
                 {stage >= 3 && <div className="sign__form sign__form_telegram">
-                    <Input placeholder="Код подтверждения" value={registerCode} setValue={setRegisterCode} />
+                    <Input mask={INPUT_MASK_TYPE.CONFIRM_CODE} placeholder="Код подтверждения" value={registerCode} setValue={setRegisterCode} />
                 </div>}
 
-                {isCodeAgain && <div className="sign__link sign__send" onClick={sendSmsCode}>Выслать код</div>}
+                {isCodeAgain && <div className={`sign__link sign__send${authIsLoading ? " disabled" : ""}`} onClick={sendSmsCode}>Выслать код</div>}
 
                 {stage >= 3 && <>
                     {!isCodeAgain && <div className="sign__again">
@@ -143,7 +146,7 @@ const Register = () => {
                     </div>}
 
                     <div className="sign__button--inner">
-                        <Button className="register__button" onClick={register} disabled={!agree}>
+                        <Button className="register__button" onClick={registerHandler} disabled={authIsLoading}>
                             Регистрация
                         </Button>
                     </div>

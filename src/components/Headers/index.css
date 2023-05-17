@@ -2,7 +2,7 @@
 .header{
 	width: 100%;
 	padding: 1.2rem 0;
-	border-bottom: 1px solid var(--borderC);
+	border-bottom: 1px solid var(--backgroundC);
 }
 
 .header__inner{
@@ -37,4 +37,11 @@
 
 .header__profile:hover svg path{
 	stroke: var(--mainC);
+}
+
+.header__profile--name{
+	max-width: 110px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

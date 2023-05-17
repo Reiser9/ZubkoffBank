@@ -1,0 +1,59 @@
+.statuspage{
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statuspage__inner{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.statuspage__icon{
+    width: 370px;
+    max-width: 90%;
+}
+
+.statuspage__title{
+    margin-top: 4rem;
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.statuspage__text{
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.statuspage__link{
+    margin-top: 3.2rem;
+}
+
+@media (max-width:768px) {
+    .statuspage__link{
+        margin-top: 2rem;
+    }
+}
+
+@media(max-width: 768px){
+    .statuspage__title{
+        font-size: 2rem;
+    }
+}
+@media(max-width: 480px){
+    .statuspage__title{
+        font-size: 1.6rem;
+        margin-top: 3.2rem;
+    }
+
+    .statuspage__text{
+        font-size: 1.4rem;
+        margin-top: 1.2rem;
+    }
+}

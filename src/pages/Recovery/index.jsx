@@ -1,124 +1,133 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import '../Sign/index.css';
 import './index.css';
 
-import { RecoveryIcon } from '../../components/Icons';
+import useAuth from '../../hooks/useAuth';
+import useNotify, { NOTIFY_TYPES } from '../../hooks/useNotify';
+import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import NoAuthWrapper from '../../components/Wrappers/NoAuthWrapper';
+import TitleWrapper from '../../components/Wrappers/TitleWrapper';
+import SignImgBlock from '../../components/SignImgBlock';
 
 const Recovery = () => {
-    const [phoneEnter, setPhoneEnter] = React.useState("");
     const [step, setStep] = React.useState(1);
 
-    React.useEffect(() => {
-        document.title = `${process.env.REACT_APP_BANK_NAME} Bank - Забыли пароль`;
-        window.scrollTo(0, 0);
-    }, []);
+    const [phone, setPhone] = React.useState("");
+    const [code, setCode] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [passwordAgain, setPasswordAgain] = React.useState("");
+
+    const {recoveryPassword, sendCodeRecovery} = useAuth();
+    const {authIsLoading} = useSelector(state => state.auth);
+    const {notifyTemplate} = useNotify();
+
+    const prevStep = () => {
+        setStep(step => step - 1);
+    }
+
+    const sendCodeRecoveryHandler = () => {
+        sendCodeRecovery(phone, () => setStep(2));
+    }
+
+    const confirmRecoveryCode = () => {
+        if(code.length !== 6){
+            return notifyTemplate(NOTIFY_TYPES.CODE);
+        }
+
+        setStep(3);
+    }
+
+    const recoveryPasswordHandler = () => {
+        if(password !== passwordAgain){
+            return notifyTemplate(NOTIFY_TYPES.CONFIRM_PASSWORD);
+        }
+
+        recoveryPassword(phone, code, password);
+    }
 
     return (
-        <NoAuthWrapper>
-            <div className="sign">
-                <div className="container">
-                    <div className="sign__inner">
-                        <div className="sign__content">
-                            <div className="sign__wrapper">
-                                <div className="sign__steps">
-                                    <div className="sign__step active">1</div>
-                                    <div className={`sign__step${step > 1 ? " active" : ""}`}>2</div>
-                                    <div className={`sign__step${step > 2 ? " active" : ""}`}>3</div>
-                                </div>
+        <TitleWrapper pageTitle="Забыли пароль">
+            <NoAuthWrapper>
+                <div className="sign">
+                    <div className="container">
+                        <div className="sign__inner">
+                            <div className="sign__content">
+                                <div className="sign__wrapper">
+                                    <div className="sign__steps">
+                                        <div className="sign__step active">1</div>
+                                        <div className={`sign__step${step > 1 ? " active" : ""}`}>2</div>
+                                        <div className={`sign__step${step > 2 ? " active" : ""}`}>3</div>
+                                    </div>
 
-                                <p className="sign__title">
-                                    Восстановление пароля
-                                </p>
+                                    <p className="sign__title">
+                                        Восстановление пароля
+                                    </p>
 
-                                {/* стадия 1 */}
-                                {step === 1 &&
-                                    <div className="sign__step-inner">
+                                    {step === 1 && <div className="sign__step-inner">
                                         <div className="sign__form">
-                                            <Input placeholder="Введите номер телефона" value={phoneEnter} setValue={setPhoneEnter} />
+                                            <Input mask={INPUT_MASK_TYPE.PHONE} placeholder="Введите номер телефона" value={phone} setValue={setPhone} />
                                         </div>
 
                                         <Link to="/sign" className="sign__link">Вспомнили пароль?</Link>
 
                                         <div className="recovery__btns">
-                                            <Button className="sign__btn recovery__btn" onClick={() => setStep(2)}>
+                                            <Button className="sign__btn recovery__btn" onClick={sendCodeRecoveryHandler} disabled={authIsLoading}>
                                                 Отправить
                                             </Button>
                                         </div>
-                                    </div>
-                                }
+                                    </div>}
 
-                                {/* стадия 2 */}
-                                {step === 2 &&
-                                    <div className="sign__step-inner">
+                                    {step === 2 && <div className="sign__step-inner">
                                         <div className="sign__subtitle">
-                                            На номер телефона +79123456789 было отправлено СМС с кодом подтверждения
+                                            На номер телефона {phone} было отправлено СМС с кодом подтверждения
                                         </div>
                                         
                                         <div className="sign__form">
-                                            <Input placeholder="Введите номер телефона" value={phoneEnter} setValue={setPhoneEnter} />
+                                            <Input mask={INPUT_MASK_TYPE.CONFIRM_CODE} placeholder="Введите полученный код" value={code} setValue={setCode} />
                                         </div>
 
                                         <div className="recovery__btns">
-                                            <Button className="sign__btn recovery__btn" onClick={() => setStep(3)}>
+                                            <Button className="sign__btn recovery__btn" onClick={confirmRecoveryCode}>
                                                 Отправить
                                             </Button>
 
-                                            <div className="recovery__back" onClick={() => setStep(step => step - 1)}>Назад</div>
+                                            <div className="recovery__back" onClick={prevStep}>Назад</div>
                                         </div>
-                                    </div>
-                                }
+                                    </div>}
 
-                                {/* стадия 3 */}
-                                {step === 3 &&
-                                    <div className="sign__step-inner">
+                                    {step === 3 && <div className="sign__step-inner">
                                         <div className="sign__form">
-                                            <Input placeholder="Придумайте новый пароль" value={phoneEnter} setValue={setPhoneEnter} password/>
-                                            <Input placeholder="Подтвердите пароль" value={phoneEnter} setValue={setPhoneEnter} password/>
+                                            <Input placeholder="Придумайте новый пароль" value={password} setValue={setPassword} password/>
+                                            <Input placeholder="Подтвердите пароль" value={passwordAgain} setValue={setPasswordAgain} password/>
                                         </div>
 
                                         <div className="recovery__btns">
-                                            <Button className="sign__btn recovery__btn">
+                                            <Button className="sign__btn recovery__btn" onClick={recoveryPasswordHandler}>
                                                 Сменить пароль
                                             </Button>
 
-                                            <div className="recovery__back" onClick={() => setStep(step => step - 1)}>Назад</div>
+                                            <div className="recovery__back" onClick={prevStep}>Назад</div>
                                         </div>
-                                    </div>
-                                }
+                                    </div>}
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="sign__info">
-                            <RecoveryIcon className="login__icon" />
-
-                            <p className="sign__info--title">
-                                Восстановление пароля на Zubkoff
-                            </p>
-
-                            <div className="sign__info--points">
-                                <p className="sign__info--point">
-                                    Введите номер телефона, указанный при регистрайии
-                                </p>
-
-                                <p className="sign__info--point">
-                                    После этого мы отправим код подтверждения
-                                </p>
-
-                                <p className="sign__info--point">
-                                    После успешного ввода кода подтверждения  у Вас будет возможность придумать новый пароль
-                                </p>
-                            </div>
+                            
+                            <SignImgBlock title={`Восстановление пароля на ${process.env.REACT_APP_BANK_NAME}`} img="recovery" points={[
+                                {text: "Введите номер телефона, указанный при регистрайии"},
+                                {text: "После этого мы отправим код подтверждения"},
+                                {text: "После успешного ввода кода подтверждения  у Вас будет возможность придумать новый пароль"}
+                            ]} />
                         </div>
                     </div>
                 </div>
-            </div>
-        </NoAuthWrapper>
+            </NoAuthWrapper>
+        </TitleWrapper>
     )
 }
 

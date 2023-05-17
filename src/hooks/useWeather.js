@@ -7,20 +7,16 @@ import {getNormalWord} from '../utils/getNormalWord';
 import {getWeatherIcon} from '../utils/getWeatherIcon';
 
 const useWeather = () => {
-    const [weather, setWeather] = React.useState({});
     const [error, setError] = React.useState(false);
     const [isLoad, setIsLoad] = React.useState(false);
 
-    const weatherState = useSelector(state => state.api);
+    const {weather} = useSelector(state => state.api);
     const dispatch = useDispatch();
 
     const getCityData = async () => {
         setIsLoad(true);
 
-        if(Object.keys(weatherState.weather).length !== 0){
-            setWeather(weatherState.weather);
-        }
-        else{
+        if(Object.keys(weather).length === 0){
             const {cityName, timezone, error, wind, description, temp, humidity, feels_like, main} = await getCity();
 
             if(error){
@@ -39,18 +35,17 @@ const useWeather = () => {
                 }
 
                 dispatch(setWeatherData(weatherObj));
-                setWeather(weatherObj);
             }
         }
 
         setIsLoad(false);
-    }
+    };
 
     React.useEffect(() => {
         getCityData();
     }, []);
 
-    return {isLoadWeather: isLoad, errorWeather: error, weather};
+    return {isLoad, error};
 }
 
 export default useWeather;

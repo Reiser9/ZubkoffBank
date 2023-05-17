@@ -12,12 +12,12 @@
 	--weatherLightC: #87919C;
 	--cashBackItemC : #333;
 	--cashBackItemLightC : #EAECEE;
-	--notifyWarning: #FABD48;
+	--errorHover: #d42b2b;
 
 	/* Цвета уведомления */
+	--notifyWarning: #FABD48;
 	--notifyOk: #10B97B;
 	--notifyError: #EF3B3B;
-	--errorHover: #d42b2b;
 	--notifyInfo: var(--mainC);
 
 	/* Цвета карт */
@@ -125,18 +125,6 @@ input::-webkit-inner-spin-button{
 	width: 0px;
 }
 
-@media (max-width:992px) {
-	.title {
-		font-size: 2.4rem;
-	}
-}
-
-@media (max-width:768px) {
-	.title {
-		font-size: 2rem;
-	}
-}
-
 .block{
     width: 100%;
     display: flex;
@@ -153,24 +141,39 @@ input::-webkit-inner-spin-button{
 	opacity: 1;
 }
 
-/* Адаптив */
-/* @media(max-width: 1200px){
-	.container{
-		max-width: 978px;
+.skeleton__content{
+	width: 100%;
+	height: 100%;
+}
+
+.swiper__inner{
+	width: 100%;
+}
+
+.w100{
+	width: 100%;
+}
+
+.red{
+	color: var(--notifyError);
+}
+
+.center{
+	text-align: center;
+}
+
+.medium{
+	font-weight: 500;
+}
+
+@media (max-width:992px) {
+	.title {
+		font-size: 2.4rem;
 	}
 }
-@media(max-width: 998px){
-	.container{
-		max-width: 748px;
+
+@media (max-width:768px) {
+	.title {
+		font-size: 2rem;
 	}
 }
-@media(max-width: 768px){
-	.container{
-		max-width: 460px;
-	}
-}
-@media(max-width: 480px){
-	.container{
-		max-width: 300px;
-	}
-} */

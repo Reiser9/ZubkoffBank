@@ -3,7 +3,8 @@ import {isBot} from './isBot';
 
 export const getCity = async () => {
     try{
-        if(isBot(window.navigator.userAgent)){
+        // throw new Error(); // Убрать при продакшене
+        if(isBot()){
             throw new Error();
         }
 
@@ -21,20 +22,18 @@ export const getCity = async () => {
         }
 
         return {cityName, timezone, temp, humidity, feels_like, wind, main, description};
-    }catch(error){
-        console.log(error);
-
+    }catch(err){
         return {error: true};
     }
 }
 
 export const getCurrency = async () => {
-    if(isBot(window.navigator.userAgent)){
+    if(isBot()){
         return {error: true}
     }
 
     const [currencyUsd, currencyEur] = await Promise.all([
-        getOneCurrency(),
+        getOneCurrency("USD"),
         getOneCurrency("EUR")
     ]);
 
@@ -61,15 +60,14 @@ const getWeather = async (lat, lon) => {
 
         return {temp, humidity, feels_like, wind, main, description};
     }
-    catch(error){
-        console.log(error);
-
+    catch(err){
         return {error: true};
     }
 }
 
 const getOneCurrency = async (from = "USD") => {
     try{
+        // throw new Error();
         const data = await currency.get(`convert?to=RUB&from=${from}&amount=1`, {
             headers: {
                 "apikey": process.env.REACT_APP_CURRENCY_TOKEN
@@ -80,8 +78,6 @@ const getOneCurrency = async (from = "USD") => {
 
         return {currencyResult};
     }catch(err){
-        console.log(err);
-
         return {error: true};
     }
 }

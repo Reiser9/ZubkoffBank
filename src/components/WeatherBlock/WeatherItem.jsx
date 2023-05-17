@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
@@ -11,16 +12,17 @@ import ErrorBlock from '../ErrorBlock';
 import useWeather from '../../hooks/useWeather';
 
 const WeatherItem = () => {
-    const {isLoadWeather, errorWeather, weather} = useWeather();
+    const {isLoad, error} = useWeather();
+    const {weather} = useSelector(state => state.api);
 
     return(
         <div className="weather__inner">
-            {isLoadWeather ? <Preloader fill /> : errorWeather ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
+            {isLoad ? <Preloader fill /> : error ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
                 <div className="weather__info">
                     <div className="weather__location">
                         <Location className="weather__location--icon" />
 
-                        <p className="weather__city">{weather.city}</p>
+                        <p className="weather__city">{weather.city || "Тюмень"}</p>
                     </div>
 
                     <div className="weather__dot"></div>
@@ -32,16 +34,16 @@ const WeatherItem = () => {
                     {weather.weatherIcon && <img src={`/assets/img/${weather.weatherIcon}.svg`} alt={weather.weatherIcon} className="weather__temp--icon big" />}
 
                     <div className="weather__current-temp-inner">
-                        <p className="weather__current-temp">{weather.temp}°</p>
+                        <p className="weather__current-temp">{weather.temp || 0}°</p>
 
-                        <p className="weather__name">{weather.tempDesc}</p>
+                        <p className="weather__name">{weather.tempDesc || ""}</p>
                     </div>
                 </div>
 
                 <div className="weather__items">
-                    <WeatherBox title="Ощущается" icon="like" value={`${weather.feelsLike}°`} />
-                    <WeatherBox title="Ветер" icon="wind" value={`${weather.wind} м/с`} />
-                    <WeatherBox title="Влажность" icon="humidity" value={`${weather.humidity} %`} />
+                    <WeatherBox title="Ощущается" icon="like" value={`${weather.feelsLike || 0}°`} />
+                    <WeatherBox title="Ветер" icon="wind" value={`${weather.wind || 0} м/с`} />
+                    <WeatherBox title="Влажность" icon="humidity" value={`${weather.humidity || 0} %`} />
                 </div>
             </>}
         </div>

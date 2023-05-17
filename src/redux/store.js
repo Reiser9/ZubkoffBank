@@ -4,12 +4,20 @@ import authSlice from './slices/auth';
 import apiSlice from './slices/api';
 import notifySlice from './slices/notify';
 import userSlice from './slices/user';
+import cardTypesSlice from './slices/cardTypes';
+import serverSlice from './slices/server';
+import adminSlice from './slices/admin';
+import appSlice from './slices/app';
 
 export const store = configureStore({
     reducer: {
         auth: authSlice,
         api: apiSlice,
         notify: notifySlice,
-        user: userSlice
+        user: userSlice,
+        cardTypes: cardTypesSlice,
+        server: serverSlice,
+        admin: adminSlice,
+        app: appSlice
     }
 });

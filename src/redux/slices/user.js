@@ -1,26 +1,37 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    userLoading: false,
-    user: {}
+    userIsLoading: false,
+    user: {},
+    cards: []
 };
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserLoading: (state, action) => {
-            state.userLoading = action.payload
+        setUserIsLoading: (state, action) => {
+            state.userIsLoading = action.payload
         },
-        setUser: (state, action) => {
+        updateUser: (state, action) => {
             state.user = {...state.user, ...action.payload}
-        }
+        },
+        initCards: (state, action) => {
+            state.cards = action.payload
+        },
+        addCards: (state, action) => {
+            state.cards = state.cards.concat(action.payload)
+        },
+        setDataUser: () => initialState
     }
 });
 
 export const {
-    setUserLoading,
-    setUser
+    setUserIsLoading,
+    updateUser,
+    initCards,
+    addCards,
+    setDataUser
 } = userSlice.actions;
 
 export default userSlice.reducer;

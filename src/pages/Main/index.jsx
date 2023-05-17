@@ -3,35 +3,25 @@ import { Link } from 'react-router-dom';
 
 import './index.css';
 
-import useNotify from '../../hooks/useNotify';
-
 import { Dollar, Fast, Phone, Invest, Card, Percent, CoinStack, Banknotes } from '../../components/Icons';
+
+import TitleWrapper from '../../components/Wrappers/TitleWrapper';
 
 import Button from '../../components/Button';
 import WeatherBlock from '../../components/WeatherBlock';
 import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
+import { QRCode } from 'antd';
 
 const Main = () => {
-    React.useEffect(() => {
-        document.title = `${process.env.REACT_APP_BANK_NAME} Bank`;
-        window.scrollTo(0, 0);
-    }, []);
-
-    const {alertNotify} = useNotify();
-
-    const test = () => {
-        alertNotify("Тест", "Тест", "info");
-    }
-
     return (
-        <>
+        <TitleWrapper pageTitle="Главная">
             <section className="main-block">
                 <div className="container">
                     <div className="main-block__inner">
                         <div className="main-block__content">
-                            <h1 className="main-block__title title" onClick={test}>Привет 👋</h1>
+                            <h1 className="main-block__title title">Привет 👋</h1>
                                 
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
@@ -69,7 +59,7 @@ const Main = () => {
                         <h2 className="services__title title">Сервисы и услуги</h2>
 
                         <div className="services__items">
-                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" />
+                            <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" buttonLink="/profile" />
 
                             <ServiceItem icon={<Card />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
 
@@ -108,7 +98,7 @@ const Main = () => {
 
                         <div className="banner__icons">
                             <div className="banner__icon--inner banner__icon--inner_qr">
-                                <img src="assets/img/qr.svg" alt="qr" className="banner__icon" />
+                                <QRCode size="115" value="https://n1s2.hsmedia.ru/43/8e/85/438e85e1dcf8bc45fdb4738ad67e0523/728x485_1_676f156728d52a40cefbf4e88311021a@5000x3333_0xac120003_744610521626771276.jpg" />
                             </div>
 
                             <div className="banner__icon--inner banner__icon--inner_logo">
@@ -148,7 +138,7 @@ const Main = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </TitleWrapper>
     )
 }
 

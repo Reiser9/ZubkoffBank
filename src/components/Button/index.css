@@ -3,11 +3,16 @@
     border-radius: 50px;
     background: var(--mainC);
     font-weight: 600;
+    font-size: 1.4rem;
     color: #fff;
 }
 
 .default__button.disabled{
     pointer-events: none;
+    opacity: 0.5;
+}
+
+.default__button.opacity{
     opacity: 0.5;
 }
 
@@ -19,9 +24,33 @@
     background: var(--mainFocusC);
 }
 
+.default__button.admin__btn {
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.default__button.admin__back-btn {
+    display: none;
+    margin-right: auto;
+}
+
+.admin__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 @media(max-width: 768px){
     .default__button{
         padding: 1.2rem 4rem;
+    }
+
+    .default__button.admin__back-btn {
+        display: flex;
     }
 }
 
@@ -29,5 +58,9 @@
     .default__button{
         padding: 1.2rem 2rem;
         font-size: 1.4rem;
+    }
+
+    .default__button.admin__back-btn {
+        width: auto;
     }
 }

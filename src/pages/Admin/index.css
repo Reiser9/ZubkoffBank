@@ -1,7 +1,5 @@
-.admin__content {
-    display: flex;
+.profile__content.admin__content {
     justify-content: flex-start;
-    align-items: flex-start;
     gap: 16px;
 }
 
@@ -22,9 +20,8 @@
 }
 
 @media (max-width:480px) {
-    .admin__header_cards {
-        align-items: flex-start;
-        flex-direction: column;
+    .admin__btn span{
+        display: none;
     }
 }
 
@@ -85,16 +82,12 @@
 
 @media (max-width:480px) {
     .number__btn {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
     }
 }
 
-.number__btn:hover {
-    opacity: 0.7;
-}
-
-.number__btn.active {
+.number__btn.active, .number__btn:hover{
     background-color: var(--mainC);
     color: #fff;
 }
@@ -106,11 +99,13 @@
     flex-direction: column;
     gap: 12px;
     width: 100%;
+    flex: 1;
 }
 
 .item-admin {
     background-color: #fff;
     width: 100%;
+    border-radius: 4px;
 }
 
 .item-admin__header {
@@ -125,13 +120,7 @@
 .item-admin__title {
     display: flex;
     align-items: center;
-    gap: 20px;
-}
-
-@media (max-width:480px) {
-    .item-admin__title {
-        gap: 12px;
-    }
+    gap: 12px;
 }
 
 .item-admin__number {
@@ -163,11 +152,7 @@
 
 @media (max-width:480px) {
     .item-admin__name {
-        font-size: 12px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        width: 100px;
-        overflow: hidden;
+        font-size: 14px;
     }
 }
 
@@ -242,11 +227,22 @@
     font-size: 1.4rem;
 }
 
-.section-admin__icon {
+.section-admin__title svg {
     width: 20px;
     height: 20px;
-    stroke: #000;
     flex-shrink: 0;
+}
+
+.verify__not path{
+    stroke: var(--notifyError);
+}
+
+.verify__process path{
+    stroke: var(--notifyWarning);
+}
+
+.verify__success path{
+    stroke: var(--notifyOk);
 }
 
 .section-admin__arrow {
@@ -266,13 +262,7 @@
     align-items: center;
     flex-direction: column;
     gap: 24px;
-    padding: 8px 8px 20px;
-}
-
-@media (max-width:998px) {
-    .section-admin__content {
-        padding: 8px 8px 16px;
-    }
+    padding: 8px 8px 16px;
 }
 
 @media (max-width:768px) {
@@ -283,7 +273,6 @@
 
 @media (max-width:480px) {
     .section-admin__content {
-        padding: 8px 8px 12px;
         gap: 12px;
     }
 }
@@ -292,7 +281,7 @@
     display: flex;
 }
 
-.section-admin__items {
+.section-admin__items{
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
@@ -334,66 +323,20 @@
     gap: 8px;
 }
 
-.default__button.admin__btn {
-    padding: 0.8rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 8px;
-    font-size: 14px;
-}
-
-@media (max-width:480px) {
-    .admin__btn {
-        width: 100%;
-    }
-}
-
-.admin__icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-}
-
 .section-admin__text {
     font-weight: 500;
     font-size: 14px;
 }
 
 .section-admin__item_card {
-    width: calc(100% / 3 - 2 * 12px / 3);
+    width: 100%;
     padding: 16px 8px;
     gap: unset;
 }
 
-.section-admin__item_card .section-admin__card-img {
-    align-self: center;
-}
-
-@media (max-width:1200px) {
-    .section-admin__item_card {
-        width: calc(100% / 2 - 12px / 2);
-    }
-}
-
-@media (max-width:860px) {
-    .section-admin__item_card {
-        width: 100%;
-    }
-}
-
 @media (max-width:768px) {
-    .section-admin__item_card {
-        width: calc(100% / 2 - 12px / 2);
-    }
-}
-
-@media (max-width:576px) {
-    .section-admin__item_card {
-        width: 100%;
-        max-width: 250px;
-        margin: 0 auto;
+    .item-admin__header, .section-admin__header{
+        cursor: default;
     }
 }
 
@@ -401,9 +344,22 @@
     align-self: start;
 }
 
+.section-admin__card-img-inner{
+    width: 150px;
+    height: 95px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.section-admin__card-img-inner.left{
+    margin: 0;
+}
+
 .section-admin__card-img {
     width: 100%;
-    max-width: 150px;
+    height: 100%;
+    object-fit: cover;
 }
 
 .section-admin__card-items {
@@ -415,7 +371,7 @@
 
 @media (max-width:768px) {
     .section-admin__card-items {
-        margin: 1.2rem 0 1.6rem 0   ;
+        margin: 1.2rem 0 1.6rem 0;
     }
 }
 
@@ -467,20 +423,34 @@
 
 .pagination {
     margin: 0 auto;
+    margin-top: auto;
 }
 
-.default__button.admin__back-btn {
-    display: none;
+.admin__create--type--inner, .admin__create--type--content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
 }
 
-@media (max-width:768px) {
-    .default__button.admin__back-btn {
-        display: flex;
-    }
+.admin__create--type--content{
+    gap: 16px;
+    flex: 1;
 }
 
-@media (max-width:480px) {
-    .default__button.admin__back-btn {
-        width: auto;
-    }
+.admin__create--type--button{
+    margin: 0 auto;
+    margin-top: auto;
+}
+
+.admin__verify--buttons{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin__verify--button{
+    min-width: 175px;
 }
