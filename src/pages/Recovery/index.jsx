@@ -1,14 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import '../Sign/index.css';
 import './index.css';
 
-import useAuth from '../../hooks/useAuth';
-import useNotify, { NOTIFY_TYPES } from '../../hooks/useNotify';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
-
+import { NOTIFY_TYPES } from '../../consts/NOTIFY_TYPES';
+import useAuth from '../../hooks/useAuth';
+import useNotify from '../../hooks/useNotify';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import NoAuthWrapper from '../../components/Wrappers/NoAuthWrapper';
@@ -23,9 +23,10 @@ const Recovery = () => {
     const [password, setPassword] = React.useState("");
     const [passwordAgain, setPasswordAgain] = React.useState("");
 
-    const {recoveryPassword, sendCodeRecovery} = useAuth();
+    const {recoveryPassword, checkCodeRecovery, sendCodeRecovery} = useAuth();
     const {authIsLoading} = useSelector(state => state.auth);
     const {notifyTemplate} = useNotify();
+    const navigate = useNavigate();
 
     const prevStep = () => {
         setStep(step => step - 1);
@@ -36,11 +37,7 @@ const Recovery = () => {
     }
 
     const confirmRecoveryCode = () => {
-        if(code.length !== 6){
-            return notifyTemplate(NOTIFY_TYPES.CODE);
-        }
-
-        setStep(3);
+        checkCodeRecovery(phone, code, () => setStep(3));
     }
 
     const recoveryPasswordHandler = () => {
@@ -48,7 +45,7 @@ const Recovery = () => {
             return notifyTemplate(NOTIFY_TYPES.CONFIRM_PASSWORD);
         }
 
-        recoveryPassword(phone, code, password);
+        recoveryPassword(phone, password, code, () => navigate("/sign"));
     }
 
     return (
@@ -119,9 +116,9 @@ const Recovery = () => {
                             </div>
                             
                             <SignImgBlock title={`Восстановление пароля на ${process.env.REACT_APP_BANK_NAME}`} img="recovery" points={[
-                                {text: "Введите номер телефона, указанный при регистрайии"},
+                                {text: "Введите номер телефона, указанный при регистрации"},
                                 {text: "После этого мы отправим код подтверждения"},
-                                {text: "После успешного ввода кода подтверждения  у Вас будет возможность придумать новый пароль"}
+                                {text: "После успешного ввода кода подтверждения у Вас будет возможность придумать новый пароль"}
                             ]} />
                         </div>
                     </div>

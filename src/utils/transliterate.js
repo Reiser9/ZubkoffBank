@@ -35,23 +35,15 @@ export const transliterate = (str, upper = false) => {
         я: "ya",
     };
 
-    if(upper){
-        return str.split("").map(char => {
+    return str.split("").map(char => {
             const lowercaseChar = ru[char.toLowerCase()];
 
             if(!lowercaseChar){
                 return char;
             }
 
-            return lowercaseChar.toUpperCase();
-        }).join("");
-    }
-
-    return str.split("").map(char => {
-            const lowercaseChar = ru[char.toLowerCase()];
-
-            if(!lowercaseChar){
-                return char;
+            if(upper){
+                return lowercaseChar.toUpperCase();
             }
 
             return char === char.toUpperCase() ? lowercaseChar.toUpperCase() : lowercaseChar;

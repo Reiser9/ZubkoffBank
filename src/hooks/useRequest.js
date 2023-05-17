@@ -4,26 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {BASE_API_URL_USER, BASE_API_URL_ADMIN, BASE_API_URL_AUTH, BASE_API_URL_EMPTY, BASE_API_URL_CARD} from '../consts/API_URLS';
 import {REQUEST_STATUSES} from '../consts/REQUEST_STATUSES';
+import { HTTP_METHODS, REQUEST_TYPE } from '../consts/HTTP';
 
 import {setIsServerAvailable} from '../redux/slices/server';
 import {setBlocked} from '../redux/slices/app';
 import {isBot} from '../utils/isBot';
-
-export const HTTP_METHODS = {
-    GET: 'GET',
-    POST: 'POST',
-    PUT: 'PUT',
-    DELETE: 'DELETE',
-    PATCH: 'PATCH'
-};
-
-export const REQUEST_TYPE = {
-    USER: 'user',
-    ADMIN: 'admin',
-    AUTH: 'auth',
-    CARD: 'card',
-    EMPTY: 'empty'
-};
+import {requestDataIsError} from '../utils/requestDataIsError';
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -61,6 +47,10 @@ const useRequest = () => {
     ]);
 
     const getHealthServer = async () => {
+        if(isBot()){
+            return;
+        }
+        
         try{
             await emptyRequest.get("/health", {
                 timeout: 5000
@@ -70,6 +60,27 @@ const useRequest = () => {
 
             return REQUEST_STATUSES.SITE_NOT_AVAILABLE;
         }
+    }
+
+    // Получить новые токены
+    const getNewTokens = async (refreshToken) => {
+        const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
+            
+        if(requestDataIsError(newTokens)){
+            return;
+        }
+
+        localStorage.setItem("accessToken", newTokens.accessToken);
+        localStorage.setItem("refreshToken", newTokens.refreshToken);
+        localStorage.setItem("typeToken", newTokens.typeToken);
+
+        return newTokens;
+    }
+
+    const checkAccessDenied = async () => {
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        await getNewTokens(refreshToken);
     }
 
     const request = React.useCallback(async (
@@ -82,10 +93,6 @@ const useRequest = () => {
     ) => {
         if(isBot()){
             return;
-        }
-
-        if(!isServerAvailable){
-            return REQUEST_STATUSES.SITE_NOT_AVAILABLE;
         }
 
         setError(false);
@@ -118,10 +125,11 @@ const useRequest = () => {
 
             setIsLoading(false);
 
-            console.log(response.data); // <--
             return response.data;
         }
         catch(err){
+            const error = err.response;
+
             const serverHealth = await getHealthServer();
 
             setError(true);
@@ -131,17 +139,21 @@ const useRequest = () => {
                 return serverHealth;
             }
             
-            console.log(err.response.data.error);
-            if(err.response.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
+            if(error.data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
                 dispatch(setBlocked(true));
             }
 
-            console.log(err.response.data); // <--
-            return err.response.data;
+            if(error.data.error === "Forbidden" && error.data.status === 403){
+                checkAccessDenied();
+
+                return REQUEST_STATUSES.TOKEN_EXPIRED;
+            }
+
+            return error.data;
         }
     }, [isServerAvailable]);
 
-    return {isLoading, error, request, getHealthServer};
+    return {isLoading, error, request, getHealthServer, checkAccessDenied, getNewTokens};
 }
 
 export default useRequest;

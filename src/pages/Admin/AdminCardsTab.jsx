@@ -3,18 +3,25 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import { PAGGINATION_DATA } from '../../consts/PAGGINATION_DATA';
 import { Add } from '../../components/Icons';
 import Button from '../../components/Button';
 import CardBlock from './CardBlock';
-import useCardTypes from '../../hooks/useCardTypes';
 import Preloader from '../../components/Preloader';
 import EmptyBlock from '../../components/EmptyBlock';
+import Paggination from '../../components/Paggination';
+import useAdmin from '../../hooks/useAdmin';
+import ReloadButton from '../../components/ReloadButton';
 
 const AdminCardsTab = ({setActive}) => {
-    const {isLoad, error} = useCardTypes();
-    const {cardTypes} = useSelector(state => state.cardTypes);
+    const {isLoad, error, getCardTypes} = useAdmin();
+    const {cardTypesPagin} = useSelector(state => state.admin);
 
-    const {content, totalPages, totalElements} = cardTypes;
+    const {content, totalPages, totalElements, page, size} = cardTypesPagin;
+
+    React.useEffect(() => {
+        getCardTypes();
+    }, []);
 
     if(isLoad){
         return <Preloader />
@@ -23,7 +30,11 @@ const AdminCardsTab = ({setActive}) => {
     return (
         <>
             <div className="admin__header">
-                <h2 className="admin__title">Типы карт: {totalElements && totalElements}</h2>
+                <div className="admin__wrap">
+                    {totalElements && <h2 className="admin__title">Типы карт: {totalElements}</h2>}
+
+                    <ReloadButton action={() => getCardTypes(0, 10, true)} />
+                </div>
 
                 <Button className="admin__btn" onClick={() => setActive("createType")}>
                     <Add className="admin__icon" />
@@ -34,18 +45,14 @@ const AdminCardsTab = ({setActive}) => {
 
             <div className="admin__items">
                 {!error
-                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={id} data={data} />)
+                ? content?.length ? content.map((data, id) => <CardBlock key={id} id={(page * size) + id} data={data} />)
                 : <EmptyBlock title="Карт нет" center />
-                : <EmptyBlock title="Возникла какая-то ошибка" center />}
+                : <EmptyBlock title="Возникла какая-то ошибка" center>
+                    <Button small onClick={getCardTypes}>Перезагрузить</Button>
+                </EmptyBlock>}
             </div>
 
-            {totalPages > 1 &&<div className="number__btns pagination">
-                <div className="number__btn active">1</div>
-
-                <div className="number__btn">2</div>
-                
-                <div className="number__btn">3</div>
-            </div>}
+            <Paggination totalPages={totalPages} page={page} size={size} data={PAGGINATION_DATA.CARD_TYPES} />
         </>
     )
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import './index.css';
 
@@ -22,7 +21,7 @@ const Main = () => {
                     <div className="main-block__inner">
                         <div className="main-block__content">
                             <h1 className="main-block__title title">Привет 👋</h1>
-                                
+
                             <p className="main-block__text">Нужно быстро перевести деньги любимой бабушке, оплатить внезапный счет или хуже того, купить сигареты соседу? На пользу придет {process.env.REACT_APP_BANK_NAME}, банк #1 в мире</p>
 
                             <Button className="main-block__button" isLink to="/cards">
@@ -60,13 +59,9 @@ const Main = () => {
 
                         <div className="services__items">
                             <ServiceItem icon={<Invest />} title={`${process.env.REACT_APP_BANK_NAME} Инвестиции`} text="Понятные тарифы и удобное приложение" buttonText="В личный кабинет" buttonLink="/profile" />
-
                             <ServiceItem icon={<Card />} title={`Карта ${process.env.REACT_APP_BANK_NAME} Platinum`} text="Лимит до 700 000 ₽. Рассрочка без процентов до года" buttonText="Оформить карту" buttonLink="/cards" />
-
                             <ServiceItem icon={<Dollar />} title="Вклады" text="Откройте вклад с пополнением и частичным изъятием. Каждый месяц получайте проценты на карту или вклад" />
-
                             <ServiceItem icon={<Fast />} title="Система быстрых платежей" text="Оплачивайте покупки быстро и безопасно – в магазинах и на сайтах, в мессенджерах и социальных сетях. Без карты, нужен только смартфон." big />
-
                             <ServiceItem icon={<Phone />} title={`${process.env.REACT_APP_BANK_NAME} Mobile`} text="Безлимитные приложения, 25 ГБ и 600 минут со скидкой для клиентов банка. Самая эффективная защита от спама. Секретарь Алексей ответит на пропущенные звонки" big />
                         </div>
                     </div>
@@ -113,13 +108,13 @@ const Main = () => {
                         </div>
 
                         <div className="banner__downloads">
-                            <Link to="/" className="banner__link">
+                            <div className="banner__download">
                                 <img src="assets/img/play-market.svg" alt="play-market" />
-                            </Link>
+                            </div>
 
-                            <Link to="/" className="banner__link">
+                            <div className="banner__download">
                                 <img src="assets/img/app-store.svg" alt="app-store" />
-                            </Link>
+                            </div>
                         </div>
                     </div>
                 </div>

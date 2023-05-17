@@ -3,22 +3,28 @@ import { useSelector } from 'react-redux';
 
 import './index.css';
 
+import { PAGGINATION_DATA } from '../../consts/PAGGINATION_DATA';
 import useAdmin from '../../hooks/useAdmin';
 import useCardTypes from '../../hooks/useCardTypes';
 
 import UserBlock from './UserBlock';
 import Preloader from '../../components/Preloader';
 import EmptyBlock from '../../components/EmptyBlock';
+import Paggination from '../../components/Paggination';
+import ShowBy from '../../components/ShowBy';
+import Button from '../../components/Button';
+import ReloadButton from '../../components/ReloadButton';
 
 const AdminUsersTab = () => {
     const {isLoad, error, getUsers} = useAdmin();
-    const {isLoad: isLoadCardTypes, error: errorCardTypes} = useCardTypes();
+    const {isLoad: isLoadCardTypes, error: errorCardTypes, getCardTypes} = useCardTypes();
 
-    const {users} = useSelector(state => state.admin);
-    const {content, totalPages, totalElements} = users;
+    const {usersPagin} = useSelector(state => state.admin);
+    const {content, totalPages, totalElements, page, size} = usersPagin;
 
     React.useEffect(() => {
         getUsers();
+        getCardTypes();
     }, []);
 
     if(isLoad || isLoadCardTypes){
@@ -28,35 +34,25 @@ const AdminUsersTab = () => {
     return (
         <>
             <div className="admin__header admin__header_users">
-                <h2 className="admin__title">Пользователи: {totalElements && totalElements}</h2>
+                {totalElements && <div className="admin__wrap">
+                    <h2 className="admin__title">Пользователи: {totalElements}</h2>
 
-                <div className="limit">
-                    <p className="limit__label">Показывать по:</p>
+                    <ReloadButton action={() => getUsers(0, 10, true)} />
+                </div>}
 
-                    <div className="number__btns">
-                        <div className="number__btn active">5</div>
-
-                        <div className="number__btn">10</div>
-
-                        <div className="number__btn">20</div>
-                    </div>
-                </div>
+                <ShowBy page={page} size={size} data={PAGGINATION_DATA.USERS} />
             </div>
 
             <div className="admin__items">
                 {error || errorCardTypes
-                ? <EmptyBlock title="Возникла какая-то ошибка" center />
-                : (content?.length ? content.map((data, id) => <UserBlock key={data.id} id={id} data={data} />)
+                ? <EmptyBlock title="Возникла какая-то ошибка" center>
+                    <Button small onClick={getCardTypes}>Перезагрузить</Button>
+                </EmptyBlock>
+                : (content?.length ? content.map((data, id) => <UserBlock key={data.id} id={(page * size) + id} data={data} />)
                 : <EmptyBlock title="Пользователей нет" center />)}
             </div>
 
-            {totalPages > 1 && <div className="number__btns pagination">
-                <div className="number__btn active">1</div>
-
-                <div className="number__btn">2</div>
-
-                <div className="number__btn">3</div>
-            </div>}
+            <Paggination totalPages={totalPages} page={page} size={size} data={PAGGINATION_DATA.USERS} />
         </>
     )
 }

@@ -1,22 +1,26 @@
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
-import useRequest, { REQUEST_TYPE, HTTP_METHODS } from './useRequest';
-
+import { REQUEST_TYPE, HTTP_METHODS } from '../consts/HTTP';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
+import { NOTIFY_TYPES } from '../consts/NOTIFY_TYPES';
+
+import useRequest from './useRequest';
 import { setAuthIsLoading, setLogin, setIsAuth, setDataAuth } from '../redux/slices/auth';
 import { setAppIsLoading, setDataApp } from '../redux/slices/app';
 import { setDataAdmin } from '../redux/slices/admin';
 import { setDataUser } from '../redux/slices/user';
 import { setIsServerAvailable } from '../redux/slices/server';
-import useNotify, {NOTIFY_TYPES} from './useNotify';
+import useNotify from './useNotify';
 import useUser from './useUser';
 import {unmaskPhone} from '../utils/maskPhone';
+import { requestDataIsError } from '../utils/requestDataIsError';
 
 const useAuth = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
+
     const dispatch = useDispatch();
-    const {navigate} = useNavigate();
-    const {request, getHealthServer} = useRequest();
+    const {request, getHealthServer, getNewTokens} = useRequest();
     const {alertNotify, notifyTemplate} = useNotify();
     const {getUserShortInfo} = useUser();
 
@@ -49,7 +53,7 @@ const useAuth = () => {
 
         const data = await getHealthServer();
 
-        if(!data){
+        if(data !== REQUEST_STATUSES.SITE_NOT_AVAILABLE){
             checkAuth();
         }
 
@@ -71,22 +75,18 @@ const useAuth = () => {
 
         const data = await getUserShortInfo();
 
-        if(data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED){
+        if(data.error === REQUEST_STATUSES.YOU_ARE_BLOCKED || data.error === REQUEST_STATUSES.ACCESS_DENIED){
             dispatch(setAuthIsLoading(false));
             dispatch(setAppIsLoading(false));
             return;
         }
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 403){
-            const newTokens = await request(REQUEST_TYPE.AUTH, "/refresh", HTTP_METHODS.POST, false, {refreshToken});
-            
-            if(newTokens.status === REQUEST_STATUSES.NOT_SUCCESSFUL){
+        if(requestDataIsError(data)){
+            const tokens = await getNewTokens(refreshToken);
+
+            if(!tokens){
                 return clearData();
             }
-
-            localStorage.setItem("accessToken", newTokens.accessToken);
-            localStorage.setItem("refreshToken", newTokens.refreshToken);
-            localStorage.setItem("typeToken", newTokens.typeToken);
 
             return checkAuth();
         }
@@ -104,7 +104,7 @@ const useAuth = () => {
         }
 
         if(password.length < 8){
-            return alertNotify("Предупреждение", "Пароль не может быть меньше 8 символов", "warn");
+            return notifyTemplate(NOTIFY_TYPES.PASSWORD_SHORT);
         }
 
         dispatch(setAuthIsLoading(true));
@@ -113,7 +113,7 @@ const useAuth = () => {
         
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             return alertNotify("Ошибка", "Неверный номер телефона или пароль", "error");
         }
 
@@ -146,10 +146,12 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.ALREADY_REGISTERED:
-                    return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
+                    return notifyTemplate(NOTIFY_TYPES.USER_ALREADY_EXISTS);
+                case REQUEST_STATUSES.USER_NOT_LINK_ACCOUNT:
+                    return alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
                 default:
                     return alertNotify("Ошибка", "Вы не отправили боту номер телефона", "warn");
             }
@@ -171,12 +173,14 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.ALREADY_REGISTERED:
-                    return alertNotify("Ошибка", "Пользователь в такими данными уже зарегистрирован", "warn");
-                default:
+                    return notifyTemplate(NOTIFY_TYPES.USER_ALREADY_EXISTS);
+                case REQUEST_STATUSES.INVALID_CODE:
                     return notifyTemplate(NOTIFY_TYPES.INVALID_CODE);
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
         }
 
@@ -188,18 +192,20 @@ const useAuth = () => {
 
     // Смена пароля
     const changePassword = async (password, newPassword, successCallback = () => {}) => {
-        dispatch(setAuthIsLoading(true));
+        setIsLoading(true);
 
         const data = await request(REQUEST_TYPE.USER, "/change_pass", HTTP_METHODS.POST, true, {password, newPassword});
 
-        dispatch(setAuthIsLoading(false));
+        setIsLoading(false);
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch (data.error) {
-                case "Password is too short/long":
+                case REQUEST_STATUSES.PASSWORD_LONG_OR_SHORT:
                     return alertNotify("Ошибка", "Новый пароль меньше 8 или больше 35 символов", "warn");
+                case REQUEST_STATUSES.WRONG_PASSWORD:
+                    return notifyTemplate(NOTIFY_TYPES.WRONG_PASSWORD);
                 default:
-                    return alertNotify("Ошибка", "Старый пароль введен неверно", "warn");
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
         }
 
@@ -219,10 +225,12 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
+                case REQUEST_STATUSES.WRONG_PASSWORD:
+                    return notifyTemplate(NOTIFY_TYPES.WRONG_PASSWORD)
                 default:
-                    return alertNotify("Ошибка", "Неверный пароль", "error");
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
             }
         }
 
@@ -243,7 +251,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.PHONE_NOT_FOUND:
                     return alertNotify("Ошибка", "Пользователь с таким номером телефона не найден", "error");
@@ -256,20 +264,43 @@ const useAuth = () => {
         alertNotify("Успешно", "Код отправлен", "success");
     }
 
+    const checkCodeRecovery = async (phoneNum, code, successCallback = () => {}) => {
+        if(phoneNum.length < 17){
+            return notifyTemplate(NOTIFY_TYPES.PHONE);
+        }
+        if(code.length !== 6){
+            return notifyTemplate(NOTIFY_TYPES.PHONE);
+        }
+
+        dispatch(setAuthIsLoading(true));
+
+        const data = await request(REQUEST_TYPE.AUTH, "/check_recovery_code", HTTP_METHODS.POST, false, {phoneNum: unmaskPhone(phoneNum), code});
+
+        dispatch(setAuthIsLoading(false));
+
+        if(requestDataIsError(data)){
+            switch(data.error){
+                case REQUEST_STATUSES.INVALID_CODE:
+                    return notifyTemplate(NOTIFY_TYPES.CODE);
+                default:
+                    return notifyTemplate(NOTIFY_TYPES.ERROR);
+            }
+        }
+
+        successCallback();
+    }
+
     // Восстановление пароля (изменить пароль)
     const recoveryPassword = async (phoneNum, password, code, successCallback = () => {}) => {
         if(phoneNum.length < 17){
             return notifyTemplate(NOTIFY_TYPES.PHONE);
         }
-
         if(password.length < 8){
             return notifyTemplate(NOTIFY_TYPES.PASSWORD_SHORT);
         }
-
         if(password.length > 35){
             return notifyTemplate(NOTIFY_TYPES.PASSWORD_LONG);
         }
-
         if(code.length !== 6){
             return notifyTemplate(NOTIFY_TYPES.CODE);
         }
@@ -280,7 +311,7 @@ const useAuth = () => {
 
         dispatch(setAuthIsLoading(false));
 
-        if(data.status === REQUEST_STATUSES.NOT_SUCCESSFUL || data.status === 500){
+        if(requestDataIsError(data)){
             switch(data.error){
                 case REQUEST_STATUSES.INVALID_CODE:
                     return notifyTemplate(NOTIFY_TYPES.INVALID_CODE);
@@ -291,10 +322,11 @@ const useAuth = () => {
 
         successCallback();
         alertNotify("Успешно", "Пароль изменен", "success");
-        navigate("/sign");
     }
 
     return {
+        isLoading,
+        getNewTokens,
         checkAuth,
         login,
         logout,
@@ -304,6 +336,7 @@ const useAuth = () => {
         reload,
         deleteAccount,
         sendCodeRecovery,
+        checkCodeRecovery,
         recoveryPassword
     }
 }

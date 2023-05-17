@@ -13,11 +13,18 @@ import CheckItem from '../../components/CheckItem';
 import Confirm from '../../components/Confirm';
 import NewCardModal from '../../components/NewCardModal';
 
-const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard}) => {
+const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard, setTab}) => {
     const [newCardModal, setNewCardModal] = React.useState(false);
+    const [showMore, setShowMore] = React.useState(false);
 
     const {logout} = useAuth();
     const {user, cards} = useSelector(state => state.user);
+
+    React.useEffect(() => {
+        if(cards.length && !activeCard){
+            setActiveCard(cards[0].id);
+        }
+    }, [cards]);
 
     return (
         <>
@@ -26,7 +33,15 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
                 <ErrorBlock text="Необходима верификация" />
             </div>
             : <>
-                {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActive={setActiveCard} setTab={setActive} />)}
+                {cards.length > 0 && <div className={`profile__bill--content${showMore ? " active" : ""}`}>
+                    {cards.map(data => <CheckItem key={data.id} data={data} active={activeCard} setActiveCard={setActiveCard} setActive={setActive} setTab={setTab} />)}
+                </div>}
+
+                {cards.length > 4 && <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setShowMore(prev => !prev)}>
+                    <p className="profile__sidebar--check--add--text w100 center">
+                        Показать {showMore ? "меньше" : "больше"}
+                    </p>
+                </div>}
 
                 <div className="profile__sidebar--check profile__sidebar--check--add" onClick={() => setNewCardModal(true)}>
                     <div className="profile__sidebar--check--icon--inner">
@@ -39,7 +54,7 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
                 </div>
             </>}
 
-            {newCardModal && <NewCardModal active={newCardModal} setActive={setNewCardModal} />}
+            <NewCardModal active={newCardModal} setActive={setNewCardModal} />
             <Confirm active={exitModal} setActive={setExitModal} text="Вы действительно хотите выйти?" action={logout} />
         </>
     )

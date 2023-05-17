@@ -63,7 +63,7 @@
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     gap: 40px;
     overflow-y: auto;
@@ -81,6 +81,7 @@
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
+    margin: 0 auto;
 }
 
 .profile__content--card--img {
@@ -250,10 +251,6 @@
     .payment-method {
         width: calc(100% / 2 - 12px / 2);
     }
-
-    .payment-method:last-child {
-        width: 100%;
-    }
 }
 
 @media (max-width:576px) {
@@ -329,43 +326,11 @@ svg.payment-method__icon_sbp path {
 }
 
 .transfer__bil-payments {
-    display: flex;
-    gap: 16px;
     width: 100%;
-    overflow-x: auto;
-    padding-bottom: 8px;
-}
-
-@media (max-width:768px) {
-    .transfer__bil-payments {
-        gap: 12px;
-    }
-}
-
-@media (max-width:480px) {
-    .transfer__bil-payments {
-        gap: 8px;
-    }
-}
-
-.transfer__bil-payments::-webkit-scrollbar {
-    height: 4px;
-}
-
-.transfer__bil-payments::-webkit-scrollbar-thumb {
-    background-color: var(--mainC);
-    border-radius: 2px;
-}
-
-.transfer__bil-payments::-webkit-scrollbar-track {
-    background-color: #fff;
-    border-radius: 2px;
 }
 
 .bil-payment__wrapper {
     width: 100%;
-    max-width: 200px;
-    flex-shrink: 0;
     border-radius: 6px;
     padding: 2px;
     border: 2px solid transparent;
@@ -389,7 +354,7 @@ svg.payment-method__icon_sbp path {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
-    min-height: 107px;
+    min-height: 122px;
     cursor: pointer;
     position: relative;
 }
@@ -404,19 +369,23 @@ svg.payment-method__icon_sbp path {
 }
 
 .bil-payment_black {
-    background-color: var(--cardBlackC);
+    background: var(--cardBlackC);
 }
 
 .bil-payment_junior {
-    background-color: var(--cardJuniorC);
+    background: var(--cardJuniorC);
 }
 
 .bil-payment_platinum {
-    background-color: var(--cardPlatinumC);
+    background: var(--cardPlatinumC);
 }
 
 .bil-payment_drive {
-    background-color: var(--cardDriveC);
+    background: var(--cardDriveC);
+}
+
+.bil-payment_default{
+    background: var(--cardDefaultC);
 }
 
 .bil-payment::before {
@@ -440,12 +409,8 @@ svg.payment-method__icon_sbp path {
 }
 
 @media (max-width:480px) {
-    .bil-payment__wrapper {
-        max-width: 160px;
-    }
-
     .bil-payment {
-        min-height: 90px;
+        min-height: 100px;
     }
 
     .bil-payment::before {
@@ -476,14 +441,14 @@ svg.payment-method__icon_sbp path {
 }
 
 @media(max-width: 998px) {
-    .profile__content--card--buttons {
-        flex-direction: column;
-        align-items: flex-start;
+    .profile__content--card--buttons{
         gap: 12px;
     }
 
     .profile__content--card--button {
+        padding: 1.4rem 2rem;
         width: 100%;
+        max-width: 175px;
     }
 
     .profile__sidebar {
@@ -545,6 +510,21 @@ svg.payment-method__icon_sbp path {
 
     .transfer__btn {
         width: 100%;
+    }
+
+    .transfer__text{
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 440px) {
+    .profile__content--card--buttons{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile__content--card--button{
+        max-width: 250px;
     }
 }
 

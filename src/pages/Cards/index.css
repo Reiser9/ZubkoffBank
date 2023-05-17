@@ -102,14 +102,14 @@
 }
 
 .card__item--img--inner{
-    width: 100%;
-    max-width: 291px;
+    width: 291px;
     height: 185px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .card__item--img{
@@ -227,11 +227,28 @@
     }
 
     .card__item{
-        padding: 2rem 2rem 4rem 2rem;
+        padding: 2rem;
     }
 
     .card__item--content{
         gap: 24px;
+    }
+
+    .card__item--for{
+        padding: 0.8rem;
+    }
+
+    .card__item--for svg{
+        width: 20px;
+    }
+
+    .card__item--point{
+        gap: 4px;
+    }
+
+    .card__for--skeleton{
+        width: 140px;
+        height: 36px;
     }
 }
 
@@ -241,11 +258,15 @@
     }
 
     .card__item--title{
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+
+    .card__item--title--skeleton{
+        height: 44px;
     }
 
     .card__item--point--title{
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
 
     .card__item--for--icon{
@@ -254,5 +275,18 @@
 
     .card__item--point--text, .card__item--for--text, .card__item--text{
         font-size: 1.4rem;
+    }
+
+    .card__item--text{
+        margin-top: 1.5rem;
+    }
+
+    .card__item--points {
+        margin-top: 1.5rem;
+    }
+
+    .card__item--img--inner, .card__img--skeleton{
+        width: 236px;
+        height: 150px;
     }
 }

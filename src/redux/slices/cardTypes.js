@@ -1,7 +1,9 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    cardTypes: {}
+    cardTypes: {
+        content: []
+    }
 };
 
 export const cardTypesSlice = createSlice({
@@ -13,14 +15,17 @@ export const cardTypesSlice = createSlice({
         },
         addCardTypes: (state, action) => {
             state.cardTypes.content = state.cardTypes.content.concat(action.payload);
-            state.cardTypes.totalElements += 1;
-        }
+        },
+        concatCardTypes: (state, action) => {
+            state.cardTypes.content = state.cardTypes.content.concat(action.payload.content);
+        },
     }
 });
 
 export const {
     initCardTypes,
-    addCardTypes
+    addCardTypes,
+    concatCardTypes
 } = cardTypesSlice.actions;
 
 export default cardTypesSlice.reducer;

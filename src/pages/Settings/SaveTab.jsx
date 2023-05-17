@@ -20,8 +20,7 @@ const SaveTab = () => {
 
     const [deletePassword, setDeletePassword] = React.useState("");
 
-    const {authIsLoading} = useSelector(state => state.auth);
-    const {changePassword, deleteAccount} = useAuth();
+    const {isLoading, changePassword, deleteAccount} = useAuth();
     const {alertNotify} = useNotify();
 
     const clearForm = () => {
@@ -61,7 +60,7 @@ const SaveTab = () => {
                         <Input value={newPasswordAgain} setValue={setNewPasswordAgain} className="setting__input" placeholder="Повторите новый пароль" password />
                     </div>
 
-                    <Button className="setting__item setting__item_btn" disabled={authIsLoading} onClick={changePasswordHandler}>Изменить</Button>
+                    <Button className="setting__item setting__item_btn" disabled={isLoading} onClick={changePasswordHandler}>Изменить</Button>
                 </div>
             </div>
 

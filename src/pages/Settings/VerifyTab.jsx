@@ -7,7 +7,6 @@ import './index.css';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
 
 import useUser from '../../hooks/useUser';
-import {getNormalDate} from '../../utils/getNormalDate';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -15,15 +14,16 @@ import VerifyStage from './VerifyStage';
 import Preloader from '../../components/Preloader';
 import Choice from '../../components/Choice';
 import { VERIFY_STATUS } from '../../consts/VERIFY_STATUS';
+import EmptyBlock from '../../components/EmptyBlock';
 
 const VerifyTab = () => {
     const {user, userIsLoading} = useSelector(state => state.user);
-    const {sendVerifyRequest, getUserFullInfo} = useUser();
+    const {error, sendVerifyRequest, getUserFullInfo, cancelVerify} = useUser();
 
     const [passportData, setPassportData] = React.useState("");
     const [granted, setGranted] = React.useState("");
-    const [grantedDate, setGrantedDate] = React.useState(user.verified === VERIFY_STATUS.REFUSED ? dayjs() : "");
-    const [birthdate, setBirthdate] = React.useState(user.verified === VERIFY_STATUS.REFUSED ? dayjs() : "");
+    const [grantedDate, setGrantedDate] = React.useState(dayjs());
+    const [birthdate, setBirthdate] = React.useState(dayjs());
     const [sex, setSex] = React.useState(true);
 
     const verify = () => {
@@ -35,7 +35,7 @@ const VerifyTab = () => {
     }, []);
 
     React.useEffect(() => {
-        if(user.verified === VERIFY_STATUS.REFUSED && user.secondName){
+        if(user.birthdate){
             setPassportData(`${user.passportSer} ${user.passportNum}`);
             setGranted(user.granted);
             setGrantedDate(dayjs(user.grantedDate));
@@ -46,6 +46,12 @@ const VerifyTab = () => {
 
     if(userIsLoading){
         return <Preloader />
+    }
+
+    if(error){
+        return <EmptyBlock title="Возникла ошибка при загрузке данных" center>
+            <Button small onClick={getUserFullInfo}>Перезагрузить</Button>
+        </EmptyBlock>
     }
 
     return (
@@ -82,7 +88,10 @@ const VerifyTab = () => {
                 <Button className="setting__verify-btn" onClick={verify}>Верифицировать</Button>
             </>}
 
-            {user.verified === VERIFY_STATUS.PROCESS && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте" />}
+            {user.verified === VERIFY_STATUS.PROCESS && <VerifyStage icon="clock" text="Данные на этапе проверки, пожалуйста, ожидайте">
+                <Button onClick={() => cancelVerify()}>Отменить заявку</Button>
+            </VerifyStage>}
+            
             {user.verified === VERIFY_STATUS.VERIFIED && <VerifyStage icon="check" text="Верификация успешно пройдена" />}
         </>
     )

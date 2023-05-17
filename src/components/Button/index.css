@@ -1,4 +1,4 @@
-.default__button{
+.default__button {
     padding: 1.4rem 6.6rem;
     border-radius: 50px;
     background: var(--mainC);
@@ -7,20 +7,28 @@
     color: #fff;
 }
 
-.default__button.disabled{
+.reload__btn{
+    margin-top: 1.6rem;
+    font-size: 1.4rem;
+    padding: 1.2rem 2.8rem;
+}
+
+.default__button.disabled {
     pointer-events: none;
     opacity: 0.5;
 }
 
-.default__button.opacity{
+.default__button.opacity {
     opacity: 0.5;
 }
 
-.default__button:hover{
-    background: var(--mainHoverC);
+@media (any-hover:hover) {
+    .default__button:hover {
+        background: var(--mainHoverC);
+    }
 }
 
-.default__button:active{
+.default__button:active {
     background: var(--mainFocusC);
 }
 
@@ -44,8 +52,16 @@
     flex-shrink: 0;
 }
 
-@media(max-width: 768px){
-    .default__button{
+.default__button.red-btn {
+    background-color: var(--notifyError);
+}
+
+.default__button.red-btn:hover {
+    background-color: var(--errorHover);
+}
+
+@media(max-width: 768px) {
+    .default__button {
         padding: 1.2rem 4rem;
     }
 
@@ -54,8 +70,8 @@
     }
 }
 
-@media(max-width: 480px){
-    .default__button{
+@media(max-width: 480px) {
+    .default__button {
         padding: 1.2rem 2rem;
         font-size: 1.4rem;
     }

@@ -2,7 +2,7 @@ import React from 'react';
 
 import './index.css';
 
-import { NotifyOkIcon, Lock, SettingsIcon } from '../../components/Icons';
+import { NotifyOkIcon, Lock, SettingsIcon, Card } from '../../components/Icons';
 import SidebarItem from '../../components/SidebarItem';
 import SidebarTab from '../../components/SidebarTab';
 import BackButton from '../../components/Button/BackButton';
@@ -11,6 +11,7 @@ import PageSidebarInner from '../../components/PageSidebarInner';
 import VerifyTab from './VerifyTab';
 import DataTab from './DataTab';
 import SaveTab from './SaveTab';
+import SubscribesTab from './SubscribesTab';
 
 const settingsTabs = [
     {
@@ -27,6 +28,11 @@ const settingsTabs = [
         text: "Безопасность",
         icon: <Lock />,
         names: ["save"]
+    },
+    {
+        text: "Подписки",
+        icon: <Card />,
+        names: ["subscribes"]
     }
 ]
 
@@ -50,6 +56,7 @@ const Settings = () => {
                 {tab === "verify" && <VerifyTab />}
                 {tab === "data" && <DataTab />}
                 {tab === "save" && <SaveTab />}
+                {tab === "subscribes" && <SubscribesTab />}
             </div>
         </PageSidebarInner>
     )

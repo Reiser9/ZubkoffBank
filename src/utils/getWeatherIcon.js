@@ -1,5 +1,5 @@
-export const getWeatherIcon = (desc) => {
-    switch (desc) {
+export const getWeatherIcon = (description) => {
+    switch (description) {
         case "Clear":
             return "cloud-sun";
         case "Snow":

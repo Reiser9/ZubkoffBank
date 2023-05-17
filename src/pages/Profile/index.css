@@ -15,7 +15,7 @@
     font-weight: 500;
 }
 
-.profile__content--limit--value{
+.profile__content--limit--value {
     font-size: 1.4rem;
 }
 
@@ -52,7 +52,7 @@
     overflow: hidden;
 }
 
-.profile__content--limit--line--progress{
+.profile__content--limit--line--progress {
     height: 4px;
     background: var(--mainC);
     position: absolute;
@@ -62,10 +62,175 @@
     transition: .2s linear;
 }
 
-.profile__content--limit--line--progress.orange{
+.profile__content--limit--line--progress.orange {
     background: #e59313;
 }
 
-.profile__content--limit--line--progress.red{
+.profile__content--limit--line--progress.red {
     background: #e51313;
+}
+
+.profile__bill--content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    max-height: calc(65px * 4 + 12px * 3);
+    overflow-y: hidden;
+}
+
+.profile__bill--content.active {
+    max-height: unset;
+}
+
+.transfer__info--button{
+    padding: 1.2rem 4.4rem;
+}
+
+/* История платежей */
+.history__inner{
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.6rem 0 4rem 0;
+    flex-grow: 1;
+}
+
+.history__title--inner{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0rem 1.6rem;
+}
+
+.history__title{
+    font-weight: 600;
+}
+
+.history__content{
+    width: 100%;
+    margin-top: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.profile__content--inner {
+    width: 100%;
+    position: relative;
+}
+
+.profile__content--card--options {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-bottom: 8px;
+}
+
+.profile__content--card--options--btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--creditCardBg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: .2s linear;
+}
+
+@media (any-hover:hover) {
+    .profile__content--card--options--btn:hover {
+        background-color: var(--submenuItemHoverC);
+    }
+}
+
+.profile__content--card--options--icon {
+    width: 24px;
+    height: 24px;
+}
+
+.profile__content--card--options--icon path {
+    stroke: var(--mainC);
+}
+
+.transfer__buttons{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.transfer__to--content{
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.transfer__to--item{
+    width: calc(100% / 4 - 32px / 4);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    padding: 2px;
+    cursor: pointer;
+    transition: .2s linear;
+}
+
+.transfer__to--item:hover{
+    border: 2px solid rgba(0, 0, 0, .2);
+}
+
+.transfer__to--item.active{
+    border: 2px solid var(--mainC);
+}
+
+.transfer__to--item--content{
+    padding: 1.2rem;
+    background: var(--cardDefaultC);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.transfer__to--item--icon--inner{
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+.transfer__to--item--icon{
+    max-width: 70%;
+    max-height: 70%;
+}
+
+.transfer__to--item--organization{
+    font-size: 1.4rem;
+    margin-top: 0.8rem;
+    color: #fff;
+}
+
+.transfer__to--item--name{
+    margin-top: .8rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }

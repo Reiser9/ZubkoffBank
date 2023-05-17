@@ -2,9 +2,22 @@ import React from 'react';
 
 import './index.css';
 
-const CardLimitBlock = ({card, cardType}) => {
-    const {limit} = cardType;
+const CardLimitBlock = ({card}) => {
+    const {type, remainsLimit} = card;
+
     const [progress, setProgress] = React.useState(0);
+
+    React.useEffect(() => {
+        if(type && typeof remainsLimit === "number"){
+            if(remainsLimit >= 0){
+                setProgress((type.limit - remainsLimit) / type.limit * 100);
+            }
+            else{
+                setProgress(100);
+            }
+        }
+
+    }, [remainsLimit, type]);
 
     return (
         <div className="profile__content--limit--inner">
@@ -17,7 +30,7 @@ const CardLimitBlock = ({card, cardType}) => {
                     </p>
 
                     <p className="profile__content--limit--content--num">
-                        {limit?.toLocaleString()} ₽
+                        {type?.limit?.toLocaleString()} ₽
                     </p>
                 </div>
 
@@ -27,7 +40,7 @@ const CardLimitBlock = ({card, cardType}) => {
             </div>
 
             <p className="profile__content--limit--value">
-                Осталось: <span>50 000 ₽</span>
+                Осталось: <span>{remainsLimit >= 0 ? remainsLimit?.toLocaleString() : "0"} ₽</span>
             </p>
         </div>
     )

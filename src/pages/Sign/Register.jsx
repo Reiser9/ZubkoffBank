@@ -36,15 +36,12 @@ const Register = () => {
         if(phoneRegister.length < 17){
             return alertNotify("Предупреждение", "Введите корректный номер телефона", "warn");
         }
-
-        if(!nameRegister || (fioValid < 3 || fioValid > 3)){
+        if(!nameRegister || fioValid !== 3){
             return alertNotify("Предупреждение", "Введите корретные данные ФИО", "warn");
         }
-
         if(passwordRegister.length < 8){
             return alertNotify("Предупреждение", "Пароль не может быть меньше 8 символов", "warn");
         }
-
         if(passwordRegister !== passwordAgainRegister){
             return alertNotify("Предупреждение", "Пароли не совпадают", "warn");
         }

@@ -13,9 +13,10 @@ import Preloader from '../../components/Preloader';
 import Input from '../../components/Input';
 import EmptyBlock from '../../components/EmptyBlock';
 import VerifyStage from './VerifyStage';
+import Button from '../../components/Button';
 
 const DataTab = () => {
-    const {getUserFullInfo} = useUser();
+    const {error, getUserFullInfo} = useUser();
     const {user, userIsLoading} = useSelector(state => state.user);
 
     const {firstName, secondName, middleName, phoneNum, sex, verified, birthdate, passportNum, passportSer, granted, grantedDate} = user;
@@ -26,6 +27,12 @@ const DataTab = () => {
 
     if(userIsLoading){
         return <Preloader />
+    }
+
+    if(error){
+        return <EmptyBlock title="Возникла ошибка при загрузке данных" center>
+            <Button small onClick={getUserFullInfo}>Перезагрузить</Button>
+        </EmptyBlock>
     }
 
     return (

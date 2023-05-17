@@ -12,6 +12,10 @@ import Input from '../../components/Input';
 const CardRequisites = ({card}) => {
     const {cardNum, cvc, expDate} = card;
 
+    const [cardNumData, setCardNumData] = React.useState("");
+    const [expDateData, setExpDateData] = React.useState("");
+    const [cvcData, setCvcData] = React.useState("");
+
     const [show, setShow] = React.useState(false);
 
     const {alertNotify} = useNotify();
@@ -22,7 +26,13 @@ const CardRequisites = ({card}) => {
     }
 
     React.useEffect(() => {
-        setShow(false);
+        if(cardNum && expDate && cvc){
+            setCardNumData(cardNum);
+            setExpDateData(getNormalDate(expDate, "MM / YY"));
+            setCvcData(cvc);
+        }
+
+        return () => setShow(false);
     }, [card]);
 
     return (
@@ -37,12 +47,12 @@ const CardRequisites = ({card}) => {
                 </p>
             </div>
 
-            <Input value={show ? getFormatCardNumber(cardNum) : maskCardNumber(cardNum)} readOnly="readonly" onClick={() => copy(cardNum)} />
+            <Input value={show ? getFormatCardNumber(cardNumData) : maskCardNumber(cardNumData)} readOnly="readonly" onClick={() => copy(cardNumData)} />
 
             <div className="profile__content--card--input--wrapper">
-                <Input value={show ? getNormalDate(expDate, "MM / YY") : "** / **"} readOnly="readonly" onClick={() => copy(getNormalDate(expDate, "MM / YY"))} />
+                <Input value={show ? expDateData : "** / **"} readOnly="readonly" onClick={() => copy(expDateData)} />
 
-                <Input value={show ? cvc : "***"} readOnly="readonly" onClick={() => copy(cvc)} />
+                <Input value={show ? cvcData : "***"} readOnly="readonly" onClick={() => copy(cvcData)} />
             </div>
         </div>
     )

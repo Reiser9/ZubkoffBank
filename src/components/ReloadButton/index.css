@@ -1,0 +1,27 @@
+.reload__button{
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--creditCardBg);
+    border-radius: 50%;
+}
+
+.reload__button:hover{
+    opacity: 0.7;
+}
+
+.reload__button.active{
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.reload__button svg{
+    width: 18px;
+    flex-shrink: 0;
+}
+
+.reload__button svg path{
+    stroke: var(--mainC);
+}
