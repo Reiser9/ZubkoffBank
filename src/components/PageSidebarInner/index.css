@@ -3,7 +3,25 @@
     padding: 6rem 0;
     display: flex;
     overflow: hidden auto;
-    height: calc(100vh - 59px);
+    min-height: calc(100vh - 59px);
+}
+
+@media (any-hover:none) {
+    .profile {
+        height: calc(100vh - 59px);
+    }
+} 
+
+@media (max-height:600px) {
+    .profile {
+        padding: 3rem 0;
+    }
+}
+
+@media (max-height:420px) {
+    .profile {
+        padding: 1.5rem 0;
+    }
 }
 
 .profile .container, .container .profile__inner{
@@ -448,7 +466,7 @@ svg.payment-method__icon_sbp path {
     .profile__content--card--button {
         padding: 1.4rem 2rem;
         width: 100%;
-        max-width: 175px;
+        max-width: 190px;
     }
 
     .profile__sidebar {

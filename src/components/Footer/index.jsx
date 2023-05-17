@@ -19,20 +19,12 @@ const Footer = () => {
                                 <p className="footer__text">Он такой один</p>
 
                                 <div className="footer__social">
-                                    <Link to="/" className="footer__icon--inner">
+                                    <Link to="https://t.me/zubkoffbot" target="_blank" className="footer__icon--inner">
                                         <Telegram className="footer__icon" />
                                     </Link>
 
-                                    <Link to="/" className="footer__icon--inner">
+                                    <Link to="https://vk.com/club220655047" target="_blank" className="footer__icon--inner">
                                         <Vk className="footer__icon" />
-                                    </Link>
-
-                                    <Link to="/" className="footer__icon--inner">
-                                        <Tiktok className="footer__icon" />
-                                    </Link>
-
-                                    <Link to="/" className="footer__icon--inner">
-                                        <Instagram className="footer__icon" />
                                     </Link>
                                 </div>
                             </div>

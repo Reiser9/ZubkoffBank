@@ -187,7 +187,7 @@ const PaymentScreen = ({cardId, setTab}) => {
                 </TransferBlock>
 
                 <div className="transfer__to--content">
-                    {infoTransfer.map((data, id) => <TransferToItem key={id} data={data} active={data.code === toPayInfo.code} changeToPay={setToPayInfo} />)}
+                    <div className="transfer__to--wrapper">{infoTransfer.map((data, id) => <TransferToItem key={id} data={data} active={data.code === toPayInfo.code} changeToPay={setToPayInfo} />)}</div>
                 </div>
 
                 <div className="transfer__step">

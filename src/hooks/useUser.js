@@ -220,6 +220,8 @@ const useUser = () => {
 
         if(requestDataIsError(data)){
             switch(data.error){
+                case REQUEST_STATUSES.INSUFFICIENT_FUNDS:
+                    return alertNotify("Ошибка", "Недостаточно средств", "error");
                 default:
                     return notifyTemplate(NOTIFY_TYPES.ERROR);
             }

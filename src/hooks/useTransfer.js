@@ -179,7 +179,7 @@ const useTransfer = () => {
         if(confirmCode){
             paymentInfo = {
                 ...paymentInfo,
-                confirmCode
+                codeConfirm: confirmCode
             }
         }
 

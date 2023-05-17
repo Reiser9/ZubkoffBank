@@ -12,6 +12,7 @@ import ErrorBlock from '../../components/ErrorBlock';
 import CheckItem from '../../components/CheckItem';
 import Confirm from '../../components/Confirm';
 import NewCardModal from '../../components/NewCardModal';
+import { useNavigate } from 'react-router-dom';
 
 const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setActiveCard, setTab}) => {
     const [newCardModal, setNewCardModal] = React.useState(false);
@@ -19,6 +20,11 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
 
     const {logout} = useAuth();
     const {user, cards} = useSelector(state => state.user);
+    const navigate = useNavigate();
+
+    const logoutHandler = () => {
+        logout(() => navigate("/"));
+    }
 
     React.useEffect(() => {
         if(cards.length && !activeCard){
@@ -55,7 +61,7 @@ const CurrentCardsBlock = ({exitModal, setExitModal, setActive, activeCard, setA
             </>}
 
             <NewCardModal active={newCardModal} setActive={setNewCardModal} />
-            <Confirm active={exitModal} setActive={setExitModal} text="Вы действительно хотите выйти?" action={logout} />
+            <Confirm active={exitModal} setActive={setExitModal} text="Вы действительно хотите выйти?" action={logoutHandler} />
         </>
     )
 }

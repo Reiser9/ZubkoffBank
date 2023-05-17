@@ -41,8 +41,9 @@ const useAuth = () => {
     }
 
     // Выход
-    const logout = () => {
+    const logout = (successCallback = () => {}) => {
         clearData();
+        successCallback();
         alertNotify("Успешно", "Вы вышли из аккаунта", "success");
     }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import './index.css';
@@ -9,6 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import { Leave, SettingsIcon, User, UserCircle } from '../../components/Icons';
 import { Arrow } from '../../components/Icons';
 import Confirm from '../Confirm';
+import { Button } from 'antd';
 
 const Header = () => {
     const [submenuActive, setSubmenuActive] = React.useState(false);
@@ -17,8 +18,13 @@ const Header = () => {
     const { isAuth } = useSelector(state => state.auth);
     const { user } = useSelector(state => state.user);
     const {logout} = useAuth();
+    const navigate = useNavigate();
 
     const { firstName, roles } = user;
+
+    const logoutHandler = () => {
+        logout(() => navigate("/"));
+    }
 
     const documentClickHandler = (e) => {
         const targetElement = e.target;
@@ -56,7 +62,7 @@ const Header = () => {
                                 </div>
 
                                 <div className={`submenu submenu_header${submenuActive? " active": ""}`}>
-                                    {roles?.includes("admin") && <Link to="/admin" className="submenu__item">
+                                    {roles?.includes("admin") && <Link to="/admin" className="submenu__item" onClick={() => setSubmenuActive(false)}>
                                         <User className="submenu__icon" />
 
                                         <p className="submenu__text">
@@ -64,7 +70,7 @@ const Header = () => {
                                         </p>
                                     </Link>}
 
-                                    <Link to="/profile" className="submenu__item">
+                                    <Link to="/profile" className="submenu__item" onClick={() => setSubmenuActive(false)}>
                                         <UserCircle className="submenu__icon" />
 
                                         <p className="submenu__text">
@@ -72,7 +78,7 @@ const Header = () => {
                                         </p>
                                     </Link>
 
-                                    <Link to="/settings" className="submenu__item">
+                                    <Link to="/settings" className="submenu__item" onClick={() => setSubmenuActive(false)}>
                                         <SettingsIcon className="submenu__icon" />
 
                                         <p className="submenu__text">
@@ -80,7 +86,10 @@ const Header = () => {
                                         </p>
                                     </Link>
                                     
-                                    <div className="submenu__item" onClick={() => setConfirmExitModal(true)}>
+                                    <div className="submenu__item" onClick={() => {
+                                        setConfirmExitModal(true);
+                                        setSubmenuActive(false);
+                                    }}>
                                         <Leave className="submenu__icon" />
 
                                         <p className="submenu__text">
@@ -98,7 +107,7 @@ const Header = () => {
                 </div>
             </header>
 
-            <Confirm active={confirmExitModal} setActive={setConfirmExitModal} text="Вы действительно хотите выйти?" action={logout} />
+            <Confirm active={confirmExitModal} setActive={setConfirmExitModal} text="Вы действительно хотите выйти?" action={logoutHandler} />
         </>
     )
 }
