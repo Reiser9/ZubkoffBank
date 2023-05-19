@@ -108,9 +108,11 @@ const Register = () => {
                 </div>
 
                 <div className="sign__button--inner">
-                    <Button className="register__button" onClick={goToSmsCode} disabled={!agree}>
+                    {agree ? <Button className="register__button" onClick={goToSmsCode}>
                         Регистрация
-                    </Button>
+                    </Button> : <Button className="register__button" disabled>
+                        Регистрация
+                    </Button>}
 
                     <div className="sign__save">
                         <Save className="sign__save--icon" />

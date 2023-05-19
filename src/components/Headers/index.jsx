@@ -9,7 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import { Leave, SettingsIcon, User, UserCircle } from '../../components/Icons';
 import { Arrow } from '../../components/Icons';
 import Confirm from '../Confirm';
-import { Button } from 'antd';
+import {getLogoBank} from '../../utils/getSrcBanks';
 
 const Header = () => {
     const [submenuActive, setSubmenuActive] = React.useState(false);
@@ -46,7 +46,7 @@ const Header = () => {
                 <div className="container">
                     <div className="header__inner">
                         <Link to="/" className="header__logo--inner">
-                            <img src="/assets/img/logo1.svg" alt="logo" className="header__logo" />
+                            <img src={getLogoBank()} alt="logo" className="header__logo" />
                         </Link>
 
                         {isAuth

@@ -31,9 +31,11 @@ const AdminCardsTab = ({setActive}) => {
         <>
             <div className="admin__header">
                 <div className="admin__wrap">
-                    {totalElements && <h2 className="admin__title">Типы карт: {totalElements}</h2>}
+                    {totalElements > 0 && <>
+                        <h2 className="admin__title">Типы карт: {totalElements}</h2>
 
-                    <ReloadButton action={() => getCardTypes(0, 10, true)} />
+                        <ReloadButton action={() => getCardTypes(0, 10, true)} />
+                    </>}
                 </div>
 
                 <Button className="admin__btn" onClick={() => setActive("createType")}>

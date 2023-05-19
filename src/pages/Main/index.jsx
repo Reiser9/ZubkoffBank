@@ -12,6 +12,7 @@ import ServiceItem from '../../components/ServiceItem';
 import CashbackItem from '../../components/CashbackItem';
 import FaqItem from '../../components/FaqItem';
 import { QRCode } from 'antd';
+import { getCardBank } from '../../utils/getSrcBanks';
 
 const Main = () => {
     return (
@@ -47,7 +48,7 @@ const Main = () => {
                             </Button>
                         </div>
 
-                        <img src="/assets/img/card-black.svg" alt="card" className="credit-card__icon" />
+                        <img src={getCardBank()} alt="card" className="credit-card__icon" />
                     </div>
                 </div>
             </section>

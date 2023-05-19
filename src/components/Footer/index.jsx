@@ -1,8 +1,9 @@
 import React from 'react';
-import { Telegram, Vk, Tiktok, Instagram } from '../../components/Icons';
+import { Telegram, Vk} from '../../components/Icons';
 import { Link } from 'react-router-dom';
 
 import './index.css';
+import { getLogoBank } from '../../utils/getSrcBanks';
 
 const Footer = () => {
     return (
@@ -13,17 +14,17 @@ const Footer = () => {
                         <div className="footer-top__inner">
                             <div className="footer__column">
                                 <Link to="/" className="footer__logo--inner">
-                                    <img src="/assets/img/logo1.svg" alt="logo" className="footer__logo" />
+                                    <img src={getLogoBank()} alt="logo" className="footer__logo" />
                                 </Link>
 
                                 <p className="footer__text">Он такой один</p>
 
                                 <div className="footer__social">
-                                    <Link to="https://t.me/zubkoffbot" target="_blank" className="footer__icon--inner">
+                                    <Link to={process.env.REACT_APP_BOT_URL} target="_blank" className="footer__icon--inner">
                                         <Telegram className="footer__icon" />
                                     </Link>
 
-                                    <Link to="https://vk.com/club220655047" target="_blank" className="footer__icon--inner">
+                                    <Link to={process.env.REACT_APP_VK_URL} target="_blank" className="footer__icon--inner">
                                         <Vk className="footer__icon" />
                                     </Link>
                                 </div>

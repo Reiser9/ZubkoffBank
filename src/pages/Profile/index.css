@@ -178,7 +178,7 @@
     width: 100%;
     display: flex;
     gap: 8px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .transfer__to--item{

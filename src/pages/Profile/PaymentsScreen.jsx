@@ -107,6 +107,8 @@ const PaymentScreen = ({cardId, setTab}) => {
         else if(summ <= 0 && summ != ""){
             setSum(1);
         }
+
+        setTransferCode(false);
     }, [summ]);
 
     React.useEffect(() => {
