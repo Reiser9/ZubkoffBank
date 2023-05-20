@@ -6,7 +6,7 @@ import {getNormalDate} from '../../utils/getNormalDate';
 import {getTypeTransfer} from '../../utils/getTypeTransfer';
 import {HISTORY_STATUSES} from '../../consts/HISTORY_STATUSES';
 import { Block, Clock, NotifyOkIcon } from '../Icons';
-import { BANK_NAMES } from '../../consts/BANK_NAMES';
+import {getOrganizationInfo} from '../../utils/getOrganizationInfo';
 
 const HistoryItem = ({data}) => {
     const {date, message, money, organization, status, type} = data;
@@ -36,7 +36,7 @@ const HistoryItem = ({data}) => {
 
                     <div className="history__item--info">
                         <p className="history__item--info--name">
-                            {BANK_NAMES[organization].name}
+                            {getOrganizationInfo(organization)?.name}
                         </p>
 
                         <p className="history__item--info--date">
