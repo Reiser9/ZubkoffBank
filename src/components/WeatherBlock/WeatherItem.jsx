@@ -17,7 +17,7 @@ const WeatherItem = () => {
 
     return(
         <div className="weather__inner">
-            {isLoad ? <Preloader fill /> : error ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
+            {isLoad ? <Preloader fill small /> : error ? <ErrorBlock text="Сервис погоды временно недоступен" /> : <>
                 <div className="weather__info">
                     <div className="weather__location">
                         <Location className="weather__location--icon" />

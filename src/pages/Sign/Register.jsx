@@ -126,7 +126,7 @@ const Register = () => {
             
             {stage >= 2 && <>
                 <div className="sign__subtitle">
-                    Для завершения регистрации подтвердите ваш номер телефона через телеграм бота <a href={process.env.REACT_APP_BOT_URL} className="sign__link" target="_blanc">@zubkoffbot</a>
+                    Для завершения регистрации подтвердите ваш номер телефона через телеграм <a href={process.env.REACT_APP_BOT_URL} className="sign__link" target="_blanc">бота</a>
                 </div>
 
                 <div className="sign__warning sign__warning_1">

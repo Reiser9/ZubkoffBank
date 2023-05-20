@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode } from "swiper";
+import Skeleton from 'react-loading-skeleton';
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -12,6 +13,7 @@ import Input from '../../components/Input';
 import TransferBlock from './TransferBlock';
 import CardItem from './CardItem';
 import useTransfer from '../../hooks/useTransfer';
+import useDelay from '../../hooks/useDelay';
 import PayMethod from './PayMethod';
 import TransferToItem from './TransferToItem';
 import {INPUT_MASK_TYPE} from '../../consts/INPUT_MASK_TYPE';
@@ -32,11 +34,12 @@ const PaymentScreen = ({cardId, setTab}) => {
     const [confirmCode, setConfirmCode] = React.useState("");
 
     const [summ, setSum] = React.useState("");
+    const [summWithComission, setSumWithComission] = React.useState("");
     const [message, setMessage] = React.useState("");
 
     const {cards} = useSelector(state => state.user);
-    const {infoTransfer} = useSelector(state => state.transfers);
-    const {error, isLoading, sendTransfer, getInfoBanks, getInfoByCard, getConfirmTransferCode} = useTransfer();
+    const {infoTransfer, comission} = useSelector(state => state.transfers);
+    const {isLoading, sendTransfer, getInfoBanks, getInfoByCard, getConfirmTransferCode, checkComission} = useTransfer();
 
     const send = () => {
         if(summ >= 100000 && !transferCode){
@@ -99,6 +102,22 @@ const PaymentScreen = ({cardId, setTab}) => {
             setMethod("");
         }
     }
+
+    useDelay(() => {
+        if(summ && payCard && toPayInfo){
+            let params = {
+                money: summ,
+                cardNum: payCard,
+                code: toPayInfo.code
+            }
+    
+            checkComission(params);
+        }
+    }, [summ, payCard, toPayInfo], 400);
+
+    React.useEffect(() => {
+        setSumWithComission(comission * summ);
+    }, [comission]);
 
     React.useEffect(() => {
         if(summ > 1000000){
@@ -203,11 +222,13 @@ const PaymentScreen = ({cardId, setTab}) => {
 
                     {!summ || !toPayInfo
                     ? <Button className="transfer__btn" disabled>Перевести</Button>
-                    : <Button className="transfer__btn" disabled={isLoading || (transferCode && confirmCode.length !== 6)} onClick={send}>Перевести {summ} ₽</Button>}
+                    : <Button className="transfer__btn" disabled={isLoading || (transferCode && confirmCode.length !== 6)} onClick={send}>Перевести {summWithComission} ₽</Button>}
 
-                    {summ && <p className="transfer__text">Комиссия не взимается банком</p>}
-
-                    {/* <p className="transfer__text transfer__text_red">Перевод с комиссией банка: 2%</p> */}
+                    {summ > 0 && (isLoading
+                    ? <Skeleton containerClassName="transfer__text--skeleton" className="skeleton__content" />
+                    : comission > 1
+                        ? <p className="transfer__text transfer__text_red">Перевод с комиссией банка: {comission * 100 - 100}%</p>
+                        : <p className="transfer__text">Комиссия не взимается банком</p>)}
                 </div>
             </>}
 

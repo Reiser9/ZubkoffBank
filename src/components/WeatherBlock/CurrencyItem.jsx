@@ -12,7 +12,7 @@ const CurrencyItem = () => {
 
     return(
         <div className="course-weather">
-            {isLoad ? <Preloader fill /> : error ? <ErrorBlock text="Сервис валют временно недоступен" /> : <>
+            {isLoad ? <Preloader fill small /> : error ? <ErrorBlock text="Сервис валют временно недоступен" /> : <>
                 <p className="course-weather__label">
                     Курс рубля от ЦБ РФ
                 </p>

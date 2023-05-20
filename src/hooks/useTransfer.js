@@ -7,7 +7,7 @@ import { requestDataIsError } from '../utils/requestDataIsError';
 import {NOTIFY_TYPES} from '../consts/NOTIFY_TYPES';
 import useNotify from '../hooks/useNotify';
 import { initTransfersHistory } from '../redux/slices/user';
-import { initInfoBanks, initInfoTransfer, addInfoTransfer } from '../redux/slices/transfers';
+import { initInfoBanks, initInfoTransfer, addInfoTransfer, setComission } from '../redux/slices/transfers';
 import { REQUEST_STATUSES } from '../consts/REQUEST_STATUSES';
 
 const useTransfer = () => {
@@ -206,11 +206,21 @@ const useTransfer = () => {
         alertNotify("Успешно", "Перевод выполнен", "success");
     }
 
-    const checkComission = async () => {
+    // Проверить комиссию при переводе
+    // money - сколько переводим денег
+    // cardNum/phoneNum - номер телефона/карты куда переводим
+    // sourceCardNum - номер карты, с которой перевродим
+    const checkComission = async ({money, cardNum, code}) => {
         setError(false);
         setIsLoading(true);
 
-        const data = request(REQUEST_TYPE.USER, "/transfer/commission", HTTP_METHODS.POST, true);
+        let params = {
+            money,
+            cardNum,
+            code
+        }
+
+        const data = await request(REQUEST_TYPE.USER, "/transfer/commission", HTTP_METHODS.POST, true, params);
 
         setIsLoading(false);
 
@@ -219,7 +229,7 @@ const useTransfer = () => {
             return;
         }
 
-        return data.commission;
+        dispatch(setComission(data.commission));
     }
 
     return {

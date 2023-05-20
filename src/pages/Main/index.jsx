@@ -89,7 +89,7 @@ const Main = () => {
                 <div className="container">
                     <div className="banner__inner">
                         <div className="banner__image ibg">
-                            <img src="assets/img/phone.png" alt="banner" />
+                            <img src="assets/img/phone.svg" alt="banner" />
                         </div>
 
                         <div className="banner__icons">

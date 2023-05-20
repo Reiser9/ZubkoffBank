@@ -2,7 +2,8 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     infoBanks: [],
-    infoTransfer: []
+    infoTransfer: [],
+    comission: 0
 };
 
 export const transfersSlice = createSlice({
@@ -16,7 +17,10 @@ export const transfersSlice = createSlice({
             state.infoTransfer = action.payload;
         },
         addInfoTransfer: (state, action) => {
-            state.infoTransfer = [...state.infoTransfer, action.payload]
+            state.infoTransfer = [...state.infoTransfer, action.payload];
+        },
+        setComission: (state, action) => {
+            state.comission = action.payload;
         }
     }
 });
@@ -24,7 +28,8 @@ export const transfersSlice = createSlice({
 export const {
     initInfoBanks,
     initInfoTransfer,
-    addInfoTransfer
+    addInfoTransfer,
+    setComission
 } = transfersSlice.actions;
 
 export default transfersSlice.reducer;
